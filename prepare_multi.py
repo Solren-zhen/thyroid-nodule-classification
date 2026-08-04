@@ -18,7 +18,7 @@ from pathlib import Path
 
 CLINICAL_COLS = ["composition", "echogenicity", "shape",
                  "margin", "echogenic_foci", "size_mm"]
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid_ai")
+PROJ = Path(r"C:\Users\甄朝晖\Desktop	hyroid")
 
 
 def tn5000_rows():

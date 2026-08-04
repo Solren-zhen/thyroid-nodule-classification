@@ -13,7 +13,7 @@ from pathlib import Path
 
 from PIL import Image
 
-ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid_ai\data\thyroid")
+ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid\data\thyroid")
 REF_PATTERNS = {
     "tn5000": ROOT / "tn5000",
     "tn3k": ROOT / "tn3k" / "datasets" / "tn3k",

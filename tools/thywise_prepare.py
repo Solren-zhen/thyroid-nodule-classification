@@ -17,7 +17,7 @@ from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
-ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid_ai")
+ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
 OUTER = ROOT / "data" / "thyroid" / "thywise" / "thywise_us_images.zip"
 IMG_ROOT = ROOT / "data" / "thyroid" / "thywise" / "images"
 MANIFEST = ROOT / "data" / "thyroid" / "thywise" / "manifest.csv"

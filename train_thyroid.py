@@ -34,9 +34,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
-from thyroid_ai.config import get_thyroid_config
-from thyroid_ai.models.thyroid import ThyroidClassifier
-from thyroid_ai.data.thyroid_dataset import ThyroidDataset
+from thyroid.config import get_thyroid_config
+from thyroid.models.thyroid import ThyroidClassifier
+from thyroid.data.thyroid_dataset import ThyroidDataset
 
 
 # ── 工具 ─────────────────────────────────────────

@@ -23,8 +23,8 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from thyroid_ai.models.thyroid import ThyroidClassifier  # noqa: E402
-from thyroid_ai.data.thyroid_dataset import ThyroidDataset  # noqa: E402
+from thyroid.models.thyroid import ThyroidClassifier  # noqa: E402
+from thyroid.data.thyroid_dataset import ThyroidDataset  # noqa: E402
 from train_thyroid import compute_metrics, get_device  # noqa: E402
 
 

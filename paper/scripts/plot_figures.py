@@ -14,10 +14,10 @@ import torch
 from sklearn.metrics import roc_curve, auc as sk_auc, confusion_matrix
 from torch.utils.data import DataLoader
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid_ai")
+PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
 sys.path.insert(0, str(PROJ.parent))
-from thyroid_ai.data.thyroid_dataset import ThyroidDataset
-from thyroid_ai.models.thyroid import ThyroidClassifier
+from thyroid.data.thyroid_dataset import ThyroidDataset
+from thyroid.models.thyroid import ThyroidClassifier
 
 FIG_DIR = PROJ / "paper" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)

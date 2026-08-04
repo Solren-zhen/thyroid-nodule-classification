@@ -6,7 +6,7 @@
 ## é¡¹ç›®
 
 - ç›®æ ‡ï¼šç”²çŠ¶è…ºç»“èŠ‚è¶…å£°è‰¯æ¶æ€§åˆ†ç±» Q2 è®ºæ–‡ï¼ˆå¤è¯•ç”¨ï¼‰ï¼Œå›¾åƒ + TI-RADS èåˆ
-- æ ¹ç›®å½•ï¼š`C:\Users\ç”„æœæ™–\Desktop\thyroid_ai`
+- æ ¹ç›®å½•ï¼š`C:\Users\ç”„æœæ™–\Desktop\thyroid`
 - ç¯å¢ƒï¼š`C:\miniconda3\envs\lymph_yolo\python.exe`
   - torch 2.5.1+cu121ï¼ˆCUDA å¯ç”¨ï¼ŒRTX 3060 6GBï¼‰
   - torchvision 0.20.1+cu121ï¼ŒPillow 12.3.0
@@ -57,12 +57,12 @@
 - [ ] figshare ä¸‹è½½å®Œæˆ â†’ è§£å‹ï¼ˆtar.exe æ”¯æŒ RARï¼‰â†’ manifest â†’ å¤–éƒ¨éªŒè¯
 - [ ] è‹¥ ThyroidXL é•¿æ—¶é—´ä¸æ‰¹ â†’ è”ç³»ä½œè€…ï¼ˆè¶Šå—æ²³å†…å†…åˆ†æ³ŒåŒ»é™¢ï¼‰æˆ–å…ˆç”¨ TN5000 + figshare
 
-## ¸üĞÂ£¨2026-08-04 ÉÏÎç£©
+## ï¿½ï¿½ï¿½Â£ï¿½2026-08-04 ï¿½ï¿½ï¿½ç£©
 
-- TN3K ÒÑÏÂÔØ£¨376MB£¬HF ¹Ù·½¾µÏñ haifan-gong/TN3K£©+ manifest Éú³É£¨3493 ÕÅÈ«Á¿=test£©
-- TN3K Íâ²¿ÑéÖ¤£¨µ¥Êı¾İ¼¯Ä£ĞÍ£©£ºAUC 0.7131£¨95%CI 0.696-0.731£©¡ú ÓòÆ¯ÒÆÁ¿»¯
-- Êı¾İ¼¯´úÂëÉı¼¶£ºÖ§³Ö manifest µÄ split ÁĞ£¨¹Ù·½»®·ÖÓÅÏÈ£©
-- ¶àÊı¾İ¼¯ÁªºÏÑµÁ·£¨TN5000+TN3K trainval£¬7879 ÕÅ£©£ºGPU ÑµÁ·ÖĞ£¨ÓÅ»¯ workers=10 + persistent_workers£©
-- ÂÛÎÄ¹¤×÷Çø£¨paper/£©£ºproject_truth / decision_log / result_summary / paper_handoff / literature_matrix + manuscript.md£¨Methods ³õ¸å£©
-- figshare ·ÅÆú£¨¹êËÙ£©£»TN-SCUI ·ÅÆú£¨Ìõ¿î½ûÖ¹·¢±í£©
-- ThyroidXL£ºÈÔ awaiting review
+- TN3K ï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½376MBï¿½ï¿½HF ï¿½Ù·ï¿½ï¿½ï¿½ï¿½ï¿½ haifan-gong/TN3Kï¿½ï¿½+ manifest ï¿½ï¿½ï¿½É£ï¿½3493 ï¿½ï¿½È«ï¿½ï¿½=testï¿½ï¿½
+- TN3K ï¿½â²¿ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¼ï¿½Ä£ï¿½Í£ï¿½ï¿½ï¿½AUC 0.7131ï¿½ï¿½95%CI 0.696-0.731ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+- ï¿½ï¿½ï¿½İ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ manifest ï¿½ï¿½ split ï¿½Ğ£ï¿½ï¿½Ù·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½
+- ï¿½ï¿½ï¿½ï¿½ï¿½İ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½ï¿½ï¿½ï¿½TN5000+TN3K trainvalï¿½ï¿½7879 ï¿½Å£ï¿½ï¿½ï¿½GPU Ñµï¿½ï¿½ï¿½Ğ£ï¿½ï¿½Å»ï¿½ workers=10 + persistent_workersï¿½ï¿½
+- ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½paper/ï¿½ï¿½ï¿½ï¿½project_truth / decision_log / result_summary / paper_handoff / literature_matrix + manuscript.mdï¿½ï¿½Methods ï¿½ï¿½ï¿½å£©
+- figshare ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù£ï¿½ï¿½ï¿½TN-SCUI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+- ThyroidXLï¿½ï¿½ï¿½ï¿½ awaiting review

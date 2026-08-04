@@ -29,7 +29,7 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid_ai")
+ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
 CLINICAL_COLUMNS = ["composition", "echogenicity", "shape", "margin",
                     "echogenic_foci", "size_mm"]
 

@@ -12,7 +12,7 @@ from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
-ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid_ai\data\thyroid")
+ROOT = Path(r"C:\Users\甄朝晖\Desktop\thyroid\data\thyroid")
 
 # 参考集：TN5000 + TN3K（已确认独立的两个数据集）
 REF_PATTERNS = {

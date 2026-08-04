@@ -19,8 +19,8 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from thyroid_ai.models.thyroid import ThyroidClassifier
-from thyroid_ai.data.thyroid_dataset import ThyroidDataset
+from thyroid.models.thyroid import ThyroidClassifier
+from thyroid.data.thyroid_dataset import ThyroidDataset
 from train_thyroid import compute_metrics, bootstrap_auc, ece_score, get_device
 
 
