@@ -125,7 +125,7 @@ guidelines.
 ### 2.1 Datasets
 
 We used four publicly available thyroid ultrasound datasets with benign/
-malignant labels.
+malignant labels (study flow in Figure 1).
 
 The TN5000 dataset (Zhang et al., Scientific Data, 2025) [11] contains 5,000
 B-mode ultrasound images of thyroid nodules with expert-radiologist labels
