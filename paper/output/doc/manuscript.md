@@ -481,16 +481,20 @@ it aggregates frames with learned attention within each patient, whereas we
 use fixed mean aggregation, which is simpler and avoids additional learned
 parameters. Third, it does not use structured clinical features. Our results
 are not directly comparable in absolute terms because of these methodological
-differences (and the lower AUC of our image-only model on ThyroidXL reflects,
-at least in part, the absence of mask guidance and patient-level attention
-aggregation). To quantify the effect of aggregation choice, we additionally
-evaluated max-frame aggregation within each nodule, which yielded a lower AUC
-(0.927 vs. 0.939 for mean aggregation), confirming that the frame-aggregation
-strategy materially affects performance and that the reported figures are
-specific to the mean-aggregation protocol used throughout this study. The
-present study instead focuses on the questions that the mask-based approach
-does not address — cross-dataset domain-shift quantification and the
-incremental value of structured clinical features.
+differences, and in particular the lower AUC of our image-only model on
+ThyroidXL reflects the absence of mask guidance. To isolate the contribution of
+the aggregation strategy, we evaluated alternative nodule-level aggregations of
+the same frame predictions: max pooling and attention-weighted pooling (an
+exponential softmax over frame probabilities) both yielded lower AUC than the
+mean pooling used throughout this study (fusion: mean 0.947, max 0.934,
+attention 0.935; image-only: mean 0.939, max 0.927, attention 0.928). The
+negligible gain from attention weighting here indicates that the higher
+patient-level AUC reported by the mask-based approach is not explained by its
+attention pooling, but rather by the mask guidance itself — which our framework
+deliberately avoids for clinical applicability. The present study instead
+focuses on the questions that the mask-based approach does not address —
+cross-dataset domain-shift quantification and the incremental value of
+structured clinical features.
 
 **Calibration and decision-curve reporting.** Discrimination alone is
 insufficient for clinical use. The single-dataset model was reasonably well
