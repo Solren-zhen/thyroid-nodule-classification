@@ -551,10 +551,11 @@ should be re-tested under genuine multi-device domain shift.
 
 ## Declarations
 
-- Data availability: TN5000 (figshare, [11]), TN3K (Hugging Face, haifan-gong/TN3K,
-  [9,10]), Thy-Wise (figshare, DOI 10.6084/m9.figshare.20417895, CC BY 4.0, [13]).
-  ThyroidXL [12] is available at https://huggingface.co/datasets/hunglc007/ThyroidXL
-  under gated access; access was granted and all 11,635 images were used in this study.
+- Data availability: TN5000 (publicly available, [11]), TN3K (Hugging Face,
+  haifan-gong/TN3K, [9,10]), Thy-Wise (figshare, DOI
+  10.6084/m9.figshare.20417895, CC BY 4.0, [13]). ThyroidXL [12] is available
+  at https://huggingface.co/datasets/hunglc007/ThyroidXL under gated access;
+  access was granted and all 11,635 images were used in this study.
 - Code availability: GitHub repository (URL to be inserted before submission).
 - AI disclosure: ARS disclosure statement [TBD].
 
