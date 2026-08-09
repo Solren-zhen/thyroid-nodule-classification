@@ -9,6 +9,22 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+# 统一出版风格
+plt.rcParams.update({
+    "font.family": "DejaVu Sans",
+    "font.size": 11,
+    "axes.titlesize": 13,
+    "axes.labelsize": 12,
+    "xtick.labelsize": 10,
+    "ytick.labelsize": 10,
+    "legend.fontsize": 10,
+    "figure.dpi": 300,
+    "savefig.dpi": 300,
+    "savefig.bbox": "tight",
+    "axes.spines.top": False,
+    "axes.spines.right": False,
+})
 import numpy as np
 import torch
 from sklearn.metrics import roc_curve, auc as sk_auc, confusion_matrix
@@ -117,46 +133,41 @@ def main():
     plt.close(fig)
     print("fig2 saved")
 
-    # ---- Fig 3a: calibration ----
+    # ---- Fig 3: calibration (a) + DCA (b) 合成图 ----
     mp1, my1, ece1 = reliability_curve(y_in, p_in)
     mp2, my2, ece2 = reliability_curve(y_ext, p_ext)
-    fig, ax = plt.subplots(figsize=(6.2, 5.6))
-    ax.plot([0, 1], [0, 1], "k--", lw=1.2, label="Perfect calibration")
-    ax.plot(mp1, my1, "o-", color="#1f77b4", lw=2, ms=6,
-            label=f"Internal (ECE = {ece1:.3f})")
-    ax.plot(mp2, my2, "s-", color="#d62728", lw=2, ms=6,
-            label=f"External (ECE = {ece2:.3f})")
-    ax.set_xlabel("Predicted probability", fontsize=12)
-    ax.set_ylabel("Observed frequency", fontsize=12)
-    ax.set_title("Calibration reliability", fontsize=13)
-    ax.legend(loc="upper left", fontsize=10)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "fig3_calibration.png", dpi=300)
-    plt.close(fig)
-    print("fig3 saved")
-
-    # ---- Fig 3b: DCA ----
     eval_dir = PROJ / "checkpoints" / "thyroid" / "image"
     d1 = json.loads((eval_dir / "eval_tn5000_test.json").read_text(encoding="utf-8"))
     d2 = json.loads((eval_dir / "eval_tn3k_test.json").read_text(encoding="utf-8"))
-    fig, ax = plt.subplots(figsize=(6.2, 5.6))
     pt1 = [c["threshold"] for c in d1["decision_curve"]]
     nb1 = [c["net_benefit"] for c in d1["decision_curve"]]
     pt2 = [c["threshold"] for c in d2["decision_curve"]]
     nb2 = [c["net_benefit"] for c in d2["decision_curve"]]
-    ax.plot(pt1, nb1, lw=2, color="#1f77b4", label="Internal test")
-    ax.plot(pt2, nb2, lw=2, color="#d62728", label="External TN3K")
-    # reference: treat none
-    ax.plot([0, 1], [0, 0], "k:", lw=1, label="Treat none")
-    ax.set_xlabel("Threshold probability", fontsize=12)
-    ax.set_ylabel("Net benefit", fontsize=12)
-    ax.set_title("Decision curve analysis", fontsize=13)
-    ax.legend(loc="upper right", fontsize=10)
-    ax.set_xlim(0, 1)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.2))
+    # (a) calibration
+    ax1.plot([0, 1], [0, 1], "k--", lw=1.2, label="Perfect calibration")
+    ax1.plot(mp1, my1, "o-", color="#1f77b4", lw=2, ms=6,
+             label=f"Internal (ECE = {ece1:.3f})")
+    ax1.plot(mp2, my2, "s-", color="#d62728", lw=2, ms=6,
+             label=f"External (ECE = {ece2:.3f})")
+    ax1.set_xlabel("Predicted probability", fontsize=12)
+    ax1.set_ylabel("Observed frequency", fontsize=12)
+    ax1.set_title("(a) Calibration", fontsize=13)
+    ax1.legend(loc="upper left", fontsize=9)
+    # (b) DCA
+    ax2.plot(pt1, nb1, lw=2, color="#1f77b4", label="Internal test")
+    ax2.plot(pt2, nb2, lw=2, color="#d62728", label="External TN3K")
+    ax2.plot([0, 1], [0, 0], "k:", lw=1, label="Treat none")
+    ax2.set_xlabel("Threshold probability", fontsize=12)
+    ax2.set_ylabel("Net benefit", fontsize=12)
+    ax2.set_title("(b) Decision curves", fontsize=13)
+    ax2.legend(loc="upper right", fontsize=9)
+    ax2.set_xlim(0, 1)
     fig.tight_layout()
-    fig.savefig(FIG_DIR / "fig3_dca.png", dpi=300)
+    fig.savefig(FIG_DIR / "fig3.png", dpi=300)
     plt.close(fig)
-    print("fig3 dca saved")
+    print("fig3 (calibration + DCA) saved")
 
     # ---- Fig 4: confusion matrices ----
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.2))
