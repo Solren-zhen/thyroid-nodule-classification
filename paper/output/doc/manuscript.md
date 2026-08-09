@@ -1,12 +1,12 @@
 # Multimodal fusion of ultrasound imaging and ACR TI-RADS features for thyroid nodule malignancy classification: a multi-dataset validation study
 
 > Working manuscript (draft v0.4, 2026-08-09). References filled per
-> citation-verifier pass (24 verified entries).
+> citation-verifier pass (23 verified entries).
 > v0.4 (2026-08-09): fusion ablation completed on ThyroidXL (D11) —
 > ThyroidXL approval granted; clinical features switched to ThyroidXL
 > (TI-RADS total score + diameter + age + sex, 5-dim). Three-arm ablation
 > (image 0.939 / clinical 0.814 / fusion 0.947 nodule AUC). Table 3 filled,
-> §3.5 + Abstract + Discussion + Conclusion updated, RCAF [24] comparison added.
+> §3.5 + Abstract + Discussion + Conclusion updated, RCAF [23] comparison added.
 > v0.3a (2026-08-05): C4 resolved — retrained TN5000-only model (val AUC 0.9226),
 > ran single-dataset Thy-Wise baseline (nodule AUC 0.608 vs joint 0.667, Δ=+0.059).
 
@@ -77,7 +77,7 @@ of sonographic features between benign and malignant nodules limits diagnostic
 reproducibility [3].
 
 Deep learning has emerged as a promising tool to support thyroid nodule
-classification, segmentation and detection [4,5]. Numerous
+classification, segmentation and detection [4,5,22]. Numerous
 models based on convolutional neural networks and vision transformers have
 reported high diagnostic accuracy on internal test sets [6,7].
 Several open-access datasets have accelerated this progress, including DDTI
@@ -454,13 +454,18 @@ complementary signal rather than a substitute for image analysis. Whether the
 fusion gain would be larger under genuine cross-device domain shift (where
 image statistics degrade but semantic features should not) remains an open
 question that the present single-device ThyroidXL cohort cannot answer, and is
-a direction for future work with multi-device TI-RADS-annotated data.
+a direction for future work with multi-device TI-RADS-annotated data. Our
+framework also differs from multimodal methods that depend on free-text
+radiology reports [18,19] or on contrast-enhanced sequences [20]: it uses only
+routine B-mode ultrasound together with structured clinical values, requiring
+no additional acquisitions or report transcription, which is an advantage for
+widespread clinical deployment.
 
 **Comparison with recent ThyroidXL-based studies.** Since ThyroidXL became
 available, at least one framework has reported very high patient-level
 performance on this benchmark using image-only input: a region- and
 context-aware fusion with attention-based multiple-instance learning reported
-a patient-level test AUC of 0.993 on ThyroidXL [24]. That approach differs from
+a patient-level test AUC of 0.993 on ThyroidXL [23]. That approach differs from
 ours in three respects relevant to clinical translation. First, it requires
 nodule segmentation masks at inference (a lesion-focused branch is multiplied
 by the mask), whereas our framework uses only the B-mode image and is
@@ -599,6 +604,4 @@ should be re-tested under genuine multi-device domain shift.
 
 22. Gong H, et al. Thyroid region prior guided attention for ultrasound segmentation of thyroid nodules. *Computers in Biology and Medicine*. 2023;155:106389. PMID: 36812810.
 
-23. Hou X, Hua M, Zhang W, et al. An ultrasonography of thyroid nodules dataset with pathological diagnosis annotation for deep learning. *Scientific Data*. 2024;11:1272. doi:10.1038/s41597-024-04156-5.
-
-24. Sherif M, Elsayed EK, Deif MA. RCAF for patient-level thyroid ultrasound malignancy prediction under leakage-free evaluation and calibration. *Scientific Reports*. 2026;16:16204. doi:10.1038/s41598-026-61342-8.
+23. Sherif M, Elsayed EK, Deif MA. RCAF for patient-level thyroid ultrasound malignancy prediction under leakage-free evaluation and calibration. *Scientific Reports*. 2026;16:16204. doi:10.1038/s41598-026-61342-8.
