@@ -521,6 +521,16 @@ over-referral is preferable to a missed malignancy; the operating point should
 be selected to match the clinical setting, and the decision curves provide the
 information to do so explicitly.
 
+**Error patterns.** At a fixed 0.5 threshold, the fused model on the ThyroidXL
+test cohort produced substantially more false negatives than false positives
+(143 vs. 9 of 739 nodules), i.e. a tendency to under-call malignancy
+(Figure 9). This asymmetry is consistent with the low prevalence of malignancy
+in the ThyroidXL development set (26.1%) and the high specificity attained by
+the model; in clinical triage, where missing a malignancy is the more serious
+error, a lower decision threshold (e.g. the Youden point) or a
+sensitivity-constrained operating point would be preferred. This illustrates
+the importance of explicit threshold selection rather than a fixed default.
+
 **Limitations.** Several limitations must be acknowledged. First, labels in the
 datasets arise from heterogeneous ground-truth sources (biopsy-confirmed
 pathological labels in TN5000 and Thy-Wise, published ground-truth labels in
@@ -620,6 +630,11 @@ test cohort, reporting net benefit across threshold probabilities.
 (a) sensitivity and specificity as a function of the decision threshold, and
 (b) positive predictive value as a function of the threshold, for the three
 ablation models.
+
+**Figure 9.** Representative misclassifications of the fused model on the
+ThyroidXL test cohort. Top row: false positives (benign predicted malignant);
+bottom row: false negatives (malignant predicted benign). Predicted
+probabilities and ground-truth labels are shown for each case.
 
 ## References
 
