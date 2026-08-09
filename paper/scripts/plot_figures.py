@@ -82,7 +82,8 @@ def dca_refs(pt, pos_rate):
 
 def main():
     device = get_device()
-    weights = PROJ / "checkpoints" / "thyroid" / "image" / "best.pt"
+    # Joint 模型（TN5000+TN3K）；image/best.pt 现被 ThyroidXL image-only 占用
+    weights = PROJ / "checkpoints" / "thyroid" / "image_backup" / "best_joint_20260809.pt"
     model = load_model(weights).to(device)
     print("model loaded")
 
@@ -135,8 +136,9 @@ def main():
     print("fig3 saved")
 
     # ---- Fig 3b: DCA ----
-    d1 = json.loads((weights.parent / "eval_tn5000_test.json").read_text(encoding="utf-8"))
-    d2 = json.loads((weights.parent / "eval_tn3k_test.json").read_text(encoding="utf-8"))
+    eval_dir = PROJ / "checkpoints" / "thyroid" / "image"
+    d1 = json.loads((eval_dir / "eval_tn5000_test.json").read_text(encoding="utf-8"))
+    d2 = json.loads((eval_dir / "eval_tn3k_test.json").read_text(encoding="utf-8"))
     fig, ax = plt.subplots(figsize=(6.2, 5.6))
     pt1 = [c["threshold"] for c in d1["decision_curve"]]
     nb1 = [c["net_benefit"] for c in d1["decision_curve"]]
