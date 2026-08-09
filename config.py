@@ -4,6 +4,18 @@
 from dataclasses import dataclass, field
 
 
+# 默认 ACR TI-RADS 临床特征列（TN5000/TN3K/Thy-Wise manifest 使用）
+ACR_CLINICAL_COLUMNS = [
+    "composition", "echogenicity", "shape", "margin",
+    "echogenic_foci", "size_mm",
+]
+
+# ThyroidXL 临床特征列（TIRADS 总分 + 尺寸 + 人口学）
+THYROIDXL_CLINICAL_COLUMNS = [
+    "tirads", "width_mm", "height_mm", "age", "gender",
+]
+
+
 @dataclass
 class ThyroidConfig:
     """甲状腺分类实验配置（开源数据路线）"""
@@ -12,6 +24,7 @@ class ThyroidConfig:
     data_root: str = "./data/thyroid"
     image_size: int = 224
     clinical_feature_dim: int = 6   # ACR TI-RADS: composition, echogenicity, shape, margin, echogenic_foci, size_mm
+    clinical_columns: list = field(default_factory=lambda: list(ACR_CLINICAL_COLUMNS))
     split_by_group: bool = True     # 按 patient_id 切分，防止同患者多图泄漏
 
     # 模型

@@ -66,11 +66,15 @@ def main():
     ap.add_argument("--token-file", default=str(pathlib.Path.home() / ".huggingface" / "token"))
     ap.add_argument("--workers", type=int, default=16)
     ap.add_argument("--retries", type=int, default=2)
+    ap.add_argument("--endpoint", default="official",
+                    choices=["official", "mirror"],
+                    help="official=huggingface.co (works for gated datasets); mirror=hf-mirror.com")
     args = ap.parse_args()
 
     token = load_token(args.token_file)
     headers = {"Authorization": f"Bearer {token}", "User-Agent": UA}
-    base = f"https://hf-mirror.com/datasets/{args.repo}/resolve/main/"
+    host = "huggingface.co" if args.endpoint == "official" else "hf-mirror.com"
+    base = f"https://{host}/datasets/{args.repo}/resolve/main/"
     dest_root = pathlib.Path(args.dest).resolve()
 
     print(f"listing {args.repo} ...")

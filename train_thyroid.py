@@ -27,7 +27,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR, ReduceLROnPlateau
-from sklearn.metrics import roc_auc_score, precision_recall_fscore_support
+from sklearn.metrics import roc_auc_score, average_precision_score, precision_recall_fscore_support
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -97,6 +97,7 @@ def compute_metrics(labels: np.ndarray, probs: np.ndarray, threshold: float = 0.
         labels, preds, average="binary", zero_division=0
     )
     auc = float(roc_auc_score(labels, probs)) if len(np.unique(labels)) > 1 else 0.0
+    auprc = float(average_precision_score(labels, probs)) if len(np.unique(labels)) > 1 else 0.0
     auc_mean, auc_lo, auc_hi = bootstrap_auc(labels, probs)
     tp = int(((preds == 1) & (labels == 1)).sum())
     fp = int(((preds == 1) & (labels == 0)).sum())
@@ -106,7 +107,7 @@ def compute_metrics(labels: np.ndarray, probs: np.ndarray, threshold: float = 0.
     spe = tn / max(tn + fp, 1)
     return {
         "acc": acc, "precision": float(p), "recall": float(r), "f1": float(f1),
-        "auc": auc, "auc_ci": (auc_lo, auc_hi),
+        "auc": auc, "auc_ci": (auc_lo, auc_hi), "auprc": auprc,
         "ece": ece_score(labels, probs),
         "tp": tp, "fp": fp, "tn": tn, "fn": fn,
         "sensitivity": sen, "specificity": spe,
@@ -206,16 +207,21 @@ def main():
         data_root = str(PROJECT_ROOT / data_root)
     mock = args.mode == "mock"
     train_ds = ThyroidDataset(data_root, split="train", image_size=cfg.image_size,
+                              num_clinical_features=cfg.clinical_feature_dim,
+                              clinical_columns=cfg.clinical_columns,
                               mock=mock, split_by_group=cfg.split_by_group, seed=cfg.seed)
     val_ds = ThyroidDataset(data_root, split="val", image_size=cfg.image_size,
+                            num_clinical_features=cfg.clinical_feature_dim,
+                            clinical_columns=cfg.clinical_columns,
                             mock=mock, split_by_group=cfg.split_by_group, seed=cfg.seed)
 
+    persistent = cfg.num_workers > 0
     train_loader = DataLoader(train_ds, batch_size=cfg.batch_size, shuffle=True,
                               num_workers=cfg.num_workers, pin_memory=True, drop_last=True,
-                              persistent_workers=True)
+                              persistent_workers=persistent)
     val_loader = DataLoader(val_ds, batch_size=cfg.batch_size, shuffle=False,
                             num_workers=cfg.num_workers,
-                            persistent_workers=True)
+                            persistent_workers=persistent)
 
     model = ThyroidClassifier(
         encoder_name=cfg.encoder_name,
@@ -301,15 +307,15 @@ def main():
         if val["auc"] > best_auc:
             best_auc, best_epoch, patience = val["auc"], epoch, 0
             torch.save(ckpt, save_dir / "best.pt")
-            print(f"  ✅ 新最佳 AUC={best_auc:.4f} @ epoch {epoch}")
+            print(f"  [NEW BEST] AUC={best_auc:.4f} @ epoch {epoch}")
         else:
             patience += 1
             if patience >= cfg.early_stopping_patience:
-                print(f"早停于 epoch {epoch}（最佳 epoch {best_epoch}, AUC {best_auc:.4f}）")
+                print(f"Early stop at epoch {epoch} (best epoch {best_epoch}, AUC {best_auc:.4f})")
                 break
 
-    print(f"\n完成: {args.ablation} 最佳 AUC = {best_auc:.4f} @ epoch {best_epoch}")
-    print(f"模型: {save_dir / 'best.pt'} | 日志: {log_csv}")
+    print(f"\nDone: {args.ablation} best AUC = {best_auc:.4f} @ epoch {best_epoch}")
+    print(f"Model: {save_dir / 'best.pt'} | Log: {log_csv}")
 
 
 if __name__ == "__main__":

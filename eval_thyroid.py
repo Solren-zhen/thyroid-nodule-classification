@@ -47,6 +47,9 @@ def main():
     parser.add_argument("--mode", type=str, default="real", choices=["real", "mock"])
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--clinical_columns", type=str, default=None,
+                        help="逗号分隔的临床特征列名，默认用 ACR 6 列；ThyroidXL 用 "
+                             "tirads,width_mm,height_mm,age,gender")
     args = parser.parse_args()
 
     weights = Path(args.weights)
@@ -61,7 +64,15 @@ def main():
     data_root = args.data_root or "./data/thyroid"
     if not Path(data_root).is_absolute():
         data_root = str(PROJECT_ROOT / data_root)
+    if args.clinical_columns:
+        clinical_cols = [c.strip() for c in args.clinical_columns.split(",") if c.strip()]
+        num_clin = len(clinical_cols)
+    else:
+        clinical_cols = None
+        num_clin = mc["clinical_feature_dim"]
     ds = ThyroidDataset(data_root, split=args.split, image_size=224,
+                        num_clinical_features=num_clin,
+                        clinical_columns=clinical_cols,
                         mock=args.mode == "mock", split_by_group=True, seed=args.seed)
     loader = DataLoader(ds, batch_size=args.batch_size, shuffle=False, num_workers=0)
 
@@ -99,6 +110,7 @@ def main():
     print(f"  甲状腺分类评估 | 权重: {weights.name} | 分割: {args.split}")
     print(f"{'='*56}")
     print(f"  AUC        : {m['auc']:.4f} (95% CI {m['auc_ci'][0]:.4f}-{m['auc_ci'][1]:.4f})")
+    print(f"  AUPRC      : {m['auprc']:.4f}")
     print(f"  ACC        : {m['acc']:.4f}")
     print(f"  Sensitivity: {m['sensitivity']:.4f}  Specificity: {m['specificity']:.4f}")
     print(f"  Precision  : {m['precision']:.4f}  Recall: {m['recall']:.4f}  F1: {m['f1']:.4f}")
