@@ -561,6 +561,33 @@ should be re-tested under genuine multi-device domain shift.
 - Code availability: GitHub repository (URL to be inserted before submission).
 - AI disclosure: ARS disclosure statement [TBD].
 
+## Figure Legends
+
+**Figure 1.** Study flow diagram. Data acquisition, patient-level split,
+model training and evaluation pipeline for the four public datasets.
+
+**Figure 2.** Receiver operating characteristic (ROC) curves of the joint
+multi-dataset model (TN5000 + TN3K training) on the internal TN5000 test set
+and the external TN3K official test set, showing cross-dataset domain shift.
+
+**Figure 3.** Calibration reliability plots (a) and decision curves (b) of the
+joint model on the internal and external test sets. ECE = expected calibration
+error.
+
+**Figure 4.** Confusion matrices of the joint model on the internal TN5000
+test set (left) and external TN3K test set (right) at the Youden-optimal
+threshold.
+
+**Figure 5.** Three-arm ablation on the ThyroidXL test cohort (n = 739
+nodules, mean frame aggregation): ROC curves of image-only, clinical-only and
+fused models.
+
+**Figure 6.** Calibration reliability plots of the three ablation models on
+the ThyroidXL test cohort.
+
+**Figure 7.** Decision curves of the three ablation models on the ThyroidXL
+test cohort, reporting net benefit across threshold probabilities.
+
 ## References
 
 1. Mu G, Liu J, Li X, et al. Mapping global epidemiology of thyroid nodules among general population: a systematic review and meta-analysis. *Frontiers in Oncology*. 2022;12:1029926. doi:10.3389/fonc.2022.1029926.
