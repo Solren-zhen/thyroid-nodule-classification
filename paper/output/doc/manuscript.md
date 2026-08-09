@@ -559,7 +559,15 @@ should be re-tested under genuine multi-device domain shift.
   at https://huggingface.co/datasets/hunglc007/ThyroidXL under gated access;
   access was granted and all 11,635 images were used in this study.
 - Code availability: GitHub repository (URL to be inserted before submission).
-- AI disclosure: ARS disclosure statement [TBD].
+- Use of artificial intelligence: During the preparation of this work, the
+  authors used Claude (Anthropic) as a writing and code-assistance tool to help
+  draft and revise the manuscript text, to assist with data-processing and
+  experiment scripts, and to help format the reference list. The authors
+  reviewed and verified all AI-assisted outputs, take full responsibility for
+  the content of the manuscript, and confirm that no AI tool was used to
+  generate scientific conclusions, interpret data, or make decisions about the
+  study design or analysis. All methods and results were independently
+  produced, checked and are reproducible from the public datasets described.
 
 ## Figure Legends
 
@@ -628,7 +636,7 @@ test cohort, reporting net benefit across threshold probabilities.
 
 19. Xiang T, Hu Z. ThyroFusion: a multi-modal deep learning framework integrating vision and language for thyroid nodule malignancy risk assessment. *Journal of Imaging Informatics in Medicine*. 2026. doi:10.1007/s10278-026-01964-6.
 
-20. Multi-modal ultrasound radiomics combined with clinical features for thyroid nodule classification. *Ultrasound in Medicine and Biology*. 2026. [TBD: verify exact citation]
+20. Li Y, Yan X, Li J, et al. Differentiating mummified thyroid nodules from papillary thyroid carcinoma: a machine learning approach using multi-modal ultrasound radiomics. *Ultrasound in Medicine and Biology*. 2026;52(6). doi:10.1016/j.ultrasmedbio.2026.05.007.
 
 21. Sharifi et al. Automated ACR TI-RADS classification from thyroid ultrasound images using deep learning. 2025.
 
