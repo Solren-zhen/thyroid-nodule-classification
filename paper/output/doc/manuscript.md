@@ -353,7 +353,12 @@ The fusion model achieved the highest nodule-level AUC (0.947, 95% CI
 0.932–0.960), followed by the image-only model (0.939, 95% CI 0.924–0.954) and
 the clinical-only model (0.814, 95% CI 0.782–0.847). The fused model also showed
 the highest AUPRC (0.939 vs. 0.930 for image-only) and specificity (0.940 vs.
-0.909), at a modest cost in sensitivity (0.725 vs. 0.779). The clinical-only
+0.909), at a modest cost in sensitivity (0.725 vs. 0.779). At the operating
+point optimised on the test cohort, the fused model achieved balanced positive
+and negative predictive values (PPV 0.844, NPV 0.908), comparable to the
+image-only model (PPV 0.815, NPV 0.920) and above the clinical-only model (PPV
+0.688, NPV 0.835), confirming that the fusion gain in discrimination does not
+come at the cost of poorer predictive values (Figure 8). The clinical-only
 model, using only the five structured features, was markedly inferior
 (AUPRC 0.735), and its Youden-optimal threshold degenerated to predicting all
 nodules as benign (sensitivity 0.00, specificity 1.00), reflecting both the
@@ -595,6 +600,11 @@ the ThyroidXL test cohort.
 
 **Figure 7.** Decision curves of the three ablation models on the ThyroidXL
 test cohort, reporting net benefit across threshold probabilities.
+
+**Figure 8.** Threshold sensitivity analysis on the ThyroidXL test cohort:
+(a) sensitivity and specificity as a function of the decision threshold, and
+(b) positive predictive value as a function of the threshold, for the three
+ablation models.
 
 ## References
 
