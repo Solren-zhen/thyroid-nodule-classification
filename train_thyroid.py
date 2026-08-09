@@ -187,6 +187,8 @@ def main():
     parser.add_argument("--save_dir", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--workers", type=int, default=None)
+    parser.add_argument("--clinical_columns", type=str, default=None,
+                        help="逗号分隔临床特征列名；ThyroidXL 用 tirads,width_mm,height_mm,age,gender")
     args = parser.parse_args()
 
     cfg = get_thyroid_config()
@@ -195,6 +197,9 @@ def main():
     if args.batch_size: cfg.batch_size = args.batch_size
     if args.lr: cfg.lr = args.lr
     if args.workers is not None: cfg.num_workers = args.workers
+    if args.clinical_columns:
+        cfg.clinical_columns = [c.strip() for c in args.clinical_columns.split(",") if c.strip()]
+        cfg.clinical_feature_dim = len(cfg.clinical_columns)
     cfg.encoder_pretrained = args.pretrained
     cfg.seed = args.seed
 
