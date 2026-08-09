@@ -116,10 +116,11 @@ def compute_metrics(labels: np.ndarray, probs: np.ndarray, threshold: float = 0.
 
 # ── 训练循环 ─────────────────────────────────────────
 
-def train_one_epoch(model, loader, optimizer, scaler, device, use_amp) -> float:
+def train_one_epoch(model, loader, optimizer, scaler, device, use_amp,
+                    pos_weight: float = 1.0) -> float:
     model.train()
     total_loss = 0.0
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([pos_weight], device=device))
     pbar = tqdm(loader, desc="[train]", leave=False)
     for batch in pbar:
         labels = batch["label"].to(device).unsqueeze(1)
@@ -189,6 +190,8 @@ def main():
     parser.add_argument("--workers", type=int, default=None)
     parser.add_argument("--clinical_columns", type=str, default=None,
                         help="逗号分隔临床特征列名；ThyroidXL 用 tirads,width_mm,height_mm,age,gender")
+    parser.add_argument("--pos_weight", type=float, default=1.0,
+                        help="BCEWithLogitsLoss pos_weight（缓解类别不平衡）；ThyroidXL 恶性 26.1% → ~0.35")
     args = parser.parse_args()
 
     cfg = get_thyroid_config()
@@ -286,7 +289,8 @@ def main():
     }
 
     for epoch in range(1, cfg.epochs + 1):
-        loss = train_one_epoch(model, train_loader, optimizer, scaler, device, use_amp)
+        loss = train_one_epoch(model, train_loader, optimizer, scaler, device, use_amp,
+                               pos_weight=args.pos_weight)
         val = evaluate(model, val_loader, device)
 
         if isinstance(scheduler, ReduceLROnPlateau):

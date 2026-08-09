@@ -49,6 +49,8 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--aggregate", type=str, default="none", choices=["none", "mean", "max", "majority"],
                         help="按 patient_id 分组聚合概率（多图/结节）；mean/max/majority 同 eval_thywise")
+    parser.add_argument("--tta", action="store_true", default=False,
+                        help="测试时增强：5 视图（原图+水平/垂直翻转+旋转±90°）概率平均")
     parser.add_argument("--clinical_columns", type=str, default=None,
                         help="逗号分隔的临床特征列名，默认用 ACR 6 列；ThyroidXL 用 "
                              "tirads,width_mm,height_mm,age,gender")
@@ -98,10 +100,29 @@ def main():
             clinical = batch["clinical"].to(device)
             if model.use_image:
                 images = batch["image"].to(device)
-                outputs = model(images=images, clinical=clinical)
+                if args.tta:
+                    # 测试时增强：5 视图（原图 + 水平/垂直翻转 + 旋转±90°）概率平均
+                    views = [images]
+                    if hasattr(torch, "flip"):
+                        views.append(torch.flip(images, dims=[3]))          # 水平翻转
+                        views.append(torch.flip(images, dims=[2]))          # 垂直翻转
+                        views.append(torch.rot90(images, 1, dims=[2, 3]))   # 旋转 +90
+                        views.append(torch.rot90(images, -1, dims=[2, 3]))  # 旋转 -90
+                    probs_acc = None
+                    for v in views:
+                        o = model(images=v, clinical=clinical)
+                        if probs_acc is None:
+                            probs_acc = o["probs"]
+                        else:
+                            probs_acc = probs_acc + o["probs"]
+                    p_batch = (probs_acc / len(views)).cpu().numpy().flatten()
+                else:
+                    outputs = model(images=images, clinical=clinical)
+                    p_batch = outputs["probs"].cpu().numpy().flatten()
             else:
                 outputs = model(clinical=clinical)
-            all_probs.append(outputs["probs"].cpu().numpy().flatten())
+                p_batch = outputs["probs"].cpu().numpy().flatten()
+            all_probs.append(p_batch)
             all_labels.append(batch["label"].numpy().flatten())
             all_pids.append(batch["patient_id"])
 
