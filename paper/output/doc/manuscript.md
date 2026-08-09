@@ -200,9 +200,14 @@ five features.
 The multimodal classifier consisted of three components. The image encoder
 was an EfficientNetV2-S backbone pre-trained on ImageNet, with the final
 classification layer replaced by a projection head producing a 512-dimensional
-embedding. The clinical encoder was a multi-layer perceptron mapping the
-five-dimensional clinical vector (TI-RADS total score, maximum diameter, age,
-sex) to a 64-dimensional embedding. The two
+embedding. EfficientNetV2-S was chosen as the image encoder because its
+compound-scaling design offers a favourable accuracy/efficiency trade-off, is
+well-suited to the 6 GB GPU memory budget available for training, and has been
+widely used for medical-image classification including thyroid ultrasound [7];
+we did not perform an architecture search, and other backbones may behave
+differently (Section 4, Limitations). The clinical encoder was a multi-layer
+perceptron mapping the five-dimensional clinical vector (TI-RADS total score,
+maximum diameter, age, sex) to a 64-dimensional embedding. The two
 embeddings were concatenated and passed to a prediction head with hidden
 dimensions [256, 128] and a dropout of 0.3, producing a malignancy probability.
 Three ablation configurations were compared: image-only (clinical branch
@@ -240,10 +245,14 @@ provided in the supplementary material).
 
 Discrimination was quantified by the AUC with 95% CIs obtained by bootstrap
 resampling (n = 1,000 stratified samples). Sensitivity and specificity were
-reported at the Youden-optimal operating point. Calibration was quantified by
-the expected calibration error (ECE). Clinical utility was assessed by
-decision curve analysis (DCA), reporting net benefit across threshold
-probabilities. Reporting follows the STARD 2015 [14] and TRIPOD+AI [15] checklists.
+reported at the Youden-optimal operating point determined on the respective
+validation cohort; for external cohorts the operating threshold was carried
+over from the training cohort and not re-optimised, so that reported
+sensitivity/specificity reflect threshold transferability across datasets
+rather than in-sample tuning. Calibration was quantified by the expected
+calibration error (ECE). Clinical utility was assessed by decision curve
+analysis (DCA), reporting net benefit across threshold probabilities. Reporting
+follows the STARD 2015 [14] and TRIPOD+AI [15] checklists.
 
 ## 3. Results
 
@@ -462,8 +471,13 @@ parameters. Third, it does not use structured clinical features. Our results
 are not directly comparable in absolute terms because of these methodological
 differences (and the lower AUC of our image-only model on ThyroidXL reflects,
 at least in part, the absence of mask guidance and patient-level attention
-aggregation); the present study instead focuses on the questions that
-approach does not address — cross-dataset domain-shift quantification and the
+aggregation). To quantify the effect of aggregation choice, we additionally
+evaluated max-frame aggregation within each nodule, which yielded a lower AUC
+(0.927 vs. 0.939 for mean aggregation), confirming that the frame-aggregation
+strategy materially affects performance and that the reported figures are
+specific to the mean-aggregation protocol used throughout this study. The
+present study instead focuses on the questions that the mask-based approach
+does not address — cross-dataset domain-shift quantification and the
 incremental value of structured clinical features.
 
 **Calibration and decision-curve reporting.** Discrimination alone is
