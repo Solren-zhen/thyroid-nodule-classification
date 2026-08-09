@@ -19,10 +19,10 @@ few integrate structured clinical features such as the American College of
 Radiology (ACR) Thyroid Imaging Reporting and Data System (TI-RADS) descriptors.
 
 **Methods.** We developed a multimodal framework combining an EfficientNetV2-S
-image encoder with a clinical encoder that consumes six structured TI-RADS
-descriptors (composition, echogenicity, shape, margin, echogenic foci, and
-maximum diameter). Models were trained on 5,000 ultrasound images from the
-TN5000 dataset with patient-level grouped splitting to prevent data leakage,
+image encoder with a clinical encoder that consumes five structured clinical
+features (expert ACR TI-RADS total score, maximum diameter, age, and sex).
+Models were trained on the ThyroidXL dataset with patient-level grouped
+splitting to prevent data leakage,
 and validated internally on held-out test images. External validation was
 performed on two independent public cohorts: TN3K (3,493 images from a
 different institution and device setting) and Thy-Wise (29,070 pathology-
@@ -92,8 +92,9 @@ classification accuracy and cross-dataset generalisation relative to
 image-only models.
 
 In this study, we develop and systematically evaluate a multimodal framework
-that combines an EfficientNetV2 image encoder with a clinical encoder for six
-structured TI-RADS descriptors. Our contributions are threefold: (1) we
+that combines an EfficientNetV2 image encoder with a clinical encoder for five
+structured clinical features (expert TI-RADS total score and nodule
+demographics). Our contributions are threefold: (1) we
 conduct a head-to-head ablation of image-only, clinical-only and fused
 models; (2) we quantify cross-dataset domain shift by externally validating on
 an independent multi-device dataset and evaluate whether joint multi-dataset
@@ -146,18 +147,20 @@ filenames were treated as patient identifiers for grouped splitting.
 
 ### 2.2 Clinical features
 
-Six structured clinical features were defined following the ACR TI-RADS
-lexicon: composition (0 = cystic/spongiform, 1 = mixed, 2 = solid),
-echogenicity (0 = anechoic, 1 = hyper/isoechoic, 2 = hypoechoic,
-3 = very hypoechoic), shape (0 = wider-than-tall, 3 = taller-than-wide),
-margin (0 = smooth, 1 = ill-defined, 2 = lobulated/irregular,
-3 = extrathyroidal extension), echogenic foci (0 = none/large comet-tail,
-1 = macrocalcification, 2 = peripheral, 3 = punctate), and maximum diameter
-in millimetres. [TBD: data source and annotation protocol — feature values will
-be obtained either from ThyroidXL metadata (pending approval), from author
-annotation following ACR TI-RADS guidelines, or from a TI-RADS feature table
-provided by the Thy-Wise authors. Missing-value handling will be described
-once the source is finalised.]
+Five structured clinical features were used as the clinical input to the
+fusion model. The ThyroidXL dataset provides, for each nodule, an expert ACR
+TI-RADS total score (1–5), the maximum diameter in millimetres (derived from
+the nodule width and height recorded at acquisition), the patient age (years),
+and sex (1 = male, 2 = female). These five values — TI-RADS total score,
+maximum diameter, age, and sex — were concatenated into a five-dimensional
+clinical vector. The ACR TI-RADS total score is a device-independent,
+semantically defined risk-stratification summary derived from composition,
+echogenicity, shape, margin and echogenic-foci descriptors [3], and was
+therefore expected to be less affected by acquisition variability than raw
+pixel statistics. Unlike the image modality, these features do not require
+nodule segmentation or manual lesion cropping at inference time. Missing
+clinical values were encoded as zero and no nodule in ThyroidXL lacked the
+five features.
 
 ### 2.3 Model architecture
 
@@ -165,7 +168,8 @@ The multimodal classifier consisted of three components. The image encoder
 was an EfficientNetV2-S backbone pre-trained on ImageNet, with the final
 classification layer replaced by a projection head producing a 512-dimensional
 embedding. The clinical encoder was a multi-layer perceptron mapping the
-six-dimensional TI-RADS vector to a 64-dimensional embedding. The two
+five-dimensional clinical vector (TI-RADS total score, maximum diameter, age,
+sex) to a 64-dimensional embedding. The two
 embeddings were concatenated and passed to a prediction head with hidden
 dimensions [256, 128] and a dropout of 0.3, producing a malignancy probability.
 Three ablation configurations were compared: image-only (clinical branch
@@ -344,8 +348,9 @@ indicate that device-agnostic priors — such as structured clinical features �
 may be required in addition.
 
 **Structured TI-RADS features as device-independent priors.** The central
-hypothesis of this study is that ACR TI-RADS descriptors, which are defined
-semantically and therefore largely independent of acquisition hardware, could
+hypothesis of this study is that the ACR TI-RADS score, which summarises
+semantic descriptors and is therefore largely independent of acquisition
+hardware, could
 stabilise predictions across datasets. [TBD: fusion results — report the
 image-only vs clinical-only vs fusion ablation on internal and external data;
 if the fused model narrows the external gap, this supports the hypothesis.]
