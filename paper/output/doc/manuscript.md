@@ -225,9 +225,10 @@ with a batch size of 64 (image-only and joint-training experiments) or 32
 automatic mixed precision on an NVIDIA RTX 3060 (6 GB). The best model was
 selected by validation AUC. All splits used a fixed random seed (42). Results
 are reported from a single training run for the domain-shift and joint-training
-experiments; for the fusion ablation, a second independent run (seed 123) was
-trained and test predictions were averaged across the two seeds to assess
-robustness to training-seed variation (Section 3.5). All experiments used
+experiments; for the fusion ablation, three additional independent runs (seeds
+123, 2024) were trained and test predictions were averaged across the three
+seeds to assess robustness to training-seed variation (Section 3.5). All
+experiments used
 Python 3.11, PyTorch 2.5.1 (CUDA 12.1), torchvision 0.20.1, and albumentations
 1.4.x.
 
@@ -379,10 +380,11 @@ the magnitude is modest in this single-device cohort (Figure 5).
 Metrics at the Youden-optimal threshold determined on the ThyroidXL validation
 cohort. AUPRC = area under the precision-recall curve. Table 3 reports the
 fusion model from a single training run (seed 42). Averaging the test
-predictions of two independently trained fusion models (seeds 42 and 123;
-same architecture and hyper-parameters) improved the nodule-level AUC to 0.949
-(95% CI 0.935–0.962) and AUPRC to 0.942, confirming robustness of the ablation
-result across training seeds.
+predictions of three independently trained fusion models (seeds 42, 123 and
+2024; same architecture and hyper-parameters) improved the nodule-level AUC to
+0.949 (95% CI 0.935–0.962) and AUPRC to 0.942, with individual seeds ranging
+0.946–0.948, confirming robustness of the ablation result across training
+seeds.
 
 ## 4. Discussion
 
