@@ -47,6 +47,8 @@ def main():
     parser.add_argument("--mode", type=str, default="real", choices=["real", "mock"])
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--aggregate", type=str, default="none", choices=["none", "mean", "max", "majority"],
+                        help="按 patient_id 分组聚合概率（多图/结节）；mean/max/majority 同 eval_thywise")
     parser.add_argument("--clinical_columns", type=str, default=None,
                         help="逗号分隔的临床特征列名，默认用 ACR 6 列；ThyroidXL 用 "
                              "tirads,width_mm,height_mm,age,gender")
@@ -90,7 +92,7 @@ def main():
     device = get_device()
     model.to(device)
 
-    all_probs, all_labels = [], []
+    all_probs, all_labels, all_pids = [], [], []
     with torch.no_grad():
         for batch in loader:
             clinical = batch["clinical"].to(device)
@@ -101,13 +103,38 @@ def main():
                 outputs = model(clinical=clinical)
             all_probs.append(outputs["probs"].cpu().numpy().flatten())
             all_labels.append(batch["label"].numpy().flatten())
+            all_pids.append(batch["patient_id"])
 
     probs = np.concatenate(all_probs)
     labels = np.concatenate(all_labels).astype(int)
+    pids = np.concatenate(all_pids) if all_pids and all_pids[0] is not None else None
+
+    # 可选：按 patient_id（结节）聚合
+    if args.aggregate != "none" and pids is not None:
+        groups = {}
+        for pid, p in zip(pids, probs):
+            groups.setdefault(pid, []).append(p)
+        agg_probs, agg_labels = [], []
+        for pid, ps in groups.items():
+            if args.aggregate == "mean":
+                ap = float(np.mean(ps))
+            elif args.aggregate == "max":
+                ap = float(np.max(ps))
+            else:  # majority vote
+                ap = float((np.array(ps) >= 0.5).mean())
+            agg_probs.append(ap)
+        probs = np.array(agg_probs)
+        # 重新按 patient 取标签（同组标签一致，取首个）
+        labels = np.array([int(labels[np.where(pids == pid)[0][0]]) for pid in groups])
+        tag = f"per-nodule ({args.aggregate})"
+        print(f"  [结节聚合] {tag}: {len(groups)} 结节")
+    else:
+        tag = "per-image"
+
     m = compute_metrics(labels, probs)
 
     print(f"\n{'='*56}")
-    print(f"  甲状腺分类评估 | 权重: {weights.name} | 分割: {args.split}")
+    print(f"  甲状腺分类评估 | 权重: {weights.name} | 分割: {args.split} | {tag}")
     print(f"{'='*56}")
     print(f"  AUC        : {m['auc']:.4f} (95% CI {m['auc_ci'][0]:.4f}-{m['auc_ci'][1]:.4f})")
     print(f"  AUPRC      : {m['auprc']:.4f}")
@@ -121,7 +148,7 @@ def main():
     dca = decision_curve(labels, probs)
     out = {"metrics": {k: (list(v) if isinstance(v, tuple) else v) for k, v in m.items()},
            "decision_curve": dca, "n": int(len(labels)),
-           "pos_rate": float(labels.mean())}
+           "pos_rate": float(labels.mean()), "tag": tag}
     out_path = weights.parent / f"eval_{args.split}.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
