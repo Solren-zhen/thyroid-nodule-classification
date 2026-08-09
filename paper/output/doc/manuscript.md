@@ -367,6 +367,17 @@ imbalance of the test cohort. The image-only model was best calibrated
 (ECE 0.087), while the clinical-only model was substantially miscalibrated
 (ECE 0.248) and the fused model intermediate (ECE 0.118).
 
+As a clinical reference point, the expert ACR TI-RADS total score alone — a
+widely used risk-stratification tool — achieved a nodule-level AUC of 0.929
+(AUPRC 0.887) on the same test cohort, with 79.3% sensitivity and 95.6%
+specificity at a TI-RADS-4.5 threshold. The image-only model (0.939) and the
+fused model (0.947) both exceeded this expert-scored baseline, indicating that
+the deep models extract discriminative information beyond the TI-RADS total
+score, although the incremental gain over the clinical reference is modest
+(Δ AUC +0.018 for the fused model). The clinical-only MLP model (0.814) fell
+below the direct TI-RADS score (0.929), reflecting information loss in
+regressing the raw five features to a single risk estimate.
+
 These results indicate that image features dominate the classification task,
 and that adding expert TI-RADS and demographic features yields a small but
 consistent improvement in discrimination (Δ AUC +0.007), AUPRC (+0.009) and
