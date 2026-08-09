@@ -113,7 +113,7 @@ def main():
     def show(tag, m, n, pos_rate):
         print(f"\n--- {tag} (n={n}, 恶性率 {pos_rate:.1%}) ---")
         print(f"AUC {m['auc']:.4f} (95%CI {m['auc_ci'][0]:.4f}-{m['auc_ci'][1]:.4f}) | "
-              f"Sens {m['sensitivity']:.4f} Spec {m['specificity']:.4f} | "
+              f"AUPRC {m['auprc']:.4f} | Sens {m['sensitivity']:.4f} Spec {m['specificity']:.4f} | "
               f"ACC {m['acc']:.4f} | ECE {m['ece']:.4f}")
 
     show("per-image", compute_metrics(labels, probs), len(labels), labels.mean())
@@ -126,7 +126,7 @@ def main():
         m = compute_metrics(ys, prs)
         show(f"per-nodule ({method})", m, len(ys), ys.mean())
         results[f"nodule_{method}"] = {
-            "auc": m["auc"], "auc_ci": list(m["auc_ci"]),
+            "auc": m["auc"], "auc_ci": list(m["auc_ci"]), "auprc": m["auprc"],
             "sensitivity": m["sensitivity"], "specificity": m["specificity"],
             "acc": m["acc"], "ece": m["ece"], "n": int(len(ys)),
             "pos_rate": float(ys.mean()),
