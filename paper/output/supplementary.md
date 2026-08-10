@@ -4,17 +4,17 @@
 features for thyroid nodule malignancy classification: a multi-dataset validation study.
 
 All metrics in this supplement use the same protocols as the main manuscript:
-AUC with bootstrap 95% confidence intervals (n = 1,000 stratified samples);
-sensitivity and specificity at the Youden-optimal operating point determined on the
-respective validation cohort; ECE = expected calibration error.
+AUC with bootstrap 95% confidence intervals (n = 2,000 samples); sensitivity
+and specificity at a fixed 0.5 decision threshold; ECE = expected calibration
+error (10 bins).
 
 ---
 
 ## Supplementary Table S1. Per-image classification performance across datasets
 
-Per-image statistics are reported separately from the per-nodule results in the main
+Per-image statistics are reported separately from the nodule-level results in the main
 manuscript because a nodule may be depicted in multiple frames (Thy-Wise: median 7,
-range 1–49; ThyroidXL: mean 2.8). Per-image analysis weights nodules with more frames
+range 1–48; ThyroidXL: mean 2.8). Per-image analysis weights nodules with more frames
 more heavily and is provided here for completeness.
 
 ### S1a. ThyroidXL held-out test cohort (per-image, n = 2,094 images; 46.5% malignant)
@@ -27,7 +27,7 @@ more heavily and is provided here for completeness.
 
 Corresponding nodule-level (mean aggregation, n = 739) values are reported in
 Table 3 of the main manuscript (0.939 / 0.814 / 0.947). Fusion improves over
-image-only at both the per-image (+0.009) and per-nodule (+0.007) level.
+image-only at both the per-image (+0.009) and nodule-level (+0.007) level.
 
 ### S1b. Thy-Wise external cohort (per-image, n = 29,070 images; 28.9% malignant)
 
@@ -50,7 +50,7 @@ primary external estimate.
 | TN3K test | Joint | 0.814 (0.779–0.846) | 0.674 | 0.788 | 0.744 | 0.051 | 614 |
 
 For these two datasets each image corresponds to an independent nodule, so per-image
-and per-nodule statistics coincide.
+and nodule-level statistics coincide.
 
 ---
 
