@@ -30,7 +30,8 @@ curve analysis (DCA).
 internal test AUC of 0.920 (95% CI 0.897–0.941) but dropped to 0.713 (95% CI
 0.696–0.731) on external TN3K and 0.608 (95% CI 0.589–0.628) on Thy-Wise
 (per-nodule), demonstrating substantial cross-dataset domain shift. Joint
-training raised the external TN3K AUC to 0.814 (95% CI 0.779–0.846) and the
+training raised the external TN3K AUC (official test) from 0.729 (95% CI
+0.685–0.767) to 0.814 (95% CI 0.779–0.846, matched Δ = +0.085) and the
 Thy-Wise per-nodule AUC to 0.710 (95% CI 0.693–0.727, Δ = +0.102), showing
 that the joint-training gain transfers to unseen distributions beyond the
 cohort added during training. In track B, on
@@ -279,22 +280,25 @@ calibration error was 0.035.
 Applying the single-dataset model to the full TN3K cohort (3,493 images from
 a different institution and device setting) yielded an AUC of 0.713 (95% CI
 0.696–0.731) with sensitivity 58.3% and specificity 72.7% (expected
-calibration error 0.136). The 0.21 decrease in AUC relative to internal
-testing quantifies the cross-dataset domain shift that is frequently
-underestimated in single-centre evaluations.
+calibration error 0.136). On the official TN3K test split (n = 614), the same
+model achieved an AUC of 0.729 (95% CI 0.685–0.767), which we use as the
+matched baseline for the joint-training comparison below. The 0.21 decrease
+in AUC relative to internal testing quantifies the cross-dataset domain shift
+that is frequently underestimated in single-centre evaluations.
 
 ### 3.4 Joint multi-dataset training improves internal and external performance
 
-Joint training on TN5000 together with the TN3K training subset (7,129
-images in total) modestly improved internal discrimination while
-substantially improving external performance. The joint model reached a
-validation AUC of 0.932 (95% CI 0.910–0.953) and a held-out TN5000 test AUC
-of 0.931 (95% CI 0.910–0.951) with sensitivity 94.8% and specificity 75.7%
-(expected calibration error 0.020). On the official TN3K test set (n = 614),
-external AUC improved from 0.713 to 0.814 (95% CI 0.779–0.846), with
-sensitivity 67.4%, specificity 78.8% and expected calibration error 0.051
-(Table 2; Figures 2–4). Joint training therefore recovered the large
-majority of the domain-shift gap on the external TN3K cohort.
+Joint training on TN5000 together with the TN3K training subset (a combined
+manifest of 7,129 images: 6,379 training plus 750 validation) modestly
+improved internal discrimination while substantially improving external
+performance. The joint model reached a validation AUC of 0.932 (95% CI
+0.910–0.953) and a held-out TN5000 test AUC of 0.931 (95% CI 0.910–0.951)
+with sensitivity 94.8% and specificity 75.7% (expected calibration error
+0.020). On the official TN3K test set (n = 614), external AUC improved from
+0.729 to 0.814 (95% CI 0.779–0.846; matched Δ = +0.085), with sensitivity
+67.4%, specificity 78.8% and expected calibration error 0.051 (Table 2;
+Figures 2–4). Joint training therefore recovered approximately half of the
+domain-shift gap on the external TN3K cohort.
 
 The gain transferred to a second, fully independent cohort. Applied to
 Thy-Wise (3,954 pathology-confirmed nodules from a third institution), the
@@ -306,7 +310,7 @@ computation. Per-image statistics were markedly lower (single-dataset AUC
 0.540; joint AUC 0.607; Supplementary Table S1b), reflecting the presence of
 multiple, partly-redundant frames per nodule; nodule-level aggregation was
 therefore used as the primary external estimate. The joint-training gain on
-Thy-Wise (+0.102) was comparable to that on TN3K (+0.100), showing that the
+Thy-Wise (+0.102) was comparable to that on TN3K (+0.085), showing that the
 benefit of multi-dataset training transfers to unseen distributions.
 
 **Table 2.** Classification performance of image-only models across datasets.
@@ -315,16 +319,19 @@ benefit of multi-dataset training transfers to unseen distributions.
 |---|---|---|---|---|---|---|
 | **TN5000-only (image)** | | | | | | |
 | TN5000 internal test | 0.920 (0.897–0.941) | 91.1% | 72.4% | 85.9% | 0.035 | 750 |
-| TN3K external (full cohort) | 0.713 (0.696–0.731) | 58.3% | 72.7% | 67.7% | 0.136 | 3,493 |
+| TN3K external (official test) | 0.729 (0.685–0.767) | 51.3% | 78.0% | 67.8% | 0.120 | 614 |
+| TN3K external (full cohort)^a^ | 0.713 (0.696–0.731) | 58.3% | 72.7% | 67.7% | 0.136 | 3,493 |
 | Thy-Wise external (per-nodule mean) | 0.608 (0.589–0.628) | 18.6% | 90.0% | 70.5% | 0.057 | 3,954 |
 | **Joint (TN5000 + TN3K train, image)** | | | | | | |
 | TN5000 internal test | 0.931 (0.910–0.951) | 94.8% | 75.7% | 89.5% | 0.020 | 750 |
 | TN3K external (official test) | 0.814 (0.779–0.846) | 67.4% | 78.8% | 74.4% | 0.051 | 614 |
 | Thy-Wise external (per-nodule mean) | 0.710 (0.693–0.727) | 25.7% | 90.4% | 72.7% | 0.057 | 3,954 |
-| **Δ (Joint − TN5000-only)** | | | | | | |
+| **Δ (Joint − TN5000-only, official test)** | | | | | | |
 | TN5000 internal | +0.011 | +3.7 pp | +3.3 pp | +3.6 pp | −0.015 | |
-| TN3K external | +0.100 | +9.1 pp | +6.1 pp | +6.7 pp | −0.085 | |
+| TN3K external | +0.085 | +16.1 pp | +0.8 pp | +6.7 pp | −0.069 | |
 | Thy-Wise external | +0.102 | +7.1 pp | +0.4 pp | +2.2 pp | 0.000 | |
+
+^a^ TN3K full-cohort AUC shown for domain-shift illustration only; the matched Δ uses the official test split (n = 614) for both models.
 
 All metrics computed at a fixed 0.5 decision threshold. Sensitivity and specificity for Thy-Wise use mean probability aggregation within each nodule. Δ = Joint minus TN5000-only; pp = percentage points.
 
@@ -388,7 +395,10 @@ models were trained with different seeds (123 and 2024); averaging the test
 predictions across the three models improved the nodule-level AUC to
 0.949 (95% CI 0.935–0.962) and AUPRC to 0.942, with individual seeds ranging
 0.946–0.948, confirming robustness of the ablation result across training
-seeds.
+seeds. The two additional runs used a class-weighted loss
+(pos_weight = 0.35) to offset the class imbalance of the ThyroidXL
+development set, whereas the reported seed-42 model used the unweighted loss
+(pos_weight = 1.0); individual seed AUCs remained consistent (0.946–0.948).
 
 ### 3.6 Subgroup analysis
 
@@ -447,9 +457,10 @@ image-only model trained on a single large dataset achieved high internal
 discrimination (test AUC 0.920) but lost substantial performance on an
 independent external dataset (AUC 0.713), quantifying a 0.21 cross-dataset
 domain-shift gap that is invisible to single-cohort evaluation. Second, joint
-training on the combined training images of two datasets (7,129 images)
-recovered the majority of this gap on TN3K (external AUC 0.814, +0.10) with
-only a modest internal change (AUC 0.931, +0.01). Third,
+training on the combined training images of two datasets (7,129 images: 6,379
+training plus 750 validation) recovered approximately half of this gap on
+TN3K (external AUC 0.814 vs. 0.729 on the matched official test, Δ = +0.085)
+with only a modest internal change (AUC 0.931, +0.01). Third,
 on a second, fully independent pathology-confirmed cohort (Thy-Wise; 3,954
 nodules), joint training provided a comparable gain (nodule-level AUC
 0.608 → 0.710, Δ = +0.102), demonstrating that external performance
@@ -476,9 +487,9 @@ recommendation that external validation is a prerequisite for deployment [16].
 
 **Joint multi-dataset training helps the cohort added to training, and the
 gain transfers to unseen cohorts.** Adding TN3K training images to the TN5000 pool
-improved external AUC on the official TN3K test set from 0.713 to 0.814
-(+0.10), restored the majority of the domain-shift deficit, and improved
-external specificity from 72.7% to 78.8%. Multi-dataset pooling is therefore a
+improved external AUC on the official TN3K test set from 0.729 to 0.814
+(+0.085, matched), restored approximately half of the domain-shift deficit,
+and improved external specificity from 78.0% to 78.8%. Multi-dataset pooling is therefore a
 pragmatic robustness strategy when data from the target cohort can be included
 in training. On the fully independent Thy-Wise cohort, joint training also
 improved nodule-level AUC, from 0.608 to 0.710 (+0.102), a gain comparable to
@@ -610,8 +621,9 @@ strengthen the clinical utility of the framework.
 Using four public datasets, we showed that a thyroid nodule
 classification model trained on a single dataset achieves high internal AUC
 but loses substantial performance externally (0.92 to 0.71 on TN3K); that joint
-multi-dataset training recovers the majority of that gap on the cohort added
-to training (external AUC 0.814, +0.10); and that on a second, unseen external
+multi-dataset training recovers approximately half of that gap on the cohort
+added to training (external AUC 0.814 vs. 0.729 on the matched official test,
+Δ = +0.085); and that on a second, unseen external
 cohort (Thy-Wise), the same joint training provides a comparable gain
 (nodule-level AUC 0.608 → 0.710, +0.102). External
 performance is therefore strongly cohort-dependent, yet the benefit of
