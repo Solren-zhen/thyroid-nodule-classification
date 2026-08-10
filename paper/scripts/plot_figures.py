@@ -99,7 +99,8 @@ def dca_refs(pt, pos_rate):
 def main():
     device = get_device()
     # Joint 模型（TN5000+TN3K，H1 修复后重跑 2026-08-10）
-    weights = PROJ / "checkpoints" / "thyroid" / "image" / "best.pt"
+    # 注：image/best.pt 是 ThyroidXL image-only（fig5-7/Table 3 用），joint 模型在备份目录
+    weights = PROJ / "checkpoints" / "thyroid" / "image_backup" / "best_joint_20260810_fixed.pt"
     model = load_model(weights).to(device)
     print("model loaded")
 

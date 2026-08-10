@@ -9,48 +9,32 @@ report single-centre, single-dataset results without external validation, and
 few integrate structured clinical features such as the American College of
 Radiology (ACR) Thyroid Imaging Reporting and Data System (TI-RADS) descriptors.
 
-**Methods.** We report two complementary analyses. In the first (track A),
-an image-only EfficientNetV2-S model trained on the TN5000 dataset was
-evaluated on two independent public cohorts, TN3K (3,493 images from a
-different institution and device setting) and Thy-Wise (29,070
-pathology-confirmed images from a third institution), to quantify
-cross-dataset domain shift, and a joint model trained on TN5000 together
-with TN3K training images was compared against the single-dataset model. In
-the second (track B), a multimodal framework combining the same image encoder
-with a clinical encoder consuming five structured clinical features (expert
-ACR TI-RADS total score, nodule width, nodule height, age, and sex) was
-trained on the ThyroidXL dataset with patient-level grouped splitting and
-compared against image-only and clinical-only configurations in a three-arm
-ablation. Performance was assessed using the area under the receiver
-operating characteristic curve (AUC) with bootstrap 95% confidence intervals
-(CI), sensitivity, specificity, expected calibration error (ECE), and decision
-curve analysis (DCA).
+**Methods.** In track A, an image-only EfficientNetV2-S model trained on
+TN5000 was evaluated on two external cohorts (TN3K and Thy-Wise), and a
+joint model additionally trained on TN3K images was compared with the
+single-dataset model to quantify cross-dataset domain shift. In track B, a
+multimodal model fusing the image encoder with five clinical features (ACR
+TI-RADS total score, nodule width and height, age, sex) was compared with
+image-only and clinical-only models on ThyroidXL. Performance was assessed
+using the area under the receiver operating characteristic curve (AUC) with
+bootstrap confidence intervals (CI), sensitivity, specificity, expected
+calibration error (ECE), and decision curve analysis.
 
-**Results.** In track A, the TN5000-trained image-only model achieved an
-internal test AUC of 0.920 (95% CI 0.897–0.941) but dropped to 0.713 (95% CI
-0.696–0.731) on external TN3K and 0.608 (95% CI 0.589–0.628) on Thy-Wise
-(nodule-level), demonstrating substantial cross-dataset domain shift. Joint
-training raised the external TN3K AUC (official test) from 0.729 (95% CI
-0.685–0.767) to 0.814 (95% CI 0.779–0.846, matched Δ = +0.085) and the
-Thy-Wise nodule-level AUC to 0.710 (95% CI 0.693–0.727, Δ = +0.102), showing
-that the joint-training gain transfers to unseen distributions beyond the
-cohort added during training. In track B, on
-the ThyroidXL cohort (2,094 test images, 739 nodules), fusing image features
-with structured clinical features achieved a nodule-level AUC of 0.947 (95% CI
-0.932–0.960), marginally above the image-only model (0.939, 95% CI 0.924–0.954)
-and well above the clinical-only model (0.814, 95% CI 0.782–0.847); image
-features dominated the fusion, and clinical features added a small but
-consistent gain.
+**Results.** In track A, the single-dataset model achieved an internal test
+AUC of 0.920 but dropped to 0.713 on external TN3K and 0.608 (nodule-level)
+on Thy-Wise. Joint training raised the TN3K test AUC from 0.729 to 0.814
+(matched Δ = +0.085) and the Thy-Wise nodule-level AUC to 0.710 (Δ = +0.102).
+In track B, fusion achieved a nodule-level AUC of 0.947, above the image-only
+(0.939) and clinical-only (0.814) models; image features dominated, and
+clinical features added a small but consistent gain.
 
-**Conclusions.** Across four public datasets spanning different institutions,
-devices and populations, image-only thyroid nodule classifiers achieved high
-internal AUC but lost substantial performance externally, quantifying
-cross-dataset domain shift; joint multi-dataset training recovered part of the
-gap on both the added and an unseen cohort. Adding structured clinical features
-(TI-RADS score, nodule width and height, age, sex) to image features yielded a
-small but consistent improvement in discrimination on the ThyroidXL cohort,
-supporting structured clinical priors as a complementary signal, although the
-gain was modest and image features remained dominant.
+**Conclusions.** Across four public datasets, image-only classifiers achieved
+high internal AUC but lost substantial performance externally, quantifying
+cross-dataset domain shift; joint multi-dataset training recovered part of
+the gap on both an added and an unseen cohort. Adding structured clinical
+features yielded a small but consistent improvement on ThyroidXL, supporting
+structured priors as a complementary signal while image features remained
+dominant.
 
 ## 1. Introduction
 
@@ -673,6 +657,18 @@ should be re-tested under genuine multi-device domain shift.
   generate scientific conclusions, interpret data, or make decisions about the
   study design or analysis. All methods and results were independently
   produced, checked and are reproducible from the public datasets described.
+- Consent for publication: Not applicable (no individual person's data are
+  presented; all images are de-identified and from public repositories).
+- Acknowledgements: The authors thank the developers of the TN5000, TN3K,
+  Thy-Wise and ThyroidXL datasets for making their data publicly available.
+- Authors' contributions: To be completed by the authors before submission.
+
+## Abbreviations
+
+ACR: American College of Radiology; AUC: area under the receiver operating
+characteristic curve; CI: confidence interval; DCA: decision curve analysis;
+ECE: expected calibration error; TI-RADS: Thyroid Imaging Reporting and Data
+System.
 
 ## Figure Legends
 
