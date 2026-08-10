@@ -98,13 +98,13 @@ def dca_refs(pt, pos_rate):
 
 def main():
     device = get_device()
-    # Joint 模型（TN5000+TN3K）；image/best.pt 现被 ThyroidXL image-only 占用
-    weights = PROJ / "checkpoints" / "thyroid" / "image_backup" / "best_joint_20260809.pt"
+    # Joint 模型（TN5000+TN3K，H1 修复后重跑 2026-08-10）
+    weights = PROJ / "checkpoints" / "thyroid" / "image" / "best.pt"
     model = load_model(weights).to(device)
     print("model loaded")
 
-    ds_in = ThyroidDataset(str(PROJ / "data" / "thyroid"), split="test", image_size=224,
-                           mock=False, split_by_group=True, seed=42)
+    ds_in = ThyroidDataset(str(PROJ / "data" / "thyroid_tn5000test"), split="test",
+                           image_size=224, mock=False, split_by_group=True, seed=42)
     ds_ext = ThyroidDataset(str(PROJ / "data" / "thyroid_tn3ktest"), split="test",
                             image_size=224, mock=False, split_by_group=True, seed=42)
     p_in, y_in = predict(model, ds_in, device)
@@ -118,9 +118,9 @@ def main():
     auc2 = sk_auc(fpr2, tpr2)
     fig, ax = plt.subplots(figsize=(6.2, 6))
     ax.plot(fpr1, tpr1, lw=2, color="#1f77b4",
-            label=f"Internal test (AUC = {auc1:.3f}, 95% CI 0.961-0.984)")
+            label=f"Internal test (AUC = {auc1:.3f}, 95% CI 0.910-0.951)")
     ax.plot(fpr2, tpr2, lw=2, color="#d62728",
-            label=f"External TN3K (AUC = {auc2:.3f}, 95% CI 0.782-0.849)")
+            label=f"External TN3K (AUC = {auc2:.3f}, 95% CI 0.779-0.846)")
     ax.plot([0, 1], [0, 1], "k--", lw=1, alpha=0.6)
     ax.set_xlabel("False positive rate", fontsize=12)
     ax.set_ylabel("True positive rate", fontsize=12)
@@ -129,20 +129,25 @@ def main():
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     fig.tight_layout()
-    fig.savefig(FIG_DIR / "fig2_roc.png", dpi=300)
+    fig.savefig(FIG_DIR / "fig2.png", dpi=300)
     plt.close(fig)
     print("fig2 saved")
 
     # ---- Fig 3: calibration (a) + DCA (b) 合成图 ----
     mp1, my1, ece1 = reliability_curve(y_in, p_in)
     mp2, my2, ece2 = reliability_curve(y_ext, p_ext)
-    eval_dir = PROJ / "checkpoints" / "thyroid" / "image"
-    d1 = json.loads((eval_dir / "eval_tn5000_test.json").read_text(encoding="utf-8"))
-    d2 = json.loads((eval_dir / "eval_tn3k_test.json").read_text(encoding="utf-8"))
-    pt1 = [c["threshold"] for c in d1["decision_curve"]]
-    nb1 = [c["net_benefit"] for c in d1["decision_curve"]]
-    pt2 = [c["threshold"] for c in d2["decision_curve"]]
-    nb2 = [c["net_benefit"] for c in d2["decision_curve"]]
+
+    def dca(y, p):
+        pts = np.arange(0.05, 0.96, 0.05)
+        nbs = []
+        for t in pts:
+            tp = int(((p >= t) & (y == 1)).sum())
+            fp = int(((p >= t) & (y == 0)).sum())
+            nbs.append(tp / len(y) - fp / len(y) * (t / (1 - t)))
+        return pts, np.array(nbs)
+
+    pt1, nb1 = dca(y_in, p_in)
+    pt2, nb2 = dca(y_ext, p_ext)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.2))
     # (a) calibration
@@ -189,7 +194,7 @@ def main():
             for j in range(2):
                 ax.text(j, i, cm[i, j], ha="center", va="center", fontsize=14)
     fig.tight_layout()
-    fig.savefig(FIG_DIR / "fig4_confusion.png", dpi=300)
+    fig.savefig(FIG_DIR / "fig4.png", dpi=300)
     plt.close(fig)
     print("fig4 saved")
     print("ALL FIGURES DONE")

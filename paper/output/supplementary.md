@@ -34,11 +34,11 @@ image-only at both the per-image (+0.009) and per-nodule (+0.007) level.
 | Model | AUC (95% CI) | AUPRC | Sensitivity | Specificity | ACC | ECE |
 |---|---|---|---|---|---|---|
 | TN5000-only (single-dataset) | 0.540 (0.533–0.547) | 0.326 | 0.284 | 0.757 | 0.621 | 0.191 |
-| Joint (TN5000 + TN3K train) | 0.586 (0.579–0.593) | 0.371 | 0.351 | 0.736 | 0.625 | 0.205 |
+| Joint (TN5000 + TN3K train) | 0.607 (0.601–0.614) | 0.382 | 0.368 | 0.744 | 0.635 | 0.170 |
 
 Per-nodule values (mean aggregation, n = 3,954) are reported in Table 2 of the main
-manuscript: single-dataset 0.608, joint 0.667. The markedly lower per-image AUCs
-(0.540 / 0.586 vs. 0.608 / 0.667) reflect the presence of multiple, partly
+manuscript: single-dataset 0.608, joint 0.710. The markedly lower per-image AUCs
+(0.540 / 0.607 vs. 0.608 / 0.710) reflect the presence of multiple, partly
 redundant frames per nodule; nodule-level aggregation was therefore used as the
 primary external estimate.
 
@@ -46,8 +46,8 @@ primary external estimate.
 
 | Dataset | Model | AUC (95% CI) | Sensitivity | Specificity | ACC | ECE | n |
 |---|---|---|---|---|---|---|---|
-| TN5000 test | Joint | 0.974 (0.961–0.984) | 0.961 | 0.867 | 0.935 | 0.034 | 750 |
-| TN3K test | Joint | 0.816 (0.782–0.849) | 0.640 | 0.825 | 0.754 | 0.072 | 614 |
+| TN5000 test | Joint | 0.931 (0.910–0.951) | 0.948 | 0.757 | 0.895 | 0.020 | 750 |
+| TN3K test | Joint | 0.814 (0.779–0.846) | 0.674 | 0.788 | 0.744 | 0.051 | 614 |
 
 For these two datasets each image corresponds to an independent nodule, so per-image
 and per-nodule statistics coincide.
