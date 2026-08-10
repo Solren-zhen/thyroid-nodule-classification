@@ -92,6 +92,7 @@ def main():
                         image_size=224, num_clinical_features=5, clinical_columns=CLIN,
                         mock=False, split_by_group=True, seed=42)
 
+    results = {}
     for ab in MODELS:
         wp = PROJ / "checkpoints" / "thyroid" / ab / "best.pt"
         if not wp.exists():
@@ -105,12 +106,19 @@ def main():
             groups.setdefault(pid, []).append(i)
 
         print(f"\n=== {ab} (ThyroidXL test, {len(groups)} nodules) ===")
+        results[ab] = {}
         for method in ["mean", "max", "attention"]:
             p, l = aggregate(groups, p_all, l_all, method)
             auc = roc_auc_score(l, p) if len(np.unique(l)) > 1 else 0
             auprc = average_precision_score(l, p) if len(np.unique(l)) > 1 else 0
             m, lo, hi = bootstrap_auc(l, p)
             print(f"  {method:10s}: AUC {auc:.4f} (95% CI {lo:.4f}-{hi:.4f}) | AUPRC {auprc:.4f}")
+            results[ab][method] = {"auc": float(auc), "auc_ci": [float(lo), float(hi)],
+                                   "auprc": float(auprc)}
+
+    out = PROJ / "checkpoints" / "thyroid" / "mil_sensitivity.json"
+    out.write_text(__import__("json").dumps(results, indent=2), encoding="utf-8")
+    print(f"\nsaved {out}")
 
 
 if __name__ == "__main__":

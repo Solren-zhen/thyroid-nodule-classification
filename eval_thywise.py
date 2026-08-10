@@ -115,12 +115,16 @@ def main():
         print(f"AUC {m['auc']:.4f} (95%CI {m['auc_ci'][0]:.4f}-{m['auc_ci'][1]:.4f}) | "
               f"AUPRC {m['auprc']:.4f} | Sens {m['sensitivity']:.4f} Spec {m['specificity']:.4f} | "
               f"ACC {m['acc']:.4f} | ECE {m['ece']:.4f}")
+        return {"auc": m["auc"], "auc_ci": list(m["auc_ci"]), "auprc": m["auprc"],
+                "sensitivity": m["sensitivity"], "specificity": m["specificity"],
+                "acc": m["acc"], "ece": m["ece"], "n": int(n),
+                "pos_rate": float(pos_rate)}
 
-    show("per-image", compute_metrics(labels, probs), len(labels), labels.mean())
+    per_image_m = show("per-image", compute_metrics(labels, probs), len(labels), labels.mean())
 
     groups = group_by_nodule(probs, labels, pids)
     print(f"\n[结节数] {len(groups)}")
-    results = {"per_image": len(labels), "per_nodule": len(groups)}
+    results = {"per_image": per_image_m, "per_nodule": len(groups)}
     for method in ("max", "mean", "majority"):
         ys, prs = aggregate(groups, method)
         m = compute_metrics(ys, prs)
