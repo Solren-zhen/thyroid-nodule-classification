@@ -43,7 +43,8 @@ def add_internal_hyperlink(paragraph, text, anchor):
     Word internal links use w:hyperlink with an 'anchor' attribute pointing to a
     bookmark name (no relationship needed), so Ctrl+click jumps to the target.
     """
-    hyperlink = paragraph._element.makeelement(W + "hyperlink", {W + "anchor": anchor})
+    hyperlink = paragraph._element.makeelement(
+        W + "hyperlink", {W + "anchor": anchor, W + "history": "1"})
     new_run = paragraph._element.makeelement(W + "r", {})
     rPr = paragraph._element.makeelement(W + "rPr", {})
     color = paragraph._element.makeelement(W + "color", {W + "val": "0563C1"})
