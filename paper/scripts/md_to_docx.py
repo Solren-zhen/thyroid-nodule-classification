@@ -58,16 +58,25 @@ def add_internal_hyperlink(paragraph, text, anchor):
     paragraph._element.append(hyperlink)
 
 
+_bookmark_seq = [0]
+
+
+def _next_bm_id():
+    _bookmark_seq[0] += 1
+    return str(_bookmark_seq[0])
+
+
 def add_bookmark(paragraph, name):
-    """Insert a bookmark start/end around the paragraph's start."""
-    # bookmarkStart
+    """Insert a bookmark that WRAPS the paragraph text so Word recognizes it.
+
+    bookmarkStart goes before the first run, bookmarkEnd after the last run;
+    a bookmark spanning at least one run is a valid, Word-recognized anchor.
+    """
     start = paragraph._element.makeelement(W + "bookmarkStart", {
-        W + "id": str(abs(hash(name)) % 100000),
+        W + "id": _next_bm_id(),
         W + "name": name,
     })
-    # bookmarkEnd
-    end = paragraph._element.makeelement(W + "bookmarkEnd", {W + "id": str(abs(hash(name)) % 100000)})
-    # insert at beginning of paragraph
+    end = paragraph._element.makeelement(W + "bookmarkEnd", {W + "id": str(_bookmark_seq[0])})
     paragraph._element.insert(0, start)
     paragraph._element.append(end)
 
@@ -89,7 +98,7 @@ def add_rich_text(par, text, enable_links=False):
             pieces = re.split(r"([0-9]+)", inner)
             for pc in pieces:
                 if pc.strip().isdigit():
-                    add_internal_hyperlink(par, pc, f"_Ref{pc}")
+                    add_internal_hyperlink(par, pc, f"Ref{pc}")
                 else:
                     run = par.add_run(pc)
             continue
@@ -119,23 +128,26 @@ def is_separator(line):
 
 
 def set_cell_text(cell, text, bold=False):
-    """Set cell text, clearing default paragraph first."""
+    """Set cell text, clearing default paragraph first.
+
+    Handles **bold** and ^x^ footnote markers (rendered as superscript).
+    """
     cell.text = ""
     p = cell.paragraphs[0]
-    # strip markdown bold markers; render **...** as bold runs
-    parts = re.split(r"(\*\*.*?\*\*)", text)
-    for seg in parts:
-        if not seg:
+    # split on bold and footnote markers
+    tokens = re.split(r"(\*\*.*?\*\*|\^[a-z]\^)", text)
+    for tok in tokens:
+        if not tok:
             continue
-        if seg.startswith("**") and seg.endswith("**"):
-            run = p.add_run(seg[2:-2])
+        if tok.startswith("**") and tok.endswith("**"):
+            run = p.add_run(tok[2:-2])
             run.bold = True
+        elif re.match(r"^\^[a-z]\^$", tok):
+            run = p.add_run(tok[1])  # just the letter, superscripted
+            run.font.superscript = True
         else:
-            run = p.add_run(seg)
+            run = p.add_run(tok)
             run.bold = bold
-    # strip footnote markers ^a^ ^b^ etc (footnote text is below the table)
-    for r in p.runs:
-        r.text = re.sub(r"\^\w\^", "", r.text)
     for r in p.runs:
         r.font.size = Pt(9)
         r.font.name = "Times New Roman"
@@ -268,17 +280,32 @@ def main():
                 mm = re.match(r"^(\d{1,2})\.\s+(.+)$", first_line)
                 if mm:
                     p = doc.add_paragraph()
-                    # bookmark anchor for citation hyperlinks
-                    add_bookmark(p, f"_Ref{mm.group(1)}")
                     run = p.add_run(mm.group(1) + ". ")
                     add_rich_text(p, mm.group(2))
                     if rest:
                         add_rich_text(p, " " + " ".join(rest.split()))
+                    # bookmark after all runs so it WRAPS the text (Word-recognized)
+                    add_bookmark(p, f"Ref{mm.group(1)}")
                     p.paragraph_format.left_indent = Inches(0.35)
                     p.paragraph_format.first_line_indent = Inches(-0.35)
                 else:
                     p = doc.add_paragraph()
                     add_rich_text(p, payload)
+            elif re.match(r"^\^[a-z]\^\s*", payload.lstrip()):
+                # table footnote marker (^a^ text) -> superscript letter (a) + normal text
+                text = " ".join(payload.split())
+                m_foot = re.match(r"^(\^)([a-z])(\^)(.*)$", text)
+                p = doc.add_paragraph()
+                if m_foot:
+                    run = p.add_run(m_foot.group(2))  # the letter, superscripted
+                    run.font.superscript = True
+                    run.font.size = Pt(9)
+                    if m_foot.group(4).strip():
+                        add_rich_text(p, m_foot.group(4))
+                else:
+                    add_rich_text(p, text)
+                p.paragraph_format.space_after = Pt(6)
+                p.paragraph_format.left_indent = Inches(0.2)
             elif payload.lstrip().startswith(">"):
                 # blockquote (e.g. Chinese version note) -> italic, indented
                 text = " ".join(payload.split())
