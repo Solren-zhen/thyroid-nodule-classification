@@ -258,9 +258,10 @@ def main():
             # (handled as separate para blocks since they start with ^)
             doc.add_paragraph()
         else:  # para (or figure legend)
-            m = re.match(r"\*\*Figure (\d+)\.\*\*(.*)", payload)
-            if m:
-                fig_no = int(m.group(1))
+            # figure marker <!-- FIGURE:N --> -> embed the image here (near text)
+            mf = re.match(r"<!-- FIGURE:(\d+) -->", payload)
+            if mf:
+                fig_no = int(mf.group(1))
                 fname = FIG_FILES.get(fig_no)
                 fpath = FIG_DIR / fname
                 if fpath.exists():
@@ -271,10 +272,19 @@ def main():
                         run.add_picture(str(fpath), width=Inches(5.0))
                     except Exception as e:
                         print(f"  [warn] fig{fig_no}: {e}")
+                    # caption under image: pull from the figure legend text
+                else:
+                    print(f"  [warn] missing {fname}")
+                continue
+            # figure legend text only (no image; images are placed at markers)
+            m = re.match(r"\*\*(Figure|图) (\d+)\.\*\*(.*)", payload)
+            if m:
+                label = m.group(1)  # 'Figure' or '图'
+                fig_no = int(m.group(2))
                 p = doc.add_paragraph()
-                run = p.add_run(f"Figure {fig_no}.")
+                run = p.add_run(f"{label} {fig_no}.")
                 run.bold = True
-                add_rich_text(p, m.group(2))
+                add_rich_text(p, m.group(3))
             elif re.match(r"^\d{1,2}\.\s", payload):  # reference
                 first_line, rest = payload.split("\n", 1) if "\n" in payload else (payload, "")
                 mm = re.match(r"^(\d{1,2})\.\s+(.+)$", first_line)

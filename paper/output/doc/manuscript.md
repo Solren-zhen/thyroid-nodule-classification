@@ -154,6 +154,8 @@ released independently, was not included in this comparison).
 Because each TN5000 image corresponds to an independent nodule sample, image
 filenames were treated as patient identifiers for grouped splitting.
 
+<!-- FIGURE:1 -->
+
 ### 2.2 Clinical features
 
 Five structured clinical features were used as the clinical input to the
@@ -320,6 +322,12 @@ benefit of multi-dataset training transfers to unseen distributions.
 
 All metrics computed at a fixed 0.5 decision threshold. Sensitivity and specificity for Thy-Wise use mean probability aggregation within each nodule. Δ = Joint minus TN5000-only; pp = percentage points.
 
+<!-- FIGURE:2 -->
+
+<!-- FIGURE:3 -->
+
+<!-- FIGURE:4 -->
+
 ### 3.5 Multimodal fusion
 
 To test whether structured clinical features improve over image-only
@@ -385,6 +393,14 @@ seeds. The two additional runs used a class-weighted loss
 development set, whereas the reported seed-42 model used the unweighted loss
 (pos_weight = 1.0); individual seed AUCs remained consistent (0.946–0.948).
 
+<!-- FIGURE:5 -->
+
+<!-- FIGURE:6 -->
+
+<!-- FIGURE:7 -->
+
+<!-- FIGURE:8 -->
+
 ### 3.6 Subgroup analysis
 
 To examine whether the fusion gain was consistent across clinically relevant
@@ -433,6 +449,8 @@ diameter = maximum nodule diameter (width or height). Δ = Fusion − Image-only
 | Age (years): ≥60 | 156 | 28.2% | 0.945 (0.899–0.981) | 0.814 (0.723–0.893) | 0.952 (0.901–0.986) | +0.007 |
 | Sex: male | 86 | 61.6% | 0.957 (0.909–0.991) | 0.816 (0.707–0.918) | 0.955 (0.900–0.991) | −0.002 |
 | Sex: female | 653 | 45.9% | 0.938 (0.922–0.954) | 0.813 (0.782–0.847) | 0.946 (0.930–0.960) | +0.008 |
+
+<!-- FIGURE:9 -->
 
 ## 4. Discussion
 
@@ -602,6 +620,8 @@ domain shift. Extending deep learning to the automated extraction of
 TI-RADS descriptors from ultrasound images [4] could reduce the reliance on
 expert scoring while preserving the structured-feature prior, and would
 strengthen the clinical utility of the framework.
+
+<!-- FIGURE:10 -->
 
 ## 5. Conclusion
 
