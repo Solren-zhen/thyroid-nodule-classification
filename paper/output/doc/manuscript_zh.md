@@ -45,7 +45,7 @@ ThyroidXL 数据集（Duong 等，MICCAI 2025）[13] 含在越南国家内分泌
 
 ### 2.3 模型架构
 
-多模态分类器由三部分组成。图像编码器为在 ImageNet 上预训练的 EfficientNetV2-S 主干，其最终分类层替换为生成 512 维嵌入的投影头。选择 EfficientNetV2-S 作为图像编码器，是因为其复合缩放设计提供了良好的准确率/效率权衡，适合训练可用的 6 GB GPU 显存预算，且已广泛用于医学图像分类（包括甲状腺超声）[8]；我们未进行架构搜索，其他主干可能有不同表现（见第 4 节"局限性"）。临床编码器为多层感知机，将五维临床向量（TI-RADS 总分、结节宽、结节高、年龄、性别）映射为 64 维嵌入。两个嵌入拼接后送入隐藏维数为 256 和 128、dropout 为 0.3 的预测头，产生恶性概率。比较了三种消融配置：纯图像（临床分支禁用）、纯临床（图像分支禁用）和融合（两个分支均启用）。
+多模态分类器由三部分组成。图像编码器为在 ImageNet 上预训练的 EfficientNetV2-S 主干，其最终分类层替换为生成 512 维嵌入的投影头。选择 EfficientNetV2-S 作为图像编码器，是因为其复合缩放设计提供了良好的准确率/效率权衡，适合可用的 6 GB GPU 显存，且已广泛用于医学图像分类（包括甲状腺超声）[8]；我们未进行架构搜索，其他主干可能有不同表现（见第 4 节"局限性"）。临床编码器为多层感知机，将五维临床向量（TI-RADS 总分、结节宽、结节高、年龄、性别）映射为 64 维嵌入。两个嵌入拼接后送入隐藏维数为 256 和 128、dropout 为 0.3 的预测头，产生恶性概率。比较了三种消融配置：纯图像（临床分支禁用）、纯临床（图像分支禁用）和融合（两个分支均启用）。
 
 ### 2.4 训练
 
@@ -154,7 +154,7 @@ ThyroidXL 数据集（Duong 等，MICCAI 2025）[13] 含在越南国家内分泌
 
 ## 4. 讨论
 
-我们系统评估了一个将超声图像特征与结构化临床特征相结合、用于甲状腺结节恶性分类的多模态框架，并量化了其在四个公共数据集上的泛化能力。得出了三项主要发现。其一，在单一大数据集上训练的纯图像模型内部判别力高（测试 AUC 0.920），但在独立外部数据集上性能显著下降（AUC 0.713），量化了单队列评估中不可见的 0.21 跨数据集域漂移差距。其二，在两个数据集的合并训练图像上联合训练（7,129 张：6,379 张训练加 750 张验证）在 TN3K 上恢复了约一半差距（外部 AUC 0.814 对匹配官方测试的 0.729，Δ = +0.085），内部变化适中（AUC 0.931，+0.01）。其三，在第二个完全独立的病理确诊队列（Thy-Wise；3,954 个结节）上，联合训练提供了相当的增益（结节级 AUC 0.608 → 0.710，Δ = +0.102），表明外部性能高度依赖队列，且联合训练的好处可转移到未见分布。在整个分析中，我们在判别力之外还报告校准和决策曲线指标，并在 ThyroidXL 队列上报告纯图像、纯临床和融合模型的三臂消融（见 3.5 节），弥补了该领域常见的报告空白。
+我们系统评估了一个将超声图像特征与结构化临床特征相结合、用于甲状腺结节恶性分类的多模态框架，并量化了其在四个公共数据集上的泛化能力。得出了三项主要发现。其一，在单一大数据集上训练的纯图像模型内部判别力高（测试 AUC 0.920），但在独立外部数据集上性能显著下降（AUC 0.713），量化了单队列评估中不可见的 0.21 跨数据集域漂移差距。其二，在两个数据集的合并训练图像上联合训练（7,129 张：6,379 张训练加 750 张验证）在 TN3K 上恢复了约一半差距（外部 AUC 0.814 对匹配官方测试的 0.729，Δ = +0.085），内部变化适中（AUC 0.931，+0.01）。其三，在第二个完全独立的病理确诊队列（Thy-Wise；3,954 个结节）上，联合训练提供了相当的增益（结节级 AUC 0.608 → 0.710，Δ = +0.102），表明外部性能高度依赖队列，且联合训练的好处可转移到训练中新增队列之外的未见分布。在整个分析中，我们在判别力之外还报告校准和决策曲线指标，并在 ThyroidXL 队列上报告纯图像、纯临床和融合模型的三臂消融（见 3.5 节），弥补了该领域常见的报告空白。
 
 **域漂移是转化的核心障碍。** 从 0.920 到 0.713 的外部下降值得强调。TN5000 和 TN3K 由不同机构的不同设备采集，标签患病率也显著不同（恶性 71.5% 对 34.6%），这在一定程度上解释了固定工作阈值下灵敏度的相应下降（内部 91.1% 降至官方 TN3K 测试的 51.3%）。第二个外部队列证实了这种漂移的幅度具有队列特异性：应用于 Thy-Wise 时，单数据集模型的结节级 AUC 进一步降至 0.608（见 3.4 节）。域适应文献中已报道过超声模型跨设备迁移时的类似性能退化 [17,18]。我们的结果支持了"单数据集 AUC 显著高估真实世界性能"这一日益形成的共识，并强化了 TRIPOD+AI 关于外部验证是部署前提的建议 [16]。
 
@@ -263,6 +263,6 @@ ACR：美国放射学会；AUC：受试者工作特征曲线下面积；CI：置
 
 20. Xiang T, Hu Z. ThyroFusion: a multi-modal deep learning framework integrating vision and language for thyroid nodule malignancy risk assessment. *Journal of Imaging Informatics in Medicine*. 2026. doi:10.1007/s10278-026-01964-6.
 
-21. Li Y, Yan X, Li J, et al. Differentiating mummified thyroid nodules from papillary thyroid carcinoma: a machine learning approach using multi-modal ultrasound radiomics. *Ultrasound in Medicine and Biology*. 2026;52(6). doi:10.1016/j.ultrasmedbio.2026.05.007.
+21. Li Y, Yan X, Li J, et al. Differentiating mummified thyroid nodules from papillary thyroid carcinoma: a machine learning approach using multi-modal ultrasound radiomics. *Ultrasound in Medicine and Biology*. 2026;52(8):1763–1774. doi:10.1016/j.ultrasmedbio.2026.05.007.
 
-22. Sherif M, Elsayed EK, Deif MA. RCAF for patient-level thyroid ultrasound malignancy prediction under leakage-free evaluation and calibration. *Scientific Reports*. 2026;16:16204. doi:10.1038/s41598-026-61342-8.
+22. Sherif M, Elsayed EK, Deif MA. RCAF for patient-level thyroid ultrasound malignancy prediction under leakage-free evaluation and calibration. *Scientific Reports*. 2026;16:22408. doi:10.1038/s41598-026-61342-8.

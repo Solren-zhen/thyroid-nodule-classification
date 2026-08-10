@@ -179,7 +179,7 @@ was an EfficientNetV2-S backbone pre-trained on ImageNet, with the final
 classification layer replaced by a projection head producing a 512-dimensional
 embedding. EfficientNetV2-S was chosen as the image encoder because its
 compound-scaling design offers a favourable accuracy/efficiency trade-off, is
-well-suited to the 6 GB GPU memory budget available for training, and has been
+well-suited to the available 6 GB GPU memory, and has been
 widely used for medical-image classification including thyroid ultrasound [8];
 we did not perform an architecture search, and other backbones may behave
 differently (Section 4, Limitations). The clinical encoder was a multi-layer
@@ -452,8 +452,8 @@ on a second, fully independent pathology-confirmed cohort (Thy-Wise; 3,954
 nodules), joint training provided a comparable gain (nodule-level AUC
 0.608 → 0.710, Δ = +0.102), demonstrating that external performance
 is strongly cohort-dependent and that the benefit of joint training
-transfers to unseen distributions
-explicitly added during training. Across these analyses we report calibration
+transfers to unseen distributions beyond the cohort added during training.
+Across these analyses we report calibration
 and decision-curve metrics alongside discrimination, and on the ThyroidXL
 cohort we report a three-arm ablation of image-only, clinical-only and fused
 models (Section 3.5), addressing reporting gaps that remain common in the
@@ -776,8 +776,8 @@ probabilities and ground-truth labels are shown for each case.
 20. Xiang T, Hu Z. ThyroFusion: a multi-modal deep learning framework integrating vision and language for thyroid nodule malignancy risk assessment. *Journal of Imaging Informatics in Medicine*. 2026. doi:10.1007/s10278-026-01964-6.
 
 
-21. Li Y, Yan X, Li J, et al. Differentiating mummified thyroid nodules from papillary thyroid carcinoma: a machine learning approach using multi-modal ultrasound radiomics. *Ultrasound in Medicine and Biology*. 2026;52(6). doi:10.1016/j.ultrasmedbio.2026.05.007.
+21. Li Y, Yan X, Li J, et al. Differentiating mummified thyroid nodules from papillary thyroid carcinoma: a machine learning approach using multi-modal ultrasound radiomics. *Ultrasound in Medicine and Biology*. 2026;52(8):1763–1774. doi:10.1016/j.ultrasmedbio.2026.05.007.
 
 
-22. Sherif M, Elsayed EK, Deif MA. RCAF for patient-level thyroid ultrasound malignancy prediction under leakage-free evaluation and calibration. *Scientific Reports*. 2026;16:16204. doi:10.1038/s41598-026-61342-8.
+22. Sherif M, Elsayed EK, Deif MA. RCAF for patient-level thyroid ultrasound malignancy prediction under leakage-free evaluation and calibration. *Scientific Reports*. 2026;16:22408. doi:10.1038/s41598-026-61342-8.
 

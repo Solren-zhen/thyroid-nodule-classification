@@ -36,7 +36,7 @@ image-only at both the per-image (+0.009) and nodule-level (+0.007) level.
 | TN5000-only (single-dataset) | 0.540 (0.533–0.547) | 0.326 | 0.284 | 0.757 | 0.621 | 0.191 |
 | Joint (TN5000 + TN3K train) | 0.607 (0.601–0.614) | 0.382 | 0.368 | 0.744 | 0.635 | 0.170 |
 
-Per-nodule values (mean aggregation, n = 3,954) are reported in Table 2 of the main
+Nodule-level values (mean aggregation, n = 3,954) are reported in Table 2 of the main
 manuscript: single-dataset 0.608, joint 0.710. The markedly lower per-image AUCs
 (0.540 / 0.607 vs. 0.608 / 0.710) reflect the presence of multiple, partly
 redundant frames per nodule; nodule-level aggregation was therefore used as the
