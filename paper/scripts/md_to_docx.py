@@ -31,18 +31,78 @@ FIG_FILES = {
     9: "fig9_subgroup_forest.png", 10: "fig10_error_cases.png",
 }
 
+W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+R = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
+# internal hyperlink relationship id (anchor target)
+INTERNAL_LINK_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/internalLink"
 
-def add_rich_text(par, text):
-    """Add text with **bold** markers rendered as bold runs."""
-    parts = re.split(r"(\*\*.*?\*\*)", text)
-    for p in parts:
-        if not p:
+
+def add_internal_hyperlink(paragraph, text, anchor):
+    """Add an internal hyperlink (bookmark anchor) as a run in paragraph.
+
+    Word internal links use w:hyperlink with an 'anchor' attribute pointing to a
+    bookmark name (no relationship needed), so Ctrl+click jumps to the target.
+    """
+    hyperlink = paragraph._element.makeelement(W + "hyperlink", {W + "anchor": anchor})
+    new_run = paragraph._element.makeelement(W + "r", {})
+    rPr = paragraph._element.makeelement(W + "rPr", {})
+    color = paragraph._element.makeelement(W + "color", {W + "val": "0563C1"})
+    rPr.append(color)
+    u = paragraph._element.makeelement(W + "u", {W + "val": "single"})
+    rPr.append(u)
+    new_run.append(rPr)
+    t = paragraph._element.makeelement(W + "t", {})
+    t.text = text
+    new_run.append(t)
+    hyperlink.append(new_run)
+    paragraph._element.append(hyperlink)
+
+
+def add_bookmark(paragraph, name):
+    """Insert a bookmark start/end around the paragraph's start."""
+    # bookmarkStart
+    start = paragraph._element.makeelement(W + "bookmarkStart", {
+        W + "id": str(abs(hash(name)) % 100000),
+        W + "name": name,
+    })
+    # bookmarkEnd
+    end = paragraph._element.makeelement(W + "bookmarkEnd", {W + "id": str(abs(hash(name)) % 100000)})
+    # insert at beginning of paragraph
+    paragraph._element.insert(0, start)
+    paragraph._element.append(end)
+
+
+def add_rich_text(par, text, enable_links=False):
+    """Add text with **bold** markers rendered as bold runs, and [n] citations
+    as internal hyperlinks when enable_links is True."""
+    # split into citation groups [..] and normal text
+    tokens = re.split(r"(\[[0-9, ]+\])", text)
+    for tok in tokens:
+        if not tok:
             continue
-        if p.startswith("**") and p.endswith("**"):
-            run = par.add_run(p[2:-2])
-            run.bold = True
-        else:
-            par.add_run(p)
+        cm = re.match(r"\[([0-9,\s]+)\]", tok)
+        if cm and enable_links:
+            nums = [int(x) for x in cm.group(1).split(",") if x.strip().isdigit()]
+            # render each number as its own hyperlink, keep brackets/commas plain
+            inner = cm.group(1)
+            # iterate inner numbers
+            pieces = re.split(r"([0-9]+)", inner)
+            for pc in pieces:
+                if pc.strip().isdigit():
+                    add_internal_hyperlink(par, pc, f"_Ref{pc}")
+                else:
+                    run = par.add_run(pc)
+            continue
+        # handle **bold**
+        parts = re.split(r"(\*\*.*?\*\*)", tok)
+        for p in parts:
+            if not p:
+                continue
+            if p.startswith("**") and p.endswith("**"):
+                run = par.add_run(p[2:-2])
+                run.bold = True
+            else:
+                par.add_run(p)
 
 
 def parse_table_line(line):
@@ -208,6 +268,8 @@ def main():
                 mm = re.match(r"^(\d{1,2})\.\s+(.+)$", first_line)
                 if mm:
                     p = doc.add_paragraph()
+                    # bookmark anchor for citation hyperlinks
+                    add_bookmark(p, f"_Ref{mm.group(1)}")
                     run = p.add_run(mm.group(1) + ". ")
                     add_rich_text(p, mm.group(2))
                     if rest:
@@ -231,7 +293,7 @@ def main():
                 # normal paragraph: join all source lines with space
                 text = " ".join(payload.split())
                 p = doc.add_paragraph()
-                add_rich_text(p, text)
+                add_rich_text(p, text, enable_links=True)
                 p.paragraph_format.space_after = Pt(6)
 
     doc.save(out_path)
