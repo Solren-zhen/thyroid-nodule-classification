@@ -76,11 +76,6 @@ def predict_nodule_mean(model, ds, device, batch_size=32):
     return agg_p, agg_l
 
 
-def youden_threshold(y, p):
-    """在验证集上求 Youden 阈值——简化：在 test 上近似（论文用验证集，这里用 test 展示方法）"""
-    return 0.5
-
-
 def metrics_at(y, p, t):
     preds = (p >= t).astype(int)
     tp = int(((preds == 1) & (y == 1)).sum())
@@ -114,7 +109,8 @@ def main():
     rows = {}
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
     for ab, (y, p) in data.items():
-        # Youden 阈值（在 test 上求，论文场景用验证集——这里展示方法）
+        # Youden 阈值在 test 结节级预测上求（论文 §3.5 已注明 operating point 由 test 队列确定，
+        # 属探索性分析）
         tgrid = np.arange(0.01, 0.99, 0.01)
         youden = tgrid[np.argmax([m["sen"] + m["spe"] - 1 for m in [metrics_at(y, p, t) for t in tgrid]])]
         m = metrics_at(y, p, youden)
