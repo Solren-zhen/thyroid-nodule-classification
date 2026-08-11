@@ -9,7 +9,7 @@ import json
 import sys
 from pathlib import Path
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 ABLATIONS = ["image", "clinical", "fusion"]
 LABELS = {"image": "Image-only", "clinical": "Clinical-only", "fusion": "Fusion"}
 

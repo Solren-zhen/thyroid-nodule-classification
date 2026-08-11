@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 
 manu = (PROJ / "paper" / "output" / "doc" / "manuscript.md").read_text(encoding="utf-8")
 notes = (PROJ / "paper" / "notes" / "subgroup_analysis.md").read_text(encoding="utf-8")

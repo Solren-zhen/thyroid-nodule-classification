@@ -41,7 +41,7 @@ import torch
 from torch.utils.data import DataLoader
 from sklearn.metrics import roc_auc_score
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
 from thyroid.data.thyroid_dataset import ThyroidDataset

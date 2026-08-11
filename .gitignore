@@ -12,3 +12,10 @@ runs/
 qc/
 *.bak
 
+# regenerable / internal — excluded from the public repo
+paper/output/doc/*.docx
+paper/output/ars_review_report.md
+paper/output/citation_verification_report.md
+paper/notes/
+paper/input/
+

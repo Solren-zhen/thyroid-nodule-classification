@@ -27,7 +27,7 @@ import numpy as np
 
 CLINICAL_COLS = ["composition", "echogenicity", "shape",
                  "margin", "echogenic_foci", "size_mm"]
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parent
 
 
 def tn5000_rows():

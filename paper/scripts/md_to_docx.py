@@ -21,7 +21,7 @@ from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 MD = PROJ / "paper" / "output" / "doc" / "manuscript.md"
 FIG_DIR = PROJ / "paper" / "figures"
 

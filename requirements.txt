@@ -1,34 +1,20 @@
 # ============================================================
-# 淋巴结转移概率评估系统 — 依赖
-# Lymph Node Metastasis Assessment via YOLO + Multimodal Fusion
+# 甲状腺结节良恶性分类 — 依赖
+# Thyroid nodule malignancy classification:
+#   multimodal fusion (EfficientNetV2-S image encoder + clinical MLP)
+#   with multi-dataset external validation (TN5000 / TN3K / Thy-Wise / ThyroidXL)
 # ============================================================
 
-# ── 核心深度学习 ──
 torch>=2.0.0
 torchvision>=0.15.0
-
-# ── YOLO 检测 ──
-ultralytics>=8.0.0
-
-# ── 图像处理 ──
 numpy>=1.24.0
 opencv-python>=4.8.0
 Pillow>=10.0.0
-albumentations>=2.0.0
-
-# ── 训练工具 ──
-tqdm>=4.65.0
-tensorboard>=2.13.0
-
-# ── 评估指标 ──
+albumentations>=1.4.0
 scikit-learn>=1.3.0
+tqdm>=4.65.0
+matplotlib>=3.7.0
+requests>=2.31.0
 
-# ── ONNX / TensorRT 部署 (可选) ──
-# onnx>=1.14.0
-# onnxruntime-gpu>=1.15.0
-
-# ── 配置文件 ──
-pyyaml>=6.0
-
-# ── 进度可视化 (可选) ──
-# wandb>=0.15.0
+# 论文图表/docx 生成（仅 paper/scripts 需要，可选）:
+#   pip install python-docx

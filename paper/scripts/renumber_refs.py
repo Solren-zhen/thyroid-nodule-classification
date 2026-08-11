@@ -12,7 +12,7 @@
 import re
 from pathlib import Path
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 M = PROJ / "paper" / "output" / "doc" / "manuscript.md"
 t = M.read_text(encoding="utf-8")
 

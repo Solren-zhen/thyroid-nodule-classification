@@ -5,7 +5,7 @@
 # 用法: nohup bash run_joint_retrain.sh > logs/run_joint_retrain.log 2>&1 &
 set -e
 cd "$(dirname "$0")"
-PY="C:/miniconda3/envs/lymph_yolo/python.exe"
+PY="${PYTHON:-python}"
 ROOT="data/thyroid_multi"
 
 PYTHONIOENCODING=utf-8 "$PY" -u train_thyroid.py \

@@ -15,7 +15,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJ.parent))
 from thyroid.data.thyroid_dataset import ThyroidDataset
 from thyroid.models.thyroid import ThyroidClassifier

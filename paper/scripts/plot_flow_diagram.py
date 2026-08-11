@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from pathlib import Path
 
-FIG_DIR = Path(r"C:\Users\甄朝晖\Desktop\thyroid\paper\figures")
+FIG_DIR = Path(__file__).resolve().parents[2] / "paper" / "figures"
 
 
 def box(ax, x, y, w, h, text, fc="#e8f0fe", ec="#1f77b4", fs=10):

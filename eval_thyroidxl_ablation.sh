@@ -3,7 +3,7 @@
 # 依赖: 三臂训练完成 (checkpoints/thyroid/{fusion,image,clinical}/best.pt)
 set -e
 cd "$(dirname "$0")"
-PY="C:/miniconda3/envs/lymph_yolo/python.exe"
+PY="${PYTHON:-python}"
 ROOT="data/thyroid/thyroidxl"
 CLIN="tirads,width_mm,height_mm,age,gender"
 

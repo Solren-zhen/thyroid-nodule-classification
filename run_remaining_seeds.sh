@@ -3,7 +3,7 @@
 # 用法: nohup bash run_remaining_seeds.sh > logs/run_remaining_seeds.log 2>&1 &
 set -e
 cd "$(dirname "$0")"
-PY="C:/miniconda3/envs/lymph_yolo/python.exe"
+PY="${PYTHON:-python}"
 ROOT="data/thyroid/thyroidxl"
 CLIN="tirads,width_mm,height_mm,age,gender"
 

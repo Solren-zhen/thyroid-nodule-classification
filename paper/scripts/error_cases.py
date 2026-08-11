@@ -16,7 +16,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 from thyroid.data.thyroid_dataset import ThyroidDataset
 from thyroid.models.thyroid import ThyroidClassifier

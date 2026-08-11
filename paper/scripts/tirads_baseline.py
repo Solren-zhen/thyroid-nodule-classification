@@ -16,7 +16,7 @@ from pathlib import Path
 import numpy as np
 from sklearn.metrics import roc_auc_score, average_precision_score
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 
 

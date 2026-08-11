@@ -34,7 +34,7 @@ import torch
 from torch.utils.data import DataLoader
 from sklearn.metrics import roc_curve, auc as sk_auc
 
-PROJ = Path(r"C:\Users\甄朝晖\Desktop\thyroid")
+PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 from thyroid.data.thyroid_dataset import ThyroidDataset
 from thyroid.models.thyroid import ThyroidClassifier
