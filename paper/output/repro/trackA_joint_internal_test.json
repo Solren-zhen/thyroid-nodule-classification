@@ -1,0 +1,102 @@
+{
+  "metrics": {
+    "acc": 0.8946666666666667,
+    "precision": 0.9094138543516874,
+    "recall": 0.9481481481481482,
+    "f1": 0.928377153218495,
+    "auc": 0.9309259259259259,
+    "auc_ci": [
+      0.9096327871623323,
+      0.950791760302187
+    ],
+    "auprc": 0.9663033597399326,
+    "ece": 0.01947535995642345,
+    "tp": 512,
+    "fp": 51,
+    "tn": 159,
+    "fn": 28,
+    "sensitivity": 0.9481481481481482,
+    "specificity": 0.7571428571428571
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.7083508771929825
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.6946666666666667
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.6825882352941176
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.6733333333333333
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.6644444444444445
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.6540952380952381
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.6452307692307693
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.6368888888888888
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.6260606060606061
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.6146666666666667
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": 0.6004444444444443
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": 0.5820000000000001
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": 0.5508571428571428
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": 0.5271111111111111
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": 0.4866666666666667
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": 0.44799999999999995
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": 0.4244444444444444
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": 0.3666666666666666
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": 0.2546666666666668
+    }
+  ],
+  "n": 750,
+  "pos_rate": 0.72,
+  "tag": "per-image"
+}

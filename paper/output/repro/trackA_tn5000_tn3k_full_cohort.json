@@ -1,0 +1,102 @@
+{
+  "metrics": {
+    "acc": 0.6782135699971371,
+    "precision": 0.5371329879101899,
+    "recall": 0.5140495867768595,
+    "f1": 0.5253378378378378,
+    "auc": 0.7117563159971474,
+    "auc_ci": [
+      0.695135545586888,
+      0.7289167005231093
+    ],
+    "auprc": 0.5530664936317272,
+    "ece": 0.12046775001592053,
+    "tp": 622,
+    "fp": 536,
+    "tn": 1747,
+    "fn": 588,
+    "sensitivity": 0.5140495867768595,
+    "specificity": 0.765221200175208
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.30822547350339774
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.2649743932309062
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.22766541486334013
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.19546235327798453
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.16432865731462928
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.1328780008997587
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.1050672774119668
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.07787002576581731
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.05210420841683369
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.024620669911251086
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": -9.5428953144433e-05
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": -0.033495562553678776
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": -0.05684839065886879
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": -0.08235518656360337
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": -0.1013455482393358
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": -0.12768393930718586
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": -0.16385151254890734
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": -0.18322359003721736
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": -0.19753793300887468
+    }
+  ],
+  "n": 3493,
+  "pos_rate": 0.34640709991411395,
+  "tag": "per-image"
+}

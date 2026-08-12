@@ -1,0 +1,102 @@
+{
+  "metrics": {
+    "acc": 0.5348615090735435,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "auc": 0.8260486946318568,
+    "auc_ci": [
+      0.8070642185823557,
+      0.8433292295560184
+    ],
+    "auprc": 0.7507915586261822,
+    "ece": 0.2386382769476605,
+    "tp": 0,
+    "fp": 0,
+    "tn": 1120,
+    "fn": 974,
+    "sensitivity": 0.0,
+    "specificity": 1.0
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.4369878851857437
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.4057094343627295
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.3715096353727737
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.34252626552053483
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.27061445399554285
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.011870650839132215
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.0025714495628535745
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": 0.0
+    }
+  ],
+  "n": 2094,
+  "pos_rate": 0.46513849092645654,
+  "tag": "per-image"
+}

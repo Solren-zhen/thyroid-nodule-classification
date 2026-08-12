@@ -15,9 +15,17 @@ LABELS = {"image": "Image-only", "clinical": "Clinical-only", "fusion": "Fusion"
 
 
 def load_eval(ab):
-    p = PROJ / "checkpoints" / "thyroid" / ab / "eval_test.json"
+    # Canonical nodule-level eval (batch 32, mean aggregation); runs the eval if missing.
+    d = PROJ / "checkpoints" / "thyroid" / "repro_eval" / f"{ab}_b32"
+    p = d / "eval_test.json"
     if not p.exists():
-        return None
+        import subprocess, sys
+        cmd = [sys.executable, "eval_thyroid.py",
+               "--weights", str(d / "best.pt"),
+               "--data_root", "data/thyroid/thyroidxl", "--split", "test",
+               "--batch_size", "32", "--aggregate", "mean",
+               "--clinical_columns", "tirads,width_mm,height_mm,age,gender"]
+        subprocess.run(cmd, check=True, cwd=PROJ)
     return json.loads(p.read_text(encoding="utf-8"))
 
 

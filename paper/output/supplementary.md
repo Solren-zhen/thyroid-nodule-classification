@@ -1,7 +1,7 @@
 # Supplementary Material
 
 **Supplementary Tables for:** Multimodal fusion of ultrasound imaging and ACR TI-RADS
-features for thyroid nodule malignancy classification: a multi-dataset validation study.
+features for thyroid nodule malignancy classification: an external multi-dataset validation study.
 
 All metrics in this supplement use the same protocols as the main manuscript:
 AUC with bootstrap 95% confidence intervals (n = 2,000 samples); sensitivity
@@ -23,11 +23,11 @@ more heavily and is provided here for completeness.
 |---|---|
 | Image-only | 0.909 (0.896–0.920) |
 | Clinical-only | 0.826 (0.807–0.844) |
-| Fusion | 0.918 (0.906–0.929) |
+| Fusion | 0.917 (0.904–0.928) |
 
 Corresponding nodule-level (mean aggregation, n = 739) values are reported in
 Table 3 of the main manuscript (0.939 / 0.814 / 0.947). Fusion improves over
-image-only at both the per-image (+0.009) and nodule-level (+0.007) level.
+image-only at both the per-image (+0.008) and nodule-level (+0.007) level.
 
 ### S1b. Thy-Wise external cohort (per-image, n = 29,070 images; 28.9% malignant)
 
@@ -46,8 +46,8 @@ primary external estimate.
 
 | Dataset | Model | AUC (95% CI) | Sensitivity | Specificity | ACC | ECE | n |
 |---|---|---|---|---|---|---|---|
-| TN5000 test | Joint | 0.931 (0.910–0.951) | 0.948 | 0.757 | 0.895 | 0.020 | 750 |
-| TN3K test | Joint | 0.814 (0.779–0.846) | 0.674 | 0.788 | 0.744 | 0.051 | 614 |
+| TN5000 test | Joint | 0.931 (0.910–0.951) | 0.948 | 0.757 | 0.895 | 0.019 | 750 |
+| TN3K test | Joint | 0.813 (0.779–0.846) | 0.674 | 0.788 | 0.744 | 0.050 | 614 |
 
 For these two datasets each image corresponds to an independent nodule, so per-image
 and nodule-level statistics coincide.
@@ -70,8 +70,35 @@ is not explained by attention pooling.
 | Image-only | Max | 0.927 (0.909–0.943) | 0.917 |
 | Image-only | Attention | 0.928 (0.910–0.944) | 0.915 |
 | Fusion | Mean | 0.947 (0.932–0.960) | 0.939 |
-| Fusion | Max | 0.934 (0.917–0.950) | 0.922 |
-| Fusion | Attention | 0.935 (0.919–0.951) | 0.922 |
+| Fusion | Max | 0.938 (0.921–0.953) | 0.927 |
+| Fusion | Attention | 0.940 (0.924–0.954) | 0.929 |
+
+---
+
+## Supplementary Table S3. Seed robustness of the main results (three training seeds, 42 / 123 / 2024)
+
+Each model was retrained three times with different random seeds; because the
+grouped train/validation split is itself seeded, the three runs vary both the
+model initialisation and the training partition. All external test sets
+(TN3K official test, Thy-Wise, ThyroidXL) are fixed official partitions held
+out from every run. Reported values are the mean and range across the three
+seeds; seed-42 values correspond to the main-manuscript anchors (Table 2/3).
+All runs for a given model used an identical training protocol
+(pos_weight = 1.0).
+
+| Dataset (n) | Model | AUC mean (range) | ECE mean (range) |
+|---|---|---|---|
+| TN3K official test (614) | TN5000-only | 0.740 (0.729–0.756) | 0.113 (0.090–0.128) |
+| TN3K official test (614) | Joint | 0.808 (0.800–0.813) | 0.065 (0.051–0.077) |
+| Thy-Wise nodule (3,954) | TN5000-only | 0.610 (0.594–0.628) | 0.070 (0.057–0.081) |
+| Thy-Wise nodule (3,954) | Joint | 0.709 (0.706–0.711) | 0.056 (0.023–0.089) |
+| ThyroidXL nodule (739) | Fusion | 0.948 (0.947–0.949) | 0.111 (0.089–0.129) |
+
+Seed-to-seed variation was small on all fixed external test sets (AUC ranges:
+0.729–0.756 for TN5000-only on TN3K, 0.800–0.813 for joint on TN3K,
+0.594–0.628 for TN5000-only on Thy-Wise, 0.706–0.711 for joint on Thy-Wise,
+and 0.947–0.949 for fusion on ThyroidXL), indicating that the reported
+results are not artefacts of a single training seed.
 
 ---
 

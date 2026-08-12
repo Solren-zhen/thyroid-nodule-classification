@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Build external-validation manifest for TN3K (all images labelled split=test)."""
+"""Build manifest for TN3K (trainval labelled split=train; official test labelled split=test)."""
 
 import argparse
 import csv
@@ -41,8 +41,8 @@ def main():
 
     rows = []
     n_skip = 0
-    for folder, labels in (("trainval-image", label_trainval),
-                           ("test-image", label_test)):
+    for folder, labels, split in (("trainval-image", label_trainval, "train"),
+                                      ("test-image", label_test, "test")):
         for img in sorted((root / folder).glob("*.jpg")):
             lab = labels.get(img.name, -1)
             if lab < 0:
@@ -52,7 +52,7 @@ def main():
                 "image_path": f"{folder}/{img.name}",
                 "patient_id": img.stem,
                 "label": lab,
-                "split": "test",
+                "split": split,
             })
 
     if not rows:
@@ -72,7 +72,7 @@ def main():
     print(f"manifest written: {out}")
     print(f"  images: {len(rows)} (skipped {n_skip})")
     print(f"  malignant: {n_pos} ({n_pos / len(rows) * 100:.1f}%)")
-    print("  split: all=test (external validation set)")
+    print("  split: trainval=train, official test=test")
 
 
 if __name__ == "__main__":

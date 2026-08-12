@@ -108,7 +108,7 @@ def main():
     fig.suptitle("Representative misclassifications of the fused model (ThyroidXL test)",
                  fontsize=12)
     fig.tight_layout()
-    out = FIG_DIR / "fig9_error_cases.png"
+    out = FIG_DIR / "fig10_error_cases.png"
     fig.savefig(out, dpi=300)
     plt.close(fig)
     print(f"saved {out}")

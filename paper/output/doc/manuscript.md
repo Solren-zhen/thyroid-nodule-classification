@@ -21,8 +21,8 @@ bootstrap confidence intervals (CI), sensitivity, specificity, expected
 calibration error (ECE), and decision curve analysis.
 
 **Results.** In track A, the single-dataset model achieved an internal test
-AUC of 0.920 but dropped to 0.713 on external TN3K and 0.608 (nodule-level)
-on Thy-Wise. Joint training raised the TN3K test AUC from 0.729 to 0.814
+AUC of 0.915 but dropped to 0.712 on external TN3K and 0.608 (nodule-level)
+on Thy-Wise. Joint training raised the TN3K test AUC from 0.729 to 0.813
 (matched Δ = +0.085) and the Thy-Wise nodule-level AUC to 0.710 (Δ = +0.102).
 In track B, fusion achieved a nodule-level AUC of 0.947, above the image-only
 (0.939) and clinical-only (0.814) models; image features dominated, and
@@ -256,20 +256,20 @@ follows the STARD 2015 [15] and TRIPOD+AI [16] checklists.
 
 ### 3.2 Internal test performance (image-only, single-dataset model)
 
-The image-only model trained on TN5000 achieved a validation AUC of 0.922
-(95% CI 0.896–0.943) and a held-out test AUC of 0.920 (95% CI
-0.897–0.941). At the fixed 0.5 decision threshold, test sensitivity was 91.1%,
-specificity 72.4%, accuracy 85.9%, and F1 score 0.903. The expected
-calibration error was 0.035.
+The image-only model trained on TN5000 achieved a validation AUC of 0.923
+(95% CI 0.898–0.945) and a held-out test AUC of 0.915 (95% CI
+0.893–0.936). At the fixed 0.5 decision threshold, test sensitivity was 90.6%,
+specificity 75.2%, accuracy 86.3%, and F1 score 0.905. The expected
+calibration error was 0.042.
 
 ### 3.3 External validation reveals substantial domain shift
 
 Applying the single-dataset model to the full TN3K cohort (3,493 images from
-a different institution and device setting) yielded an AUC of 0.713 (95% CI
-0.696–0.731) with sensitivity 58.3% and specificity 72.7% (expected
-calibration error 0.136). On the official TN3K test split (n = 614), the same
+a different institution and device setting) yielded an AUC of 0.712 (95% CI
+0.695–0.729) with sensitivity 51.4% and specificity 76.5% (expected
+calibration error 0.120). On the official TN3K test split (n = 614), the same
 model achieved an AUC of 0.729 (95% CI 0.685–0.767), which we use as the
-matched baseline for the joint-training comparison below. The 0.21 decrease
+matched baseline for the joint-training comparison below. The 0.20 decrease
 in AUC relative to internal testing quantifies the cross-dataset domain shift
 that is frequently underestimated in single-centre evaluations.
 
@@ -283,7 +283,7 @@ performance. The joint model reached a validation AUC of 0.932 (95% CI
 with sensitivity 94.8% and specificity 75.7% (expected calibration error
 0.020). On the official TN3K test set (n = 614), external AUC improved from
 0.729 to 0.814 (95% CI 0.779–0.846; matched Δ = +0.085), with sensitivity
-67.4%, specificity 78.8% and expected calibration error 0.051 (Table 2;
+67.4%, specificity 78.8% and expected calibration error 0.050 (Table 2;
 Figures 2–4). Joint training therefore recovered approximately half of the
 domain-shift gap on the external TN3K cohort.
 
@@ -305,16 +305,16 @@ benefit of multi-dataset training transfers to unseen distributions.
 | Model / Evaluation | AUC (95% CI) | Sensitivity | Specificity | ACC | ECE | n |
 |---|---|---|---|---|---|---|
 | **TN5000-only (image)** | | | | | | |
-| TN5000 internal test | 0.920 (0.897–0.941) | 91.1% | 72.4% | 85.9% | 0.035 | 750 |
+| TN5000 internal test | 0.915 (0.893–0.936) | 90.6% | 75.2% | 86.3% | 0.042 | 750 |
 | TN3K external (official test) | 0.729 (0.685–0.767) | 51.3% | 78.0% | 67.8% | 0.120 | 614 |
-| TN3K external (full cohort)^a^ | 0.713 (0.696–0.731) | 58.3% | 72.7% | 67.7% | 0.136 | 3,493 |
+| TN3K external (full cohort)^a^ | 0.712 (0.695–0.729) | 51.4% | 76.5% | 67.8% | 0.120 | 3,493 |
 | Thy-Wise external (nodule-level mean) | 0.608 (0.589–0.628) | 18.6% | 90.0% | 70.5% | 0.057 | 3,954 |
 | **Joint (TN5000 + TN3K train, image)** | | | | | | |
-| TN5000 internal test | 0.931 (0.910–0.951) | 94.8% | 75.7% | 89.5% | 0.020 | 750 |
-| TN3K external (official test) | 0.814 (0.779–0.846) | 67.4% | 78.8% | 74.4% | 0.051 | 614 |
+| TN5000 internal test | 0.931 (0.910–0.951) | 94.8% | 75.7% | 89.5% | 0.019 | 750 |
+| TN3K external (official test) | 0.813 (0.779–0.846) | 67.4% | 78.8% | 74.4% | 0.050 | 614 |
 | Thy-Wise external (nodule-level mean) | 0.710 (0.693–0.727) | 25.7% | 90.4% | 72.7% | 0.057 | 3,954 |
 | **Δ (Joint − TN5000-only, official test)** | | | | | | |
-| TN5000 internal | +0.011 | +3.7 pp | +3.3 pp | +3.6 pp | −0.015 | |
+| TN5000 internal | +0.016 | +4.3 pp | +0.5 pp | +3.2 pp | −0.022 | |
 | TN3K external | +0.085 | +16.1 pp | +0.8 pp | +6.7 pp | −0.069 | |
 | Thy-Wise external | +0.102 | +7.1 pp | +0.4 pp | +2.2 pp | 0.000 | |
 
@@ -343,7 +343,7 @@ the highest AUPRC (0.939 vs. 0.930 for image-only) and specificity (0.940 vs.
 0.909), at a modest cost in sensitivity (0.725 vs. 0.779). As an exploratory
 complement, predictive values were examined at the Youden-optimal operating
 point determined on the test cohort: the fused model achieved balanced positive
-and negative predictive values (PPV 0.844, NPV 0.908), comparable to the
+and negative predictive values (PPV 0.856, NPV 0.898), comparable to the
 image-only model (PPV 0.815, NPV 0.920) and above the clinical-only model (PPV
 0.688, NPV 0.835), suggesting that the fusion gain in discrimination does not
 come at the cost of poorer predictive values (Figure 8). The clinical-only
@@ -384,14 +384,11 @@ the magnitude is modest in this single-device cohort (Figure 5).
 Sensitivity and specificity at a fixed 0.5 decision threshold. AUPRC = area
 under the precision-recall curve. Table 3 reports the fusion model from a
 single training run (seed 42). As a robustness check, two additional fusion
-models were trained with different seeds (123 and 2024); averaging the test
-predictions across the three models improved the nodule-level AUC to
-0.949 (95% CI 0.935–0.962) and AUPRC to 0.942, with individual seeds ranging
-0.946–0.948, confirming robustness of the ablation result across training
-seeds. The two additional runs used a class-weighted loss
-(pos_weight = 0.35) to offset the class imbalance of the ThyroidXL
-development set, whereas the reported seed-42 model used the unweighted loss
-(pos_weight = 1.0); individual seed AUCs remained consistent (0.946–0.948).
+models were trained with different seeds (123 and 2024) using an identical
+protocol (pos_weight = 1.0); individual seed AUCs ranged 0.947–0.949, and
+averaging the test predictions across the three models improved the nodule-level
+AUC to 0.951 (95% CI 0.937–0.964) and AUPRC to 0.944, confirming robustness
+of the ablation result across training seeds (Supplementary Table S3).
 
 <!-- FIGURE:5 -->
 
@@ -412,17 +409,15 @@ scores 2–3 were combined into a single low-to-intermediate risk group
 (TR4, n = 215; 32.1% malignant; TR5, n = 297; 94.3% malignant).
 
 The fusion gain over image-only was largest in the low-to-intermediate risk
-group (TR2-3: Δ AUC +0.066; fusion 0.950 vs. image-only 0.883) and moderate in
-TR4 (Δ +0.023; 0.846 vs. 0.823), but was absent in TR5, where the image-only
-and fusion models performed equivalently (0.753 vs. 0.760, Δ −0.007) and where
+group (TR2-3: Δ AUC +0.046; fusion 0.929 vs. image-only 0.883) and smaller in
+TR4 (Δ +0.015; 0.838 vs. 0.823) and TR5 (Δ +0.013; 0.773 vs. 0.760), where
 the high malignancy prevalence (94.3%) limits discriminative headroom. By
-nodule size, fusion improved over image-only for nodules ≤10 mm (0.878 vs.
-0.868, Δ +0.010) and 10–20 mm (0.979 vs. 0.970, Δ +0.008), but not for nodules
->20 mm (0.953 vs. 0.966, Δ −0.013), a subgroup with low malignancy prevalence
-(16.8%). Fusion gains were small but consistent across age strata
-(<45: +0.003; 45–60: +0.008; ≥60: +0.007) and were not observed in the small
-male subgroup (n = 86, Δ −0.002), whereas female patients (n = 653) showed a
-gain of +0.008. Overall, the subgroup analysis indicates that the clinical
+nodule size, fusion improved over image-only for nodules ≤10 mm (0.882 vs.
+0.868, Δ +0.014) and 10–20 mm (0.976 vs. 0.970, Δ +0.006), but not for nodules
+>20 mm (0.949 vs. 0.966, Δ −0.017), a subgroup with low malignancy prevalence
+(16.8%). Fusion gains were small across age strata
+(<45: +0.004; 45–60: +0.011; ≥60: +0.001) and in the male subgroup (n = 86,
+Δ +0.006), whereas female patients (n = 653) showed a gain of +0.008. Overall, the subgroup analysis indicates that the clinical
 signal contributes most where image-derived discrimination is least certain
 (low-to-intermediate TI-RADS risk, small nodules), and that the modest average
 fusion gain in Table 3 is not driven by any single subgroup. Because the TR2-3
@@ -434,21 +429,21 @@ multiple comparisons.
 **Table 4.** Subgroup analysis on the ThyroidXL test cohort (nodule-level, n = 739).
 
 AUC (95% CI) by model and subgroup. TR = TI-RADS total score;
-diameter = maximum nodule diameter (width or height). Δ = Fusion − Image-only AUC.
+diameter = maximum nodule diameter (width or height). Δ = Fusion 0 Image-only AUC.
 
 | Subgroup | n | Malignant (%) | Image-only | Clinical-only | Fusion | Δ AUC |
 |---|---|---|---|---|---|---|
-| TI-RADS: TR2-3 | 227 | 1.8% | 0.883 (0.743–1.000) | 0.740 (0.544–0.872) | 0.950 (0.898–1.000) | +0.066 |
-| TI-RADS: TR4 | 215 | 32.1% | 0.823 (0.763–0.875) | 0.607 (0.530–0.686) | 0.846 (0.792–0.893) | +0.023 |
-| TI-RADS: TR5 | 297 | 94.3% | 0.760 (0.675–0.844) | 0.540 (0.411–0.671) | 0.753 (0.655–0.844) | −0.007 |
-| Nodule size: ≤10 mm | 364 | 61.8% | 0.868 (0.829–0.906) | 0.784 (0.732–0.837) | 0.878 (0.840–0.917) | +0.010 |
-| Nodule size: 10–20 mm | 238 | 44.1% | 0.970 (0.952–0.984) | 0.854 (0.807–0.899) | 0.979 (0.964–0.990) | +0.008 |
-| Nodule size: >20 mm | 137 | 16.8% | 0.966 (0.911–0.997) | 0.693 (0.564–0.808) | 0.953 (0.864–0.999) | −0.013 |
-| Age (years): <45 | 309 | 55.7% | 0.925 (0.896–0.951) | 0.766 (0.701–0.821) | 0.927 (0.898–0.953) | +0.003 |
-| Age (years): 45–60 | 274 | 50.0% | 0.945 (0.921–0.968) | 0.846 (0.798–0.891) | 0.954 (0.931–0.975) | +0.008 |
-| Age (years): ≥60 | 156 | 28.2% | 0.945 (0.899–0.981) | 0.814 (0.723–0.893) | 0.952 (0.901–0.986) | +0.007 |
-| Sex: male | 86 | 61.6% | 0.957 (0.909–0.991) | 0.816 (0.707–0.918) | 0.955 (0.900–0.991) | −0.002 |
-| Sex: female | 653 | 45.9% | 0.938 (0.922–0.954) | 0.813 (0.782–0.847) | 0.946 (0.930–0.960) | +0.008 |
+| TI-RADS: TR2-3 | 227 | 1.8% | 0.883 (0.743–1.000) | 0.740 (0.544–0.872) | 0.929 (0.863–1.000) | +0.046 |
+| TI-RADS: TR4 | 215 | 32.1% | 0.823 (0.763–0.875) | 0.607 (0.530–0.686) | 0.838 (0.781–0.887) | +0.015 |
+| TI-RADS: TR5 | 297 | 94.3% | 0.760 (0.675–0.844) | 0.540 (0.411–0.671) | 0.773 (0.687–0.855) | +0.013 |
+| Nodule size: ≤10 mm | 364 | 61.8% | 0.868 (0.829–0.906) | 0.784 (0.732–0.837) | 0.882 (0.843–0.919) | +0.014 |
+| Nodule size: 10–20 mm | 238 | 44.1% | 0.970 (0.952–0.984) | 0.854 (0.807–0.899) | 0.976 (0.961–0.988) | +0.006 |
+| Nodule size: >20 mm | 137 | 16.8% | 0.966 (0.911–0.997) | 0.693 (0.564–0.808) | 0.949 (0.850–0.999) | −0.017 |
+| Age (years): <45 | 309 | 55.7% | 0.925 (0.896–0.951) | 0.766 (0.701–0.821) | 0.929 (0.901–0.954) | +0.004 |
+| Age (years): 45–60 | 274 | 50.0% | 0.945 (0.921–0.968) | 0.846 (0.798–0.891) | 0.956 (0.934–0.976) | +0.011 |
+| Age (years): ≥60 | 156 | 28.2% | 0.945 (0.899–0.981) | 0.814 (0.723–0.893) | 0.946 (0.890–0.985) | +0.001 |
+| Sex: male | 86 | 61.6% | 0.957 (0.909–0.991) | 0.816 (0.707–0.918) | 0.963 (0.914–0.994) | +0.006 |
+| Sex: female | 653 | 45.9% | 0.938 (0.922–0.954) | 0.813 (0.782–0.847) | 0.946 (0.931–0.961) | +0.008 |
 
 <!-- FIGURE:9 -->
 
@@ -459,12 +454,12 @@ malignancy classification that combines ultrasound image features with
 structured clinical features, and quantified its generalisation across
 four public datasets. Three principal findings emerged. First, an
 image-only model trained on a single large dataset achieved high internal
-discrimination (test AUC 0.920) but lost substantial performance on an
-independent external dataset (AUC 0.713), quantifying a 0.21 cross-dataset
+discrimination (test AUC 0.915) but lost substantial performance on an
+independent external dataset (AUC 0.712), quantifying a 0.20 cross-dataset
 domain-shift gap that is invisible to single-cohort evaluation. Second, joint
 training on the combined training images of two datasets (7,129 images: 6,379
 training plus 750 validation) recovered approximately half of this gap on
-TN3K (external AUC 0.814 vs. 0.729 on the matched official test, Δ = +0.085)
+TN3K (external AUC 0.813 vs. 0.729 on the matched official test, Δ = +0.085)
 with only a modest internal change (AUC 0.931, +0.01). Third,
 on a second, fully independent pathology-confirmed cohort (Thy-Wise; 3,954
 nodules), joint training provided a comparable gain (nodule-level AUC
@@ -478,10 +473,10 @@ models (Section 3.5), addressing reporting gaps that remain common in the
 field.
 
 **Domain shift is the central barrier to translation.** The external drop from
-0.920 to 0.713 deserves emphasis. TN5000 and TN3K were acquired with
+0.915 to 0.712 deserves emphasis. TN5000 and TN3K were acquired with
 different devices at different institutions, and their label prevalence also
 differs substantially (71.5% vs 34.6% malignant), which partly explains the
-concurrent fall in sensitivity (91.1% internally to 51.3% on the official
+concurrent fall in sensitivity (90.6% internally to 51.3% on the official
 TN3K test) at a fixed operating threshold. A second external cohort confirmed that the magnitude of this shift
 is cohort-specific: applied to Thy-Wise, the single-dataset model's
 nodule-level AUC fell further to 0.608 (Section 3.4). Comparable degradation
@@ -492,14 +487,14 @@ recommendation that external validation is a prerequisite for deployment [16].
 
 **Joint multi-dataset training helps the cohort added to training, and the
 gain transfers to unseen cohorts.** Adding TN3K training images to the TN5000 pool
-improved external AUC on the official TN3K test set from 0.729 to 0.814
+improved external AUC on the official TN3K test set from 0.729 to 0.813
 (+0.085, matched), restored approximately half of the domain-shift deficit,
 and improved external specificity from 78.0% to 78.8%. Multi-dataset pooling is therefore a
 pragmatic robustness strategy when data from the target cohort can be included
 in training. On the fully independent Thy-Wise cohort, joint training also
 improved nodule-level AUC, from 0.608 to 0.710 (+0.102), a gain comparable to
 that on TN3K. The gain therefore transfers beyond the added distribution.
-The residual gaps seen on both TN3K and Thy-Wise (absolute AUCs of 0.814 and
+The residual gaps seen on both TN3K and Thy-Wise (absolute AUCs of 0.813 and
 0.710, well below the internal 0.931) indicate that device-agnostic priors,
 such as structured clinical features, may be required in addition.
 
@@ -530,8 +525,8 @@ widespread clinical deployment.
 The subgroup analysis (Section 3.6) adds two clinically relevant nuances to
 this finding. First, the fusion gain was concentrated in the subgroups where
 image-derived discrimination is least certain: the low-to-intermediate
-TI-RADS group (TR2-3, Δ AUC +0.066) and small nodules (≤20 mm). It was
-absent in the highly malignant TR5 group and in nodules >20 mm. This pattern
+TI-RADS group (TR2-3, Δ AUC +0.046) and small nodules (≤20 mm). It was
+smaller in the highly malignant TR5 group (+0.013) and negative for nodules >20 mm (−0.017). This pattern
 is consistent with the clinical intuition that a structured-risk prior adds
 most where image features are ambiguous, and suggests that the clinical branch
 may be most valuable in the triage of indeterminate nodules. Second, no
@@ -559,8 +554,8 @@ ThyroidXL reflects the absence of mask guidance. To isolate the contribution of
 the aggregation strategy, we evaluated alternative nodule-level aggregations of
 the same frame predictions: max pooling and attention-weighted pooling (an
 exponential softmax over frame probabilities) both yielded lower AUC than the
-mean pooling used throughout this study (fusion: mean 0.947, max 0.934,
-attention 0.935; image-only: mean 0.939, max 0.927, attention 0.928). The
+mean pooling used throughout this study (fusion: mean 0.947, max 0.938,
+attention 0.940; image-only: mean 0.939, max 0.927, attention 0.928). The
 negligible gain from attention weighting here indicates that the higher
 patient-level AUC reported by the mask-based approach is not explained by its
 attention pooling, but rather by the mask guidance itself, which our framework
@@ -571,13 +566,13 @@ structured clinical features.
 
 **Calibration and decision-curve reporting.** Discrimination alone is
 insufficient for clinical use. The single-dataset model was reasonably well
-calibrated internally (ECE 0.035) but substantially miscalibrated externally
-(ECE 0.136), and joint training improved external calibration (ECE 0.072);
+calibrated internally (ECE 0.042) but substantially miscalibrated externally
+(ECE 0.120 on the full TN3K cohort), and joint training improved external calibration (ECE 0.050 on the official TN3K test);
 calibration therefore degrades under domain shift in parallel with
 discrimination. Decision curves (Figures 5–7) further show that the models
 provide net benefit across a range of threshold probabilities. At the fixed
-0.5 decision threshold, sensitivity (91.1% internally) exceeded
-specificity (72.4%), reflecting both the class imbalance of the training data
+0.5 decision threshold, sensitivity (90.6% internally) exceeded
+specificity (75.2%), reflecting both the class imbalance of the training data
 (71.5% malignant) and the clinical trade-off in nodule triage, where
 over-referral is preferable to a missed malignancy; the operating point should
 be selected to match the clinical setting, and the decision curves provide the
@@ -629,7 +624,7 @@ Using four public datasets, we showed that a thyroid nodule
 classification model trained on a single dataset achieves high internal AUC
 but loses substantial performance externally (0.92 to 0.71 on TN3K); that joint
 multi-dataset training recovers approximately half of that gap on the cohort
-added to training (external AUC 0.814 vs. 0.729 on the matched official test,
+added to training (external AUC 0.813 vs. 0.729 on the matched official test,
 Δ = +0.085); and that on a second, unseen external
 cohort (Thy-Wise), the same joint training provides a comparable gain
 (nodule-level AUC 0.608 → 0.710, +0.102). External

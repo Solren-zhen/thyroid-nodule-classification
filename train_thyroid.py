@@ -185,13 +185,14 @@ def main():
     parser.add_argument("--pretrained", dest="pretrained", action="store_true", default=True,
                         help="加载 ImageNet 预训练权重（默认开启）")
     parser.add_argument("--no_pretrained", dest="pretrained", action="store_false")
-    parser.add_argument("--save_dir", type=str, default=None)
+    parser.add_argument("--save_dir", type=str, default=None,
+                        help="输出目录（默认 checkpoints/thyroid/<ablation>）")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--workers", type=int, default=None)
     parser.add_argument("--clinical_columns", type=str, default=None,
                         help="逗号分隔临床特征列名；ThyroidXL 用 tirads,width_mm,height_mm,age,gender")
     parser.add_argument("--pos_weight", type=float, default=1.0,
-                        help="BCEWithLogitsLoss pos_weight（缓解类别不平衡）；ThyroidXL 恶性 26.1% → ~0.35")
+                        help="BCEWithLogitsLoss pos_weight；1.0 表示不做类别加权（最终协议所用）")
     args = parser.parse_args()
 
     cfg = get_thyroid_config()
@@ -267,8 +268,11 @@ def main():
                                   enabled=cfg.mixed_precision)
     use_amp = cfg.mixed_precision and device.type == "cuda"
 
-    save_dir = PROJECT_ROOT / "checkpoints" / "thyroid" / args.ablation
+    save_dir = (Path(args.save_dir) if args.save_dir
+                else PROJECT_ROOT / "checkpoints" / "thyroid" / args.ablation)
     save_dir.mkdir(parents=True, exist_ok=True)
+    if (save_dir / "best.pt").exists():
+        print(f"⚠ 警告：{save_dir / 'best.pt'} 已存在，训练将覆盖它")
     log_csv = save_dir / "metrics.csv"
     with open(log_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerow(["epoch", "loss", "val_auc", "auc_lo", "auc_hi",
@@ -286,6 +290,7 @@ def main():
         "head_dropout": cfg.head_dropout,
         "use_image": args.ablation != "clinical",
         "use_clinical": args.ablation != "image",
+        "clinical_columns": list(cfg.clinical_columns),
     }
 
     for epoch in range(1, cfg.epochs + 1):

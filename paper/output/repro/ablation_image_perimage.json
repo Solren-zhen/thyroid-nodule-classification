@@ -1,0 +1,102 @@
+{
+  "metrics": {
+    "acc": 0.8237822349570201,
+    "precision": 0.8481012658227848,
+    "recall": 0.7566735112936345,
+    "f1": 0.7997829625610418,
+    "auc": 0.9090752420064535,
+    "auc_ci": [
+      0.8961385542886366,
+      0.9205927690458979
+    ],
+    "auprc": 0.8915561552031095,
+    "ece": 0.08024328689730467,
+    "tp": 737,
+    "fp": 132,
+    "tn": 988,
+    "fn": 237,
+    "sensitivity": 0.7566735112936345,
+    "specificity": 0.8821428571428571
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.4329412356105163
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.41701156744136686
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.3993763694589584
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.3843123209169054
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.37153772683858644
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.35475508254877886
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.3391374623466314
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.32696593441579114
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.3098897282278371
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.2889207258834766
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": 0.26695319961795605
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": 0.24546322827125122
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": 0.22185837085550553
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": 0.18545049347341613
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": 0.16427889207258833
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": 0.12893982808022922
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": 0.10904170646290992
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": 0.07402101241642789
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": 0.017191977077363897
+    }
+  ],
+  "n": 2094,
+  "pos_rate": 0.46513849092645654,
+  "tag": "per-image"
+}

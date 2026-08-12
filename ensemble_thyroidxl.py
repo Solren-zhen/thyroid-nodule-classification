@@ -5,6 +5,7 @@
 
 用法:
   python ensemble_thyroidxl.py --seeds 42 123 2024 --split test
+  # Protocol: pos_weight=1.0 (seed42 = fusion/best.pt; 123/2024 = fusion_seed*_pw1.0)
 """
 import argparse
 import json
@@ -93,9 +94,12 @@ def main():
 
     ensemble_p = None
     for seed in args.seeds:
-        wp = PROJ / "checkpoints" / "thyroid" / f"fusion_seed{seed}" / "best.pt"
-        if not wp.exists():
+        if seed == 42:
             wp = PROJ / "checkpoints" / "thyroid" / "fusion" / "best.pt"
+        else:
+            wp = PROJ / "checkpoints" / "thyroid" / f"fusion_seed{seed}_pw1.0" / "best.pt"
+        if not wp.exists():
+            raise FileNotFoundError(f"missing final-protocol checkpoint: {wp}")
         print(f"loading {wp} ...")
         model = load_model(wp, device)
         p, y = predict_nodule(model, ds, device, tta=args.tta)

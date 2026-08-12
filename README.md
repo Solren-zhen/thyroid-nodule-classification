@@ -1,6 +1,6 @@
 # Thyroid nodule malignancy classification: multimodal fusion of ultrasound imaging and ACR TI-RADS features with multi-dataset external validation
 
-[Paper]() · [Datasets]() · License: [MIT](LICENSE)
+[Paper]() · [Datasets]() · License: [MIT](LICENSE) · [Reproducibility](REPRODUCIBILITY.md)
 
 Code accompanying the manuscript:
 
@@ -17,9 +17,9 @@ total score, nodule width, nodule height, age, sex).
 
 | Setting | AUC (nodule-level) |
 |---|---|
-| TN5000 internal test (image-only, single dataset) | 0.920 |
+| TN5000 internal test (image-only, single dataset) | 0.915 |
 | TN3K external (official test, single dataset) | 0.729 |
-| TN3K external (official test, joint training) | 0.814 (Δ +0.085) |
+| TN3K external (official test, joint training) | 0.813 (Δ +0.085) |
 | Thy-Wise external (single dataset) | 0.608 |
 | Thy-Wise external (joint training) | 0.710 (Δ +0.102) |
 | ThyroidXL test — fusion | 0.947 |
@@ -27,6 +27,9 @@ total score, nodule width, nodule height, age, sex).
 | ThyroidXL test — clinical-only | 0.814 |
 
 See the manuscript (`paper/output/doc/`) for full details, tables, and figures.
+Every reported number maps to an exact command and result file in
+[`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) (canonical evaluation outputs are committed
+under `paper/output/repro/`).
 
 ## Repository layout
 
@@ -62,6 +65,7 @@ python download_tn5000.py --dest data/thyroid/tn5000
 python prepare_tn5000.py --data_root data/thyroid
 
 # TN3K (HuggingFace: haifan-gong/TN3K)
+#   官方 test（论文匹配口径，n=614）评估用 --split test；全量 3,493（Table 2 域漂移行）用 --split all
 python prepare_tn3k.py --data_root data/thyroid/tn3k
 
 # Thy-Wise (figshare, DOI 10.6084/m9.figshare.20417895, CC BY 4.0)
@@ -104,7 +108,7 @@ Reproduction scripts run the full pipelines and skip already-finished steps:
 ```bash
 bash run_joint_retrain.sh          # joint multi-dataset training (H1-fixed, no leakage)
 bash run_thyroidxl_ablation.sh     # ThyroidXL image / clinical ablations
-bash run_fusion_multiseed.sh       # fusion seeds 123 + 2024 (pos_weight=0.35)
+bash run_fusion_multiseed.sh       # fusion seeds 123 + 2024 (pos_weight=1.0)
 ```
 
 Set `PYTHON=/path/to/python` to use a specific interpreter; otherwise `python` on PATH is used.
@@ -113,13 +117,13 @@ Set `PYTHON=/path/to/python` to use a specific interpreter; otherwise `python` o
 
 ```bash
 # Internal / external image-level evaluation
-python eval_thyroid.py --weights checkpoints/thyroid/fusion/best.pt --data_root data/thyroid/thyroidxl --split test
+python eval_thyroid.py --weights checkpoints/thyroid/fusion/best.pt --data_root data/thyroid/thyroidxl --split test --clinical_columns tirads,width_mm,height_mm,age,gender
 
 # Thy-Wise nodule-level external evaluation
 python eval_thywise.py --weights checkpoints/thyroid/joint/best.pt --data_root data/thyroid/thywise
 
 # Multi-seed fusion ensemble (seeds 42/123/2024)
-python ensemble_thyroidxl.py --seeds 42 123 2024 --split test
+python paper/scripts/ensemble_fusion_pw1.py   # canonical 3-seed ensemble (AUC/CI/AUPRC)
 ```
 
 Metrics reported: AUC with bootstrap 95% CI (n = 2000), sensitivity/specificity/

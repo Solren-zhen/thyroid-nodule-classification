@@ -50,7 +50,7 @@ print("\nper_image_stats.json (ThyroidXL per-image):")
 exp = {
     "image": "0.909 (0.896-0.920)",
     "clinical": "0.826 (0.807-0.844)",
-    "fusion": "0.918 (0.906-0.929)",
+    "fusion": "0.917 (0.904-0.928)",
 }
 for ab, d in pi.items():
     got = f"{d['auc']:.3f} ({d['ci_lo']:.3f}-{d['ci_hi']:.3f})"
@@ -71,7 +71,7 @@ for ab, e in exp.items():
 print("\nmil_sensitivity.json vs supplementary S2:")
 s2 = {
     "image": {"mean": "0.939 (0.924-0.954)", "max": "0.927 (0.909-0.943)", "attention": "0.928 (0.910-0.944)"},
-    "fusion": {"mean": "0.947 (0.932-0.960)", "max": "0.934 (0.917-0.950)", "attention": "0.935 (0.919-0.951)"},
+    "fusion": {"mean": "0.947 (0.932-0.960)", "max": "0.938 (0.921-0.953)", "attention": "0.940 (0.924-0.954)"},
 }
 for ab, methods in mil.items():
     for meth, d in methods.items():

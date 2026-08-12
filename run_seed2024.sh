@@ -7,15 +7,15 @@ PY="${PYTHON:-python}"
 ROOT="data/thyroid/thyroidxl"
 CLIN="tirads,width_mm,height_mm,age,gender"
 SEED=2024
-DIR="checkpoints/thyroid/fusion_seed${SEED}"
-LOG="logs/train_fusion_seed${SEED}_pw035.log"
+DIR="checkpoints/thyroid/fusion_seed${SEED}_pw1.0"
+LOG="logs/train_fusion_seed${SEED}_pw1.0.log"
 
 echo "[$(date)] === TRAIN fusion seed ${SEED} ==="
 rm -f checkpoints/thyroid/fusion/best.pt checkpoints/thyroid/fusion/last.pt checkpoints/thyroid/fusion/metrics.csv
 PYTHONIOENCODING=utf-8 "$PY" -u train_thyroid.py \
   --data_root "$ROOT" --ablation fusion \
   --epochs 30 --batch_size 32 --workers 4 \
-  --clinical_columns "$CLIN" --seed "$SEED" --pos_weight 0.35 \
+  --clinical_columns "$CLIN" --seed "$SEED" --pos_weight 1.0 \
   > "$LOG" 2>&1
 mkdir -p "$DIR"
 cp -f checkpoints/thyroid/fusion/best.pt "$DIR/best.pt"

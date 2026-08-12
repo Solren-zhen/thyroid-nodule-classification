@@ -1,0 +1,102 @@
+{
+  "metrics": {
+    "acc": 0.8470906630581867,
+    "precision": 0.8870967741935484,
+    "recall": 0.7790368271954674,
+    "f1": 0.8295625942684767,
+    "auc": 0.939445757313332,
+    "auc_ci": [
+      0.9239700658746143,
+      0.9543915035392073
+    ],
+    "auprc": 0.9296035194954897,
+    "ece": 0.08693688359646838,
+    "tp": 275,
+    "fp": 35,
+    "tn": 351,
+    "fn": 78,
+    "sensitivity": 0.7790368271954674,
+    "specificity": 0.9093264248704663
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.4628587707428246
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.4491053976845587
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.433176788983523
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.41779431664411365
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.40820929183581417
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.39532186352213416
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.379202664723639
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.3572395128552098
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.3443227949317259
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.3247631935047361
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": 0.3020598406254698
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": 0.2733423545331529
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": 0.25749081770732646
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": 0.2336490753270185
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": 0.1894451962110961
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": 0.15020297699594046
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": 0.11141181777176365
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": 0.056833558863328824
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": 0.0027063599458728013
+    }
+  ],
+  "n": 739,
+  "pos_rate": 0.4776725304465494,
+  "tag": "per-nodule (mean)"
+}

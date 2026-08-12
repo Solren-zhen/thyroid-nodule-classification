@@ -286,6 +286,10 @@ def main():
                 run = p.add_run(f"{label} {fig_no}.")
                 run.bold = True
                 add_rich_text(p, m.group(3))
+                # 多行图注：续行追加到同一段落（`.*` 不跨行，此前续行被丢弃）
+                _, rest = payload.split("\n", 1) if "\n" in payload else (payload, "")
+                if rest:
+                    add_rich_text(p, " " + " ".join(rest.split()))
             elif re.match(r"^\d{1,2}\.\s", payload):  # reference
                 first_line, rest = payload.split("\n", 1) if "\n" in payload else (payload, "")
                 mm = re.match(r"^(\d{1,2})\.\s+(.+)$", first_line)

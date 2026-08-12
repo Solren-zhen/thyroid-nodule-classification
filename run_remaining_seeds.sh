@@ -8,8 +8,8 @@ ROOT="data/thyroid/thyroidxl"
 CLIN="tirads,width_mm,height_mm,age,gender"
 
 for seed in 123 2024; do
-  DIR="checkpoints/thyroid/fusion_seed${seed}"
-  LOG="logs/train_fusion_seed${seed}_pw035.log"
+  DIR="checkpoints/thyroid/fusion_seed${seed}_pw1.0"
+  LOG="logs/train_fusion_seed${seed}_pw1.0.log"
   if [ -f "$DIR/best.pt" ] && grep -q "Done:" "$LOG" 2>/dev/null; then
     echo "[$(date)] SKIP seed ${seed}: already done"
     continue
@@ -19,7 +19,7 @@ for seed in 123 2024; do
   PYTHONIOENCODING=utf-8 "$PY" -u train_thyroid.py \
     --data_root "$ROOT" --ablation fusion \
     --epochs 30 --batch_size 32 --workers 4 \
-    --clinical_columns "$CLIN" --seed "$seed" --pos_weight 0.35 \
+    --clinical_columns "$CLIN" --seed "$seed" --pos_weight 1.0 \
     > "$LOG" 2>&1
   mkdir -p "$DIR"
   cp -f checkpoints/thyroid/fusion/best.pt "$DIR/best.pt"

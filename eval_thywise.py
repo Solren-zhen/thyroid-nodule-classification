@@ -70,7 +70,10 @@ def main():
           f"use_clinical={mc['use_clinical']} clinical_dim={mc['clinical_feature_dim']}")
 
     # 数据集（预处理与训练一致）
+    mc_clin = mc.get("clinical_columns")
     ds = ThyroidDataset(args.data_root, split="test", image_size=224,
+                        num_clinical_features=mc["clinical_feature_dim"],
+                        clinical_columns=mc_clin,
                         mock=False, split_by_group=True, seed=42)
     loader = DataLoader(ds, batch_size=args.batch_size, shuffle=False,
                         num_workers=args.workers, persistent_workers=args.workers > 0)

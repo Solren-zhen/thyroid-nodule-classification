@@ -2,7 +2,10 @@
 __pycache__/
 *.py[cod]
 checkpoints/
-data/
+data/thyroid/
+data/thyroid_multi/
+data/thyroid_tn3ktest/
+data/thyroid_tn5000test/
 logs/
 *.pt
 *.pth

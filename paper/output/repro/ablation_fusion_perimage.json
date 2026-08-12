@@ -1,0 +1,102 @@
+{
+  "metrics": {
+    "acc": 0.8156638013371538,
+    "precision": 0.8759590792838875,
+    "recall": 0.7032854209445585,
+    "f1": 0.7801822323462415,
+    "auc": 0.9167488633030212,
+    "auc_ci": [
+      0.9042412244342551,
+      0.9283383435557966
+    ],
+    "auprc": 0.9002378451087859,
+    "ece": 0.10716361772009272,
+    "tp": 685,
+    "fp": 97,
+    "tn": 1023,
+    "fn": 289,
+    "sensitivity": 0.7032854209445585,
+    "specificity": 0.9133928571428571
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.4378927260845523
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.4210442534224769
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.40021911343333894
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.38992359121298953
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.3753581661891117
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.3553690817301133
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.33950481228418194
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.3223495702005731
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.30450638187027873
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.2808022922636103
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": 0.2556510665393187
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": 0.2320916905444126
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": 0.2116250511665984
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": 0.1883158229863101
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": 0.16045845272206305
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": 0.1303724928366762
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": 0.09837631327602675
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": 0.06112702960840496
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": 0.014326647564469915
+    }
+  ],
+  "n": 2094,
+  "pos_rate": 0.46513849092645654,
+  "tag": "per-image"
+}

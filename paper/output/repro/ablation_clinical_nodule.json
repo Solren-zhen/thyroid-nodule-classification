@@ -1,0 +1,102 @@
+{
+  "metrics": {
+    "acc": 0.5223274695534507,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "auc": 0.8141540313229315,
+    "auc_ci": [
+      0.78194536205074,
+      0.846591620973129
+    ],
+    "auprc": 0.7346065235220282,
+    "ece": 0.24825861354400083,
+    "tp": 0,
+    "fp": 0,
+    "tn": 386,
+    "fn": 353,
+    "sensitivity": 0.0,
+    "specificity": 1.0
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.4501816109963678
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.4196361449406104
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.38645228050624847
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.35690121786197565
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.2774018944519621
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.011405374057606804
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.0012490892057874469
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": 0.0
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": 0.0
+    }
+  ],
+  "n": 739,
+  "pos_rate": 0.4776725304465494,
+  "tag": "per-nodule (mean)"
+}

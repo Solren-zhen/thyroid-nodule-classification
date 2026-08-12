@@ -9,6 +9,7 @@
     python eval_thyroid.py --weights ./checkpoints/thyroid/fusion/best.pt --split test
 """
 import argparse
+import csv
 import json
 import sys
 from pathlib import Path
@@ -43,7 +44,7 @@ def main():
     parser = argparse.ArgumentParser(description="甲状腺分类模型评估")
     parser.add_argument("--weights", type=str, required=True, help="best.pt 路径")
     parser.add_argument("--data_root", type=str, default=None)
-    parser.add_argument("--split", type=str, default="val", choices=["val", "test"])
+    parser.add_argument("--split", type=str, default="val", choices=["val", "test", "all"])
     parser.add_argument("--mode", type=str, default="real", choices=["real", "mock"])
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--seed", type=int, default=42)
@@ -72,8 +73,23 @@ def main():
         clinical_cols = [c.strip() for c in args.clinical_columns.split(",") if c.strip()]
         num_clin = len(clinical_cols)
     else:
-        clinical_cols = None
+        # 优先用训练时保存的列名；旧 checkpoint 无该字段时对 ThyroidXL 自动识别
+        clinical_cols = mc.get("clinical_columns")
         num_clin = mc["clinical_feature_dim"]
+        if clinical_cols and len(clinical_cols) != num_clin:
+            clinical_cols = None
+        if clinical_cols is None:
+            _tcol = ["tirads", "width_mm", "height_mm", "age", "gender"]
+            _mp = Path(data_root) / "manifest.csv"
+            if _mp.exists():
+                with open(_mp, "r", encoding="utf-8") as _f:
+                    _header = next(csv.reader(_f))
+                if num_clin == len(_tcol) and all(c in _header for c in _tcol):
+                    clinical_cols = list(_tcol)
+        if clinical_cols is None and mc.get("use_clinical", False):
+            print("  ⚠ 未指定 --clinical_columns 且 checkpoint 未记录列名；将使用默认 ACR 列（缺失值补 0）")
+    if clinical_cols:
+        print(f"  [clinical] 使用列: {clinical_cols}")
     ds = ThyroidDataset(data_root, split=args.split, image_size=224,
                         num_clinical_features=num_clin,
                         clinical_columns=clinical_cols,
