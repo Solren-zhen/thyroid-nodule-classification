@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# nohup 后台串行训练剩余 seed（123, 2024），不依赖 Claude 任务句柄。
+# 后台串行训练剩余 seed（123, 2024）。
 # 用法: nohup bash run_remaining_seeds.sh > logs/run_remaining_seeds.log 2>&1 &
 set -e
 cd "$(dirname "$0")"
