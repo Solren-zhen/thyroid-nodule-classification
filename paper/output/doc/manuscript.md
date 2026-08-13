@@ -49,7 +49,7 @@ image-only), with demographic and size features adding little; image features re
 These findings support the importance of external validation before clinical
 deployment. All datasets are publicly accessible (ThyroidXL under gated
 access), and analysis code is available at
-https://github.com/ojdanajakir848-a11y/thyroid.
+https://github.com/ojdanajakir848-a11y/thyroid-nodule-classification.
 
 ## Keywords
 
@@ -698,7 +698,7 @@ multi-dataset pooling transfers to unseen distributions; image-only models showe
   10.6084/m9.figshare.20417895, CC BY 4.0, [14]). ThyroidXL [13] is available
   at https://huggingface.co/datasets/hunglc007/ThyroidXL under gated access;
   access was granted and all 11,635 images were used in this study.
-- Code availability: The analysis code is publicly available at https://github.com/ojdanajakir848-a11y/thyroid.
+- Code availability: The analysis code is publicly available at https://github.com/ojdanajakir848-a11y/thyroid-nodule-classification.
 - Ethics approval and consent: This study used only fully de-identified
   images from publicly available datasets, each released with its own
   research-use permission; no new patient data were collected and no
