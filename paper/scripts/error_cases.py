@@ -3,7 +3,7 @@
 """错误案例可视化：fusion 模型在 ThyroidXL test 的假阳/假阴病例。
 
 生成 2x2 网格图：2 个假阳 + 2 个假阴，标注预测概率 / 真实标签 / TI-RADS。
-输出 paper/figures/fig9_error_cases.png
+输出 paper/figures/fig10_error_cases.png（增大行间距避免标题重叠）
 """
 import sys
 from pathlib import Path
@@ -90,7 +90,7 @@ def main():
                 key=lambda v: v["prob"])
     print(f"假阳 {len(fp)} 个, 假阴 {len(fn)} 个")
 
-    fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+    fig, axes = plt.subplots(2, 2, figsize=(10, 9.5))
     cases = [(fp[0], "False positive (benign\npredicted malignant)"),
              (fp[1], "False positive (benign\npredicted malignant)"),
              (fn[0], "False negative (malignant\npredicted benign)"),
@@ -103,11 +103,11 @@ def main():
         ax.imshow(img, cmap="gray" if img.ndim == 2 else None)
         lab = "Malignant" if case["label"] == 1 else "Benign"
         ax.set_title(f"{title}\nP={case['prob']:.2f} | Truth: {lab}",
-                     fontsize=10)
+                     fontsize=10, pad=12)
         ax.axis("off")
     fig.suptitle("Representative misclassifications of the fused model (ThyroidXL test)",
                  fontsize=12)
-    fig.tight_layout()
+    fig.tight_layout(h_pad=3.2, w_pad=1.2, rect=[0, 0, 1, 0.955])
     out = FIG_DIR / "fig10_error_cases.png"
     fig.savefig(out, dpi=300)
     plt.close(fig)
