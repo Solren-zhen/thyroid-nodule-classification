@@ -18,10 +18,13 @@ regenerated from the **final protocol** (patient-grouped 70/15/15 split,
 
 - Image size 224×224; inference in eval mode (no test-time augmentation in the
   reported numbers).
-- **Batch size 32 for every evaluation command in this document.** Floating
-  point differences can shift the 3rd decimal of ECE / 0.1 pp of
-  sensitivity-specificity between batch sizes; the committed result files in
-  `paper/output/repro/` are the exact values behind the paper.
+- `eval_thyroid.py` commands use **batch size 32** (matching
+  `eval_thyroidxl_ablation.sh`, `subgroup_analysis.py`, `mil_sensitivity.py` and
+  `ensemble_fusion_pw1.py`). `eval_thywise.py` uses its default batch size (64)
+  and `eval_seed_retrain.py` the eval default (16); floating-point differences
+  between batch sizes affect at most the 3rd decimal of ECE / 0.1 pp of
+  sensitivity-specificity. The committed result files in `paper/output/repro/`
+  are the exact values behind the paper.
 - AUC 95% CIs: bootstrap, n = 2,000, seed = 0 (`train_thyroid.bootstrap_auc`).
 - Sensitivity/specificity/accuracy at a fixed 0.5 decision threshold.
 - ECE: 10 bins. DCA: net benefit over thresholds 0.05–0.95.
