@@ -35,7 +35,7 @@ cross-dataset domain shift; joint multi-dataset training recovered part of
 the gap on both an added and an unseen cohort. Adding structured clinical
 features yielded a small overall improvement on ThyroidXL, concentrated in
 low-to-intermediate TI-RADS scores and small nodules, supporting structured
-priors as a complementary signal while image features remained dominant. All datasets are publicly accessible (ThyroidXL under gated access), and analysis code will be released upon publication.
+priors as a complementary signal while image features remained dominant. All datasets are publicly accessible (ThyroidXL under gated access), and analysis code is available at https://github.com/ojdanajakir848-a11y/thyroid.
 
 ## Keywords
 
@@ -683,7 +683,7 @@ remained the dominant signal.
   10.6084/m9.figshare.20417895, CC BY 4.0, [14]). ThyroidXL [13] is available
   at https://huggingface.co/datasets/hunglc007/ThyroidXL under gated access;
   access was granted and all 11,635 images were used in this study.
-- Code availability: GitHub repository (URL to be inserted before submission).
+- Code availability: The analysis code is publicly available at https://github.com/ojdanajakir848-a11y/thyroid.
 - Ethics approval and consent: This study used only fully de-identified
   images from publicly available datasets, each released with its own
   research-use permission; no new patient data were collected and no

@@ -8,7 +8,7 @@ from pathlib import Path
 PROJ = Path(__file__).resolve().parents[2]
 
 manu = (PROJ / "paper" / "output" / "doc" / "manuscript.md").read_text(encoding="utf-8")
-notes = (PROJ / "paper" / "notes" / "subgroup_analysis.md").read_text(encoding="utf-8")
+notes = (PROJ / "paper" / "output" / "repro" / "subgroup_analysis_table4.md").read_text(encoding="utf-8")
 supp = (PROJ / "paper" / "output" / "supplementary.md").read_text(encoding="utf-8")
 pi = json.loads((PROJ / "checkpoints" / "thyroid" / "per_image_stats.json").read_text(encoding="utf-8"))
 mil = json.loads((PROJ / "checkpoints" / "thyroid" / "mil_sensitivity.json").read_text(encoding="utf-8"))
