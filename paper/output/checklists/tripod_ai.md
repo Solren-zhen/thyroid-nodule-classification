@@ -47,13 +47,13 @@ Reference: Collins GS, et al. TRIPOD+AI statement: updated guidance for reportin
 | 18c | Protocol | Declarations (no protocol prepared) | ✓ PRESENT |
 | 18d | Registration | Declarations (not registered) | ✓ PRESENT |
 | 18e | Data sharing | Declarations | ✓ PRESENT |
-| 18f | Code sharing | Declarations (URL pending) | ◐ PARTIAL — insert GitHub URL |
+| 18f | Code sharing | Declarations | ● PRESENT — Declarations; public GitHub repository |
 | 19 | Patient and public involvement | Declarations (no patients/public involved) | ✓ PRESENT |
 | 20a | Participant flow | Fig 1 + §2.1 | ✓ PRESENT |
 | 20b | Characteristics by dataset | Table 1 | ✓ PRESENT |
 | 20c | Development vs evaluation predictor distribution | §3.3 (domain shift) | ✓ PRESENT |
 | 21 | Participants and events per analysis | §3.2-3.5 (n values) | ✓ PRESENT |
-| 22 | Model specification (formula/code) | §2.3 + Code availability | ◐ PARTIAL — code URL pending |
+| 22 | Model specification (formula/code) | §2.3 + Code availability | ● PRESENT — Declarations; public GitHub repository |
 | 23a | Model performance with CIs, subgroups | Table 2/3/4 | ✓ PRESENT |
 | 23b | Heterogeneity across clusters | §3.3/3.4 | ✓ PRESENT |
 | 24 | Model updating results | Not applicable | N/A |
@@ -63,4 +63,4 @@ Reference: Collins GS, et al. TRIPOD+AI statement: updated guidance for reportin
 | 27b | User interaction and expertise | §4 | ◐ PARTIAL |
 | 27c | Future research | §4 Future work | ✓ PRESENT |
 
-**Summary**: 41 PRESENT, 6 PARTIAL, 0 MISSING, 3 N/A. Updated 2026-08-12: ethics/funding/COI/registration/protocol/patient involvement/sample size in Declarations; fairness approaches in §3.6 (explicit exploratory-fairness statement). Remaining PARTIAL: health inequalities (3c), acquisition dates (5b), code URL (18f, pending GitHub), model-specification URL (22), poor-quality input handling (27a, optional), user interaction/expertise (27b). Page numbers to be filled after final docx formatting.
+**Summary**: 42 PRESENT, 4 PARTIAL, 0 MISSING, 3 N/A. Updated 2026-08-12: ethics/funding/COI/registration/protocol/patient involvement/sample size in Declarations; fairness approaches in §3.6 (explicit exploratory-fairness statement). Remaining PARTIAL: health inequalities (3c), acquisition dates (5b), code URL (18f, pending GitHub), model-specification URL (22), poor-quality input handling (27a, optional), user interaction/expertise (27b). Page numbers to be filled after final docx formatting.

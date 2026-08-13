@@ -56,7 +56,7 @@ Reference: Sounderajah V, et al. The STARD-AI reporting guideline for diagnostic
 | 37 | Protocol | Declarations (no protocol prepared) | ✓ PRESENT |
 | 38 | Funding | Declarations (no specific grant) | ✓ PRESENT |
 | 39 | Commercial interests | Declarations (no competing interests) | ✓ PRESENT |
-| 40a | Data and code availability | Declarations | ◐ PARTIAL — code URL to be inserted |
+| 40a | Data and code availability | Declarations | ● PRESENT — Declarations; public GitHub repository |
 | 40b | Audit and evaluation of outputs | Not reported | ◐ PARTIAL — add outputs stored statement |
 
-**Summary**: 36 PRESENT, 6 PARTIAL, 0 MISSING, 2 N/A. Updated 2026-08-12: ethics/funding/COI/registration/protocol/sample size now in Declarations; fairness assessment in §3.6 (explicit exploratory-fairness statement). Remaining PARTIAL: acquisition dates (§2.1), participant series (public cohorts), end-user specification (§4), time interval, code URL (pending GitHub), output audit. Page numbers to be filled after final docx formatting.
+**Summary**: 37 PRESENT, 5 PARTIAL, 0 MISSING, 2 N/A. Updated 2026-08-12: ethics/funding/COI/registration/protocol/sample size now in Declarations; fairness assessment in §3.6 (explicit exploratory-fairness statement). Remaining PARTIAL: acquisition dates (§2.1), participant series (public cohorts), end-user specification (§4), time interval, code URL (pending GitHub), output audit. Page numbers to be filled after final docx formatting.
