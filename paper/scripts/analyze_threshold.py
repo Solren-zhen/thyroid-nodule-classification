@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""PPV/NPV + 阈值敏感性分析。
+"""PPV/NPV + threshold sensitivity analysis (ThyroidXL test, nodule-level).
 
-对 ThyroidXL 三臂模型（fusion/image/clinical）的 test 结节级 mean 预测，
-计算不同阈值下的 Sens/Spec/PPV/NPV，输出：
-  - 控制台表（Youden 阈值处 PPV/NPV）
-  - paper/figures/fig8.png（阈值曲线，Figure 8）
-  - paper/notes/threshold_analysis.md（汇总）
+Models: image-only, clinical-only, image + TI-RADS (feature-selected best),
+and full five-feature fusion (prespecified primary).
+
+Outputs:
+  - console table (Youden-optimal operating point)
+  - paper/figures/fig8.png (threshold curves, Figure 8)
+  - paper/notes/threshold_analysis.md (summary)
 """
-import json
 import sys
 from pathlib import Path
 
@@ -21,13 +22,17 @@ from torch.utils.data import DataLoader
 
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
+sys.path.insert(0, str(PROJ))
 from thyroid.data.thyroid_dataset import ThyroidDataset
 from thyroid.models.thyroid import ThyroidClassifier
 
-CLIN = ["tirads", "width_mm", "height_mm", "age", "gender"]
-ABLATIONS = ["fusion", "image", "clinical"]
-COLORS = {"image": "#1f77b4", "clinical": "#2ca02c", "fusion": "#d62728"}
-LABELS = {"image": "Image-only", "clinical": "Clinical-only", "fusion": "Fusion"}
+CLIN5 = ["tirads", "width_mm", "height_mm", "age", "gender"]
+MODELS = [
+    {"key": "image",    "ckpt": "checkpoints/thyroid/image/best.pt",                "cols": CLIN5, "label": "Image-only",      "color": "#1f77b4"},
+    {"key": "clinical", "ckpt": "checkpoints/thyroid/clinical/best.pt",             "cols": CLIN5, "label": "Clinical-only",  "color": "#2ca02c"},
+    {"key": "tirads",   "ckpt": "checkpoints/thyroid/ablation_img_tirads/best.pt",  "cols": ["tirads"], "label": "Image + TI-RADS", "color": "#000000"},
+    {"key": "fusion",   "ckpt": "checkpoints/thyroid/fusion/best.pt",               "cols": CLIN5, "label": "Full fusion",    "color": "#d62728"},
+]
 FIG_DIR = PROJ / "paper" / "figures"
 
 
@@ -35,8 +40,8 @@ def get_device():
     return torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def load_model(weights_path, device):
-    ckpt = torch.load(weights_path, map_location="cpu", weights_only=False)
+def load_model(wp, device):
+    ckpt = torch.load(wp, map_location="cpu", weights_only=False)
     mc = ckpt["model_config"]
     model = ThyroidClassifier(
         encoder_name=mc["encoder_name"], pretrained=mc["pretrained"],
@@ -82,74 +87,71 @@ def metrics_at(y, p, t):
     fp = int(((preds == 1) & (y == 0)).sum())
     tn = int(((preds == 0) & (y == 0)).sum())
     fn = int(((preds == 0) & (y == 1)).sum())
-    sen = tp / max(tp + fn, 1)
-    spe = tn / max(tn + fp, 1)
-    ppv = tp / max(tp + fp, 1)
-    npv = tn / max(tn + fn, 1)
-    return {"t": t, "sen": sen, "spe": spe, "ppv": ppv, "npv": npv}
+    return {"t": t,
+            "sen": tp / max(tp + fn, 1), "spe": tn / max(tn + fp, 1),
+            "ppv": tp / max(tp + fp, 1), "npv": tn / max(tn + fn, 1)}
 
 
 def main():
     device = get_device()
-    ds = ThyroidDataset(str(PROJ / "data" / "thyroid" / "thyroidxl"), split="test",
-                        image_size=224, num_clinical_features=5, clinical_columns=CLIN,
-                        mock=False, split_by_group=True, seed=42)
-
     data = {}
-    for ab in ABLATIONS:
-        wp = PROJ / "checkpoints" / "thyroid" / ab / "best.pt"
+    for m in MODELS:
+        wp = PROJ / m["ckpt"]
         if not wp.exists():
-            print(f"SKIP {ab}: no checkpoint")
+            print(f"SKIP {m['key']}: no checkpoint")
             continue
+        ds = ThyroidDataset(str(PROJ / "data" / "thyroid" / "thyroidxl"), split="test",
+                            image_size=224, num_clinical_features=len(m["cols"]),
+                            clinical_columns=m["cols"], mock=False,
+                            split_by_group=True, seed=42)
         model = load_model(wp, device)
         p, y = predict_nodule_mean(model, ds, device)
-        data[ab] = (y, p)
+        data[m["key"]] = (y, p, m)
 
     thresholds = np.arange(0.05, 0.96, 0.05)
     rows = {}
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-    for ab, (y, p) in data.items():
-        # Youden 阈值在 test 结节级预测上求（论文 §3.5 已注明 operating point 由 test 队列确定，
-        # 属探索性分析）
+    for key, (y, p, m) in data.items():
         tgrid = np.arange(0.01, 0.99, 0.01)
-        youden = tgrid[np.argmax([m["sen"] + m["spe"] - 1 for m in [metrics_at(y, p, t) for t in tgrid]])]
-        m = metrics_at(y, p, youden)
-        rows[ab] = {**m, "auc": 0.0, "n": int(len(y))}
-        print(f"{LABELS[ab]:14s} Youden t={youden:.2f} | Sens {m['sen']:.3f} Spec {m['spe']:.3f} "
-              f"PPV {m['ppv']:.3f} NPV {m['npv']:.3f}")
-
+        youden = tgrid[np.argmax([metrics_at(y, p, t)["sen"] + metrics_at(y, p, t)["spe"] - 1 for t in tgrid])]
+        mt = metrics_at(y, p, youden)
+        rows[key] = {**mt, "n": int(len(y))}
+        print(f"{m['label']:16s} Youden t={youden:.2f} | Sens {mt['sen']:.3f} Spec {mt['spe']:.3f} "
+              f"PPV {mt['ppv']:.3f} NPV {mt['npv']:.3f}")
         sens = [metrics_at(y, p, t)["sen"] for t in thresholds]
         spec = [metrics_at(y, p, t)["spe"] for t in thresholds]
         ppv = [metrics_at(y, p, t)["ppv"] for t in thresholds]
-        axes[0].plot(thresholds, sens, color=COLORS[ab], lw=2, label=f"{LABELS[ab]} Sens")
-        axes[0].plot(thresholds, spec, color=COLORS[ab], lw=2, ls="--", label=f"{LABELS[ab]} Spec")
-        axes[1].plot(thresholds, ppv, color=COLORS[ab], lw=2, label=f"{LABELS[ab]} PPV")
+        axes[0].plot(thresholds, sens, color=m["color"], lw=2, label=f"{m['label']} Sens")
+        axes[0].plot(thresholds, spec, color=m["color"], lw=2, ls="--", label=f"{m['label']} Spec")
+        axes[1].plot(thresholds, ppv, color=m["color"], lw=2, label=f"{m['label']} PPV")
 
     axes[0].set_xlabel("Threshold", fontsize=12)
     axes[0].set_ylabel("Sensitivity / Specificity", fontsize=12)
     axes[0].set_title("(a) Sens/Spec vs threshold", fontsize=13)
-    axes[0].set_xlim(0, 1); axes[0].set_ylim(0, 1)
-    axes[0].legend(fontsize=8, loc="center left")
+    axes[0].set_xlim(0, 1)
+    axes[0].set_ylim(0, 1)
+    axes[0].legend(fontsize=7, loc="center left")
     axes[1].set_xlabel("Threshold", fontsize=12)
     axes[1].set_ylabel("Positive predictive value", fontsize=12)
     axes[1].set_title("(b) PPV vs threshold", fontsize=13)
-    axes[1].set_xlim(0, 1); axes[1].set_ylim(0, 1)
-    axes[1].legend(fontsize=8, loc="center left")
+    axes[1].set_xlim(0, 1)
+    axes[1].set_ylim(0, 1)
+    axes[1].legend(fontsize=7, loc="center left")
     fig.tight_layout()
     fig.savefig(FIG_DIR / "fig8.png", dpi=300)
     plt.close(fig)
     print("saved fig8.png")
 
-    # markdown
     md = ["# Threshold Analysis (ThyroidXL test, nodule-level, n=739)",
           "", "## Youden-optimal operating point", "",
           "| Model | Threshold | Sensitivity | Specificity | PPV | NPV |",
           "|---|---|---|---|---|---|"]
-    for ab in ABLATIONS:
-        if ab in rows:
-            r = rows[ab]
-            md.append(f"| {LABELS[ab]} | {r['t']:.2f} | {r['sen']:.3f} | {r['spe']:.3f} | {r['ppv']:.3f} | {r['npv']:.3f} |")
+    for m in MODELS:
+        if m["key"] in rows:
+            r = rows[m["key"]]
+            md.append(f"| {m['label']} | {r['t']:.2f} | {r['sen']:.3f} | {r['spe']:.3f} | {r['ppv']:.3f} | {r['npv']:.3f} |")
     out = PROJ / "paper" / "notes" / "threshold_analysis.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(md) + "\n", encoding="utf-8")
     print(f"saved {out}")
 
