@@ -10,30 +10,27 @@ Correspondence: Chaohui Zhen (chaohui0408.medical@outlook.com)
 
 **Background.** Thyroid nodules are highly prevalent, yet ultrasound-based
 risk stratification remains subjective and operator-dependent. Deep learning
-models trained on thyroid ultrasound images show promise, but most studies
-report single-centre, single-dataset results without external validation, and
-few integrate structured clinical features such as the American College of
+models trained on thyroid ultrasound images show promise, but most studies lack external validation and few integrate structured clinical features such as the American College of
 Radiology (ACR) Thyroid Imaging Reporting and Data System (TI-RADS) descriptors.
 
 **Methods.** In track A, an image-only EfficientNetV2-S model trained on
 TN5000 was evaluated on two external cohorts (TN3K and Thy-Wise), and a
-joint model additionally trained on TN3K images was compared with the
+joint model also trained on TN3K images was compared with the
 single-dataset model to quantify cross-dataset domain shift. In track B, a
 multimodal model fusing the image encoder with five clinical features (ACR
 TI-RADS total score, nodule width and height, age, sex) was compared with
 image-only and clinical-only models on ThyroidXL. Performance was assessed
 using the area under the receiver operating characteristic curve (AUC) with
-bootstrap confidence intervals (CI), sensitivity, specificity, expected
-calibration error (ECE), and decision curve analysis.
+bootstrap confidence intervals (CI), sensitivity, specificity, expected calibration error (ECE), and decision curves.
 
 **Results.** In track A, the single-dataset model achieved an internal test
 AUC of 0.915 but dropped to 0.712 on the full external TN3K cohort (0.729 on the official test split) and 0.608 (nodule-level)
 on Thy-Wise. Joint training raised the TN3K test AUC from 0.729 to 0.813
-(Δ = +0.085 on the matched official TN3K test split) and the Thy-Wise nodule-level AUC to 0.710 (Δ = +0.102).
+(matched Δ = +0.085) and the Thy-Wise nodule-level AUC to 0.710 (Δ = +0.102).
 In track B, fusion achieved a nodule-level AUC of 0.947, above the image-only
 (0.939) and clinical-only (0.814) models; image features dominated, and
 clinical features added a small but statistically significant gain
-(ΔAUC +0.007, computed from unrounded values; p = 0.012).
+(ΔAUC +0.007; p = 0.012).
 
 **Conclusions.** Across four public datasets, image-only classifiers achieved
 high internal AUC but lost substantial performance externally, quantifying
