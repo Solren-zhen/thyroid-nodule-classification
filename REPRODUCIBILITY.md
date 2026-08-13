@@ -267,6 +267,13 @@ Result files: `paper/output/repro/jes_tn5000_internal_test.json`,
 `paper/output/repro/jes_tn3k_official_test.json`,
 `paper/output/repro/jes_thywise.json`.
 
+Multi-seed robustness (seeds 123/2024): repeat the training with
+`--seed {123,2024} --save_dir checkpoints/thyroid/jes_control_s{123,2024}`
+on manifests built with `tools/build_jes_manifest.py --seed {123,2024}`;
+result files `paper/output/repro/jes_s{123,2024}_{tn5000_internal_test,tn3k_official_test,thywise}.json`.
+TN3K official-test AUC across seeds 42/123/2024: 0.795 ± 0.003 (range
+0.792–0.798); Thy-Wise nodule-level AUC: 0.627 ± 0.028 (range 0.597–0.651).
+
 ### 12.2 Feature-level ablation (Table 6)
 
 ```bash

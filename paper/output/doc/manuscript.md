@@ -34,18 +34,21 @@ quantifying a large cross-dataset domain-shift gap. Joint training raised the
 TN3K official-test AUC from 0.729 to 0.813 (matched Δ = +0.085) and the
 Thy-Wise nodule-level AUC to 0.710 (Δ = +0.102), showing that the benefit of
 multi-dataset training transfers beyond the cohort added to training. In
-track B, fusion achieved a nodule-level AUC of 0.947, above the image-only
-(0.939) and clinical-only (0.814) models; the incremental gain was small but
-statistically significant (ΔAUC +0.007; 95% CI 0.002–0.013; p = 0.012) and
-was concentrated in low-to-intermediate TI-RADS scores and small nodules.
+track B, adding the expert ACR TI-RADS score alone produced the largest
+incremental improvement (nodule-level AUC 0.960 vs 0.939 for image-only;
+paired ΔAUC +0.021, 95% CI 0.008–0.035, p = 0.003), whereas adding nodule
+size or demographics provided little additional benefit, and the full
+five-feature fusion achieved AUC 0.947; the fusion gain was concentrated in
+low-to-intermediate TI-RADS scores and small nodules.
 
 **Conclusions.** Across four public datasets, image-only classifiers achieved
 high internal AUC but lost substantial performance externally, quantifying
 cross-dataset domain shift in thyroid ultrasound AI; joint multi-dataset
 training recovered part of the gap on both a target-domain held-out cohort and
-a completely unseen cohort. Adding structured patient and nodule features
-yielded a small overall improvement on ThyroidXL, concentrated in
-diagnostically ambiguous subgroups, while image features remained dominant.
+a completely unseen cohort. The incremental value of structured information was driven
+mainly by the expert ACR TI-RADS score (nodule-level AUC 0.960 vs 0.939 for
+image-only), with demographic and size features adding little; image features
+remained dominant.
 These findings support the importance of external validation before clinical
 deployment. All datasets are publicly accessible (ThyroidXL under gated
 access), and analysis code is available at
@@ -326,7 +329,7 @@ Figures 2–4). Joint training therefore recovered approximately half of the
 observed AUC loss on the external TN3K cohort. Note that the official TN3K
 test set is a target-domain held-out evaluation, because TN3K training images
 contributed to the joint model; Thy-Wise, by contrast, never contributed
-training data and is the completely unseen cohort. At the fixed 0.5 decision threshold, net benefit on the TN3K official test increased from 0.062 (single-dataset) to 0.129 (joint), compared with 0.000 for treating none (Figure 3b), indicating that the AUC improvement translated into a clinically meaningful gain at the default operating point.
+training data and is the completely unseen cohort. At the fixed 0.5 decision threshold, net benefit on the TN3K official test increased from 0.062 (single-dataset) to 0.129 (joint), compared with 0.000 for treating none (Figure 3b), and was associated with a higher net benefit at the fixed 0.5 threshold, suggesting potential clinical utility.
 
 The gain transferred to a second, fully independent cohort. Applied to
 Thy-Wise (3,954 pathology-confirmed nodules from a third institution), the
@@ -343,21 +346,30 @@ benefit of multi-dataset training transfers to unseen distributions.
 
 **Equal-sample-size control.** Because joint training also increased the
 number of training images (7,129 vs 4,250), we tested whether the improvement
-was simply a sample-size effect. We trained an equal-sample-size control model
-on 3,500 training images sampled from the combined pool (1,920 TN5000 and
-1,580 TN3K images, seed 42) with the same validation set and training protocol
-(Table 5). At matched sample size, the multi-dataset control already exceeded
+was simply a sample-size effect. We trained equal-sample-size control models on 3,500 training images sampled
+from the combined pool (stratified as 1,920 TN5000 and 1,580 TN3K images),
+matching the single-dataset training size while holding the 750-image
+validation set constant (total development set matched at 4,250 images); three
+independent subsamples (seeds 42, 123 and 2024) were trained with the same
+protocol (Table 5). At matched sample size, the multi-dataset control already exceeded
 the single-dataset model on the TN3K official test (AUC 0.792 vs 0.729) and on
 the completely unseen Thy-Wise cohort (0.651 vs 0.608), although its internal
 TN5000 test AUC was lower (0.889 vs 0.915) because fewer TN5000 images were
 available. Enlarging the pool to the full joint set added further external
 gains (TN3K 0.813; Thy-Wise 0.710). The multi-dataset benefit is therefore not
 attributable to sample size alone: data diversity contributed substantially at
-matched sample size, and scale added further improvement.
+matched sample size, and scale added further improvement. Across three independent subsamples (seeds 42, 123 and 2024), the
+equal-size control achieved a TN3K official-test AUC of 0.795 ± 0.003
+(range 0.792–0.798), consistently above the single-dataset model (0.729),
+and a Thy-Wise nodule-level AUC of 0.627 ± 0.028 (range 0.597–0.651), with
+a mean above the single-dataset model (0.608) but greater subsample-to-
+subsample variability.
 
-**Table 5.** Equal-sample-size control (training-set size matched at 4,250
-images for the single-dataset and equal-size models; the joint model used
-7,129 images).
+**Table 5.** Equal-sample-size control. The development-set size was matched at
+4,250 images (3,500 training + 750 validation) for the single-dataset and
+equal-size models, with the validation set held constant; the joint model used
+7,129 development images (6,379 training + 750 validation). Seed-42 anchor
+values are shown; multi-seed means are reported in Section 3.4.
 
 | Evaluation (AUC) | Single (3,500 TN5000) | Equal-size (1,920 TN5000 + 1,580 TN3K) | Joint (3,500 TN5000 + 2,879 TN3K) |
 |---|---|---|---|
@@ -477,14 +489,13 @@ TI-RADS total score alone yielded the largest improvement (nodule-level AUC
 five-feature fusion (0.947); adding nodule size (0.948) or demographics (0.944)
 provided little or no gain over image-only, and the full fusion did not exceed
 image + TI-RADS alone. The incremental value of structured information
-therefore derives mainly from the expert TI-RADS score in this cohort.
+therefore derives mainly from the expert TI-RADS score in this cohort. The difference between image + TI-RADS and image-only was statistically significant in a paired bootstrap analysis (ΔAUC +0.021, 95% CI 0.008–0.035, two-sided p = 0.003).
 
 **Temperature scaling.** The fused model improved discrimination at a small
 calibration cost relative to image-only (ECE 0.118 vs 0.087; Brier 0.113 vs
 0.110). Temperature scaling fitted on the validation cohort (T = 0.686)
-improved test calibration (ECE 0.118 → 0.109; Brier 0.113 → 0.112) while
-leaving discrimination unchanged (AUC 0.947), indicating that the fusion gain
-can be combined with more reliable probabilities through post-hoc calibration.
+produced a modest improvement in calibration without affecting discrimination
+(ECE 0.118 → 0.109; Brier 0.113 → 0.112; AUC unchanged at 0.947).
 
 **Table 6.** Feature-level ablation on the ThyroidXL held-out test cohort
 (nodule-level, n = 739).
@@ -622,7 +633,7 @@ proportionally improving the reliability of the predicted probabilities at the
 fixed decision threshold. Two implications follow. First, image features dominated the classification task in this
 single-device cohort, and the incremental value of the five structured
 features, while directionally positive, was small. Second, structured features
-alone were insufficient for reliable discrimination. A feature-level ablation traced this gain to the expert TI-RADS score: image + TI-RADS alone (AUC 0.960) at least matched the full five-feature fusion (0.947), whereas demographic and size features added little (Section 3.5). This tempers the
+alone were insufficient for reliable discrimination. A feature-level ablation traced this gain to the expert TI-RADS score: image + TI-RADS alone (AUC 0.960) at least matched the full five-feature fusion (0.947), whereas demographic and size features added little (Section 3.5). The large gain of image + TI-RADS over image-only is consistent with TI-RADS encoding structured expert assessment that is related to, but not identical with, the information extractable from raw ultrasound pixels. This tempers the
 "device-independent prior" framing: only a subset of the features (age and
 sex) is truly independent of image acquisition, and structured features
 appear to be a useful complementary signal rather than a substitute for image
