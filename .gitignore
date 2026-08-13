@@ -4,6 +4,7 @@ __pycache__/
 checkpoints/
 data/thyroid/
 data/thyroid_multi/
+data/thyroid_jes/
 data/thyroid_tn3ktest/
 data/thyroid_tn5000test/
 logs/
