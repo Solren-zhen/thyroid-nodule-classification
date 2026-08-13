@@ -25,6 +25,16 @@ total score, nodule width, nodule height, age, sex).
 | ThyroidXL test — fusion | 0.947 |
 | ThyroidXL test — image-only | 0.939 |
 | ThyroidXL test — clinical-only | 0.814 |
+| ThyroidXL test — image + TI-RADS | 0.960 |
+| ThyroidXL test — fusion | 0.947 |
+| ThyroidXL test — image-only | 0.939 |
+
+Equal-sample-size control shows the joint-training gain is not a pure
+sample-size effect (TN3K official test AUC 0.729 → 0.792 at matched training
+size); a feature-level ablation shows the structured-feature gain is driven by
+the expert TI-RADS score (image + TI-RADS AUC 0.960 vs image-only 0.939);
+temperature scaling improves fusion calibration (ECE 0.118 → 0.109) without
+changing AUC.
 
 See the manuscript (`paper/output/doc/`) for full details, tables, and figures.
 Every reported number maps to an exact command and result file in

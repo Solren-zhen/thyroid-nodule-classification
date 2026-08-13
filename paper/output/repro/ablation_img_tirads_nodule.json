@@ -1,0 +1,103 @@
+{
+  "metrics": {
+    "acc": 0.8863328822733424,
+    "precision": 0.940983606557377,
+    "recall": 0.8130311614730878,
+    "f1": 0.8723404255319149,
+    "auc": 0.9604206725476669,
+    "auc_ci": [
+      0.9477400039619224,
+      0.9724862106647189
+    ],
+    "auprc": 0.954196775735876,
+    "ece": 0.06360631811727163,
+    "brier": 0.08385778287282608,
+    "tp": 287,
+    "fp": 18,
+    "tn": 368,
+    "fn": 66,
+    "sensitivity": 0.8130311614730878,
+    "specificity": 0.9533678756476683
+  },
+  "decision_curve": [
+    {
+      "threshold": 0.05,
+      "net_benefit": 0.46150559076988823
+    },
+    {
+      "threshold": 0.1,
+      "net_benefit": 0.4500075176665163
+    },
+    {
+      "threshold": 0.15,
+      "net_benefit": 0.4404998806017671
+    },
+    {
+      "threshold": 0.2,
+      "net_benefit": 0.43200270635994586
+    },
+    {
+      "threshold": 0.25,
+      "net_benefit": 0.41677943166441134
+    },
+    {
+      "threshold": 0.3,
+      "net_benefit": 0.3976416006185966
+    },
+    {
+      "threshold": 0.35,
+      "net_benefit": 0.39065264911002395
+    },
+    {
+      "threshold": 0.4,
+      "net_benefit": 0.37979251240414974
+    },
+    {
+      "threshold": 0.45,
+      "net_benefit": 0.3723705252798622
+    },
+    {
+      "threshold": 0.5,
+      "net_benefit": 0.36400541271989173
+    },
+    {
+      "threshold": 0.55,
+      "net_benefit": 0.35182679296346414
+    },
+    {
+      "threshold": 0.6,
+      "net_benefit": 0.34100135317997293
+    },
+    {
+      "threshold": 0.65,
+      "net_benefit": 0.3321090276435337
+    },
+    {
+      "threshold": 0.7,
+      "net_benefit": 0.3193504736129905
+    },
+    {
+      "threshold": 0.75,
+      "net_benefit": 0.29769959404600815
+    },
+    {
+      "threshold": 0.8,
+      "net_benefit": 0.25169147496617045
+    },
+    {
+      "threshold": 0.85,
+      "net_benefit": 0.2097428958051421
+    },
+    {
+      "threshold": 0.9,
+      "net_benefit": 0.16238159675236807
+    },
+    {
+      "threshold": 0.95,
+      "net_benefit": 0.04871447902571042
+    }
+  ],
+  "n": 739,
+  "pos_rate": 0.4776725304465494,
+  "tag": "per-nodule (mean)"
+}

@@ -341,6 +341,30 @@ therefore used as the primary external estimate. The joint-training gain on
 Thy-Wise (+0.102) was comparable to that on TN3K (+0.085), showing that the
 benefit of multi-dataset training transfers to unseen distributions.
 
+**Equal-sample-size control.** Because joint training also increased the
+number of training images (7,129 vs 4,250), we tested whether the improvement
+was simply a sample-size effect. We trained an equal-sample-size control model
+on 3,500 training images sampled from the combined pool (1,920 TN5000 and
+1,580 TN3K images, seed 42) with the same validation set and training protocol
+(Table 5). At matched sample size, the multi-dataset control already exceeded
+the single-dataset model on the TN3K official test (AUC 0.792 vs 0.729) and on
+the completely unseen Thy-Wise cohort (0.651 vs 0.608), although its internal
+TN5000 test AUC was lower (0.889 vs 0.915) because fewer TN5000 images were
+available. Enlarging the pool to the full joint set added further external
+gains (TN3K 0.813; Thy-Wise 0.710). The multi-dataset benefit is therefore not
+attributable to sample size alone: data diversity contributed substantially at
+matched sample size, and scale added further improvement.
+
+**Table 5.** Equal-sample-size control (training-set size matched at 4,250
+images for the single-dataset and equal-size models; the joint model used
+7,129 images).
+
+| Evaluation (AUC) | Single (3,500 TN5000) | Equal-size (1,920 TN5000 + 1,580 TN3K) | Joint (3,500 TN5000 + 2,879 TN3K) |
+|---|---|---|---|
+| TN5000 internal test | 0.915 | 0.889 | 0.931 |
+| TN3K official test | 0.729 | 0.792 | 0.813 |
+| Thy-Wise (nodule-level) | 0.608 | 0.651 | 0.710 |
+
 **Table 2.** Classification performance of image-only models across datasets.
 
 | Model / Evaluation | AUC (95% CI) | Sensitivity | Specificity | ACC | ECE | n |
@@ -444,6 +468,34 @@ the test predictions across the three models improved the nodule-level AUC to
 confirming robustness of the ablation result across training seeds. The fusion
 gain over image-only was statistically significant (ΔAUC +0.007; paired
 bootstrap 95% CI 0.002–0.013, two-sided p = 0.012).
+
+**Feature-level ablation.** To locate the source of the structured-feature
+gain, we trained variants of the fusion model with image features plus each
+structured-feature subset under the same protocol (Table 6). Adding the expert
+TI-RADS total score alone yielded the largest improvement (nodule-level AUC
+0.960, 95% CI 0.948–0.973), above image-only (0.939) and above the full
+five-feature fusion (0.947); adding nodule size (0.948) or demographics (0.944)
+provided little or no gain over image-only, and the full fusion did not exceed
+image + TI-RADS alone. The incremental value of structured information
+therefore derives mainly from the expert TI-RADS score in this cohort.
+
+**Temperature scaling.** The fused model improved discrimination at a small
+calibration cost relative to image-only (ECE 0.118 vs 0.087; Brier 0.113 vs
+0.110). Temperature scaling fitted on the validation cohort (T = 0.686)
+improved test calibration (ECE 0.118 → 0.109; Brier 0.113 → 0.112) while
+leaving discrimination unchanged (AUC 0.947), indicating that the fusion gain
+can be combined with more reliable probabilities through post-hoc calibration.
+
+**Table 6.** Feature-level ablation on the ThyroidXL held-out test cohort
+(nodule-level, n = 739).
+
+| Structured input (added to image) | AUC (95% CI) | AUPRC | ECE | Brier |
+|---|---|---|---|---|
+| None (image-only) | 0.939 (0.924–0.954) | 0.930 | 0.087 | 0.110 |
+| TI-RADS | 0.960 (0.948–0.973) | 0.954 | 0.064 | 0.084 |
+| Size (width, height) | 0.948 (0.934–0.962) | 0.942 | 0.077 | 0.098 |
+| Demographics (age, sex) | 0.944 (0.929–0.958) | 0.935 | 0.106 | 0.112 |
+| All five (fusion) | 0.947 (0.932–0.960) | 0.939 | 0.118 | 0.113 |
 
 <!-- FIGURE:5 -->
 
@@ -552,7 +604,7 @@ Thy-Wise cohort (+0.102), which never contributed training data. The residual
 gaps on both cohorts (absolute AUCs of 0.813 and 0.710, well below the
 internal 0.931) indicate that multi-dataset pooling alone does not eliminate
 domain shift, and that additional robustness strategies, including structured
-patient and nodule features, merit evaluation.
+patient and nodule features, merit evaluation. An equal-sample-size control (Section 3.4) indicated that this gain was not attributable to sample size alone: at a matched training-set size, a multi-dataset control already improved the target-domain external test (TN3K AUC 0.729 → 0.792).
 
 **Structured patient and nodule features complement, but do not dominate, image
 features.** The hypothesis that structured patient and nodule priors (an expert ACR
@@ -570,7 +622,7 @@ proportionally improving the reliability of the predicted probabilities at the
 fixed decision threshold. Two implications follow. First, image features dominated the classification task in this
 single-device cohort, and the incremental value of the five structured
 features, while directionally positive, was small. Second, structured features
-alone were insufficient for reliable discrimination. This tempers the
+alone were insufficient for reliable discrimination. A feature-level ablation traced this gain to the expert TI-RADS score: image + TI-RADS alone (AUC 0.960) at least matched the full five-feature fusion (0.947), whereas demographic and size features added little (Section 3.5). This tempers the
 "device-independent prior" framing: only a subset of the features (age and
 sex) is truly independent of image acquisition, and structured features
 appear to be a useful complementary signal rather than a substitute for image

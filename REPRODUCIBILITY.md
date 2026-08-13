@@ -228,3 +228,67 @@ python paper/scripts/error_cases.py                 # Fig 10
 - Batch-to-batch floating-point variation is the only source of run-to-run
   differences at the 3rd decimal; re-running the exact commands above
   reproduces the committed JSON files to the reported precision.
+
+## 12. Reviewer-requested experiments
+
+### 12.1 Equal-sample-size control (Table 5)
+
+```bash
+# Build the equal-size manifest: 3,500 train images from the joint pool
+# (1,920 TN5000 + 1,580 TN3K, seed 42) + the same 750 TN5000 val images
+python - <<'PY'
+import csv, random
+from collections import defaultdict
+from pathlib import Path
+SRC = Path("data/thyroid_multi/manifest.csv"); OUT = Path("data/thyroid_jes/manifest.csv")
+rows = list(csv.DictReader(open(SRC, encoding="utf-8")))
+train = [r for r in rows if r["split"] == "train"]; val = [r for r in rows if r["split"] == "val"]
+src = lambda r: "tn3k" if "/tn3k/" in r["image_path"].replace("\\", "/") else "tn5000"
+rng = random.Random(42)
+by = defaultdict(list)
+for r in train: by[src(r)].append(r)
+chosen = []
+for s, items in sorted(by.items()):
+    chosen.extend(rng.sample(items, round(3500 * len(items) / len(train))))
+chosen = rng.sample(chosen, 3500)
+jes = [{**r, "split": "train"} for r in chosen] + [{**r, "split": "val"} for r in val]
+OUT.parent.mkdir(parents=True, exist_ok=True)
+with open(OUT, "w", newline="", encoding="utf-8") as f:
+    w = csv.DictWriter(f, fieldnames=list(jes[0].keys())); w.writeheader(); w.writerows(jes)
+PY
+
+python train_thyroid.py --data_root data/thyroid_jes --ablation image   --epochs 30 --batch_size 64 --seed 42 --pos_weight 1.0   --save_dir checkpoints/thyroid/jes_control
+python eval_thyroid.py --weights checkpoints/thyroid/jes_control/best.pt   --data_root data/thyroid_tn5000test --split test --batch_size 32   # -> jes_tn5000_internal_test.json
+python eval_thyroid.py --weights checkpoints/thyroid/jes_control/best.pt   --data_root data/thyroid_tn3ktest --split test --batch_size 32     # -> jes_tn3k_official_test.json
+python eval_thywise.py --weights checkpoints/thyroid/jes_control/best.pt   --data_root data/thyroid/thywise                                   # -> jes_thywise.json
+```
+
+Result files: `paper/output/repro/jes_tn5000_internal_test.json`,
+`paper/output/repro/jes_tn3k_official_test.json`,
+`paper/output/repro/jes_thywise.json`.
+
+### 12.2 Feature-level ablation (Table 6)
+
+```bash
+CLIN="tirads,width_mm,height_mm,age,gender"
+for arm in tirads agesex size; do
+  case $arm in
+    tirads) COLS="tirads" ;;
+    agesex) COLS="age,gender" ;;
+    size)   COLS="width_mm,height_mm" ;;
+  esac
+  python train_thyroid.py --data_root data/thyroid/thyroidxl --ablation fusion     --clinical_columns "$COLS" --epochs 30 --batch_size 32 --seed 42 --pos_weight 1.0     --save_dir "checkpoints/thyroid/ablation_img_${arm}"
+  python eval_thyroid.py --weights "checkpoints/thyroid/ablation_img_${arm}/best.pt"     --data_root data/thyroid/thyroidxl --split test --batch_size 32 --aggregate mean     --clinical_columns "$COLS"
+done
+```
+
+Result files: `paper/output/repro/ablation_img_{tirads,agesex,size}_nodule.json`.
+
+### 12.3 Temperature scaling (fusion model)
+
+```bash
+python paper/scripts/temperature_scaling.py   # -> paper/output/repro/temperature_scaling.json
+```
+
+T = 0.686 fitted on the validation cohort (n = 335 nodules); test ECE
+0.118 → 0.109, Brier 0.113 → 0.112, AUC unchanged (0.947).
