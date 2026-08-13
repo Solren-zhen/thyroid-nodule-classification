@@ -17,7 +17,7 @@ Reference: Collins GS, et al. TRIPOD+AI statement: updated guidance for reportin
 | 3c | Health inequalities | Not reported | ◐ PARTIAL — optional; fairness considered in §3.6 |
 | 4 | Objectives (development vs validation) | §1 | ✓ PRESENT |
 | 5a | Data sources (development vs evaluation) | §2.1 | ✓ PRESENT |
-| 5b | Dates of data collection | §2.1 (institutions & devices); dataset publication years in refs | ◐ PARTIAL — acquisition dates not reported in public data |
+| 5b | Dates of data collection | §2.1 (reporting note: exact acquisition dates not published; institutions, devices and publication years reported) | ● PRESENT |
 | 6a | Study setting, centres | §2.1 (4 datasets) | ✓ PRESENT |
 | 6b | Eligibility criteria | §2.1 | ✓ PRESENT |
 | 6c | Treatments received | Not applicable | N/A — diagnostic study |
@@ -60,7 +60,7 @@ Reference: Collins GS, et al. TRIPOD+AI statement: updated guidance for reportin
 | 25 | Interpretation incl. fairness | §3.6 + §4 Discussion | ✓ PRESENT |
 | 26 | Limitations | §4 Limitations | ✓ PRESENT |
 | 27a | Poor-quality input handling | Not reported | ◐ PARTIAL — optional |
-| 27b | User interaction and expertise | §4 | ◐ PARTIAL |
+| 27b | User interaction and expertise | §4 Discussion (intended users: sonographers and clinicians with limited experience; second-opinion aid, not autonomous) | ● PRESENT |
 | 27c | Future research | §4 Future work | ✓ PRESENT |
 
-**Summary**: 42 PRESENT, 4 PARTIAL, 0 MISSING, 3 N/A. Updated 2026-08-12: ethics/funding/COI/registration/protocol/patient involvement/sample size in Declarations; fairness approaches in §3.6 (explicit exploratory-fairness statement). Remaining PARTIAL: health inequalities (3c), acquisition dates (5b), code URL (18f, pending GitHub), model-specification URL (22), poor-quality input handling (27a, optional), user interaction/expertise (27b). Page numbers to be filled after final docx formatting.
+**Summary**: 44 PRESENT, 2 PARTIAL, 0 MISSING, 3 N/A. Updated 2026-08-13: dates of data collection (§2.1 reporting note); user interaction/expertise (§4). Remaining PARTIAL: health inequalities (3c, optional), poor-quality input handling (27a, optional). Page numbers to be filled after final docx formatting.

@@ -18,8 +18,8 @@ Reference: Sounderajah V, et al. The STARD-AI reporting guideline for diagnostic
 | 6 | Ethics approval (or justification) | Declarations (de-identified public data; no IRB required) | ✓ PRESENT |
 | 7 | Eligibility criteria (participant + data level) | §2.1 (4 datasets; 25 corrupted Thy-Wise images excluded) | ✓ PRESENT |
 | 8 | Participant identification basis | §2.1 (open repositories) | ✓ PRESENT |
-| 9 | Setting and dates | §2.1 (institutions & devices); dataset publication years in refs | ◐ PARTIAL — acquisition dates not reported in public data |
-| 10 | Participant series (consecutive/random/convenience) | §2.1 (publicly released cohorts) | ◐ PARTIAL — archive cohorts, not consecutive clinical series |
+| 9 | Setting and dates | §2.1 (reporting note: exact acquisition dates not published; institutions, devices and publication years reported) | ● PRESENT |
+| 10 | Participant series (consecutive/random/convenience) | §2.1 (reporting note: public archive cohorts, not consecutive clinical series) | ● PRESENT |
 | 11 | Data source (routinely collected / open-source) | §2.1 + Declarations | ✓ PRESENT |
 | 12 | Dataset annotation (who, experience, how) | §2.1 (expert-radiologist labels; pathology/cytology confirmation) | ✓ PRESENT |
 | 13 | Data capture devices and software | §2.1 (device listed) + §2.4 (software versions) | ✓ PRESENT |
@@ -27,7 +27,7 @@ Reference: Sounderajah V, et al. The STARD-AI reporting guideline for diagnostic
 | 15a | Index test detail | §2.3 Model architecture | ✓ PRESENT |
 | 15b | Index test development (train/val/test) | §2.4 + §3.2/3.4 | ✓ PRESENT |
 | 15c | Index test cutoffs (prespecified vs exploratory) | §2.5 (fixed 0.5 threshold) | ✓ PRESENT |
-| 15d | End-user specification and expertise | §4 Discussion | ◐ PARTIAL — add explicit end-user |
+| 15d | End-user specification and expertise | §4 Discussion (intended users: sonographers and clinicians with limited thyroid ultrasound experience, second-opinion aid) | ● PRESENT |
 | 16a | Reference standard detail | §2.5 | ✓ PRESENT |
 | 16b | Reference standard rationale | §2.5 | ✓ PRESENT |
 | 16c | Reference standard cutoffs | §2.5 | ✓ PRESENT |
@@ -43,7 +43,7 @@ Reference: Sounderajah V, et al. The STARD-AI reporting guideline for diagnostic
 | 25 | Baseline characteristics (train/val/test) | Table 1 + §3.1 | ✓ PRESENT |
 | 26a | Severity distribution | Table 1 (malignant %) | ✓ PRESENT |
 | 26b | Alternative diagnoses | Not applicable (binary) | N/A |
-| 27 | Time interval (index vs reference) | §2.1 | ◐ PARTIAL — labels coincide with acquisition (public datasets) |
+| 27 | Time interval (index vs reference) | §2.1 (reporting note: labels assigned at acquisition; no follow-up interval) | ● PRESENT |
 | 28 | Test set representativeness | §4 (domain shift) | ✓ PRESENT |
 | 29 | External evaluation differences | §3.3/3.4 | ✓ PRESENT |
 | 30 | Cross-tabulation (index × reference) | Table 2/3 + Fig 4 | ✓ PRESENT |
@@ -57,6 +57,6 @@ Reference: Sounderajah V, et al. The STARD-AI reporting guideline for diagnostic
 | 38 | Funding | Declarations (no specific grant) | ✓ PRESENT |
 | 39 | Commercial interests | Declarations (no competing interests) | ✓ PRESENT |
 | 40a | Data and code availability | Declarations | ● PRESENT — Declarations; public GitHub repository |
-| 40b | Audit and evaluation of outputs | Not reported | ◐ PARTIAL — add outputs stored statement |
+| 40b | Audit and evaluation of outputs | Declarations (evaluation outputs stored in repo under paper/output/repro) | ● PRESENT |
 
-**Summary**: 37 PRESENT, 5 PARTIAL, 0 MISSING, 2 N/A. Updated 2026-08-12: ethics/funding/COI/registration/protocol/sample size now in Declarations; fairness assessment in §3.6 (explicit exploratory-fairness statement). Remaining PARTIAL: acquisition dates (§2.1), participant series (public cohorts), end-user specification (§4), time interval, code URL (pending GitHub), output audit. Page numbers to be filled after final docx formatting.
+**Summary**: 42 PRESENT, 0 PARTIAL, 0 MISSING, 2 N/A. Updated 2026-08-13: reporting notes for acquisition dates/participant series/time interval (§2.1); end-user specification (§4); evaluation-outputs statement (Declarations). Page numbers to be filled after final docx formatting.

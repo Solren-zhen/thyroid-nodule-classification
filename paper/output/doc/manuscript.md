@@ -165,6 +165,16 @@ in this comparison). Because each TN5000 image corresponds to an independent
 nodule sample, image filenames were treated as patient identifiers for
 grouped splitting.
 
+Reporting notes. The original public releases do not document exact
+acquisition dates, so we report the institutions, devices and publication
+years stated by the releasing teams rather than precise collection dates.
+All four cohorts are archive collections rather than consecutive clinical
+series, and enrolment was determined by the releasing institutions rather
+than by a prespecified protocol. Benign/malignant labels were assigned from
+biopsy, cytology or pathology examinations performed at the time of
+acquisition, so the index test and the reference standard were concurrent;
+no follow-up interval was involved.
+
 <!-- FIGURE:1 -->
 
 ### 2.2 Structured patient and nodule features
@@ -609,6 +619,11 @@ estimate, and the subgroup results should be confirmed in larger,
 multi-device cohorts.
 
 **A practical caveat.** The best-performing configuration still depends on an expert TI-RADS score and is therefore not fully automated. That does not remove the need for AI: image analysis alone matched the TI-RADS total score (AUC 0.939 vs. 0.929), and the combination improved on both. The most plausible clinical role is as a second opinion that reduces subjectivity in low-to-intermediate risk nodules, where the fusion gain was largest, rather than as a replacement for the reporting radiologist. Routine deployment would require systematic expert scoring in the reading workflow or automated extraction of TI-RADS descriptors, which is an active area of work [4].
+In terms of intended use, the model is aimed at sonographers and clinicians
+with limited thyroid ultrasound experience, who would consult it as a
+second-opinion aid when triaging low-to-intermediate risk nodules; it is not
+intended for autonomous use or as a replacement for expert radiologist
+review.
 
 **Comparison with recent ThyroidXL-based studies.** Since ThyroidXL became
 available, at least one framework has reported very high patient-level
@@ -698,7 +713,7 @@ multi-dataset pooling transfers to unseen distributions; image-only models showe
   10.6084/m9.figshare.20417895, CC BY 4.0, [14]). ThyroidXL [13] is available
   at https://huggingface.co/datasets/hunglc007/ThyroidXL under gated access;
   access was granted and all 11,635 images were used in this study.
-- Code availability: The analysis code is publicly available at https://github.com/ojdanajakir848-a11y/thyroid-nodule-classification.
+- Code availability: The analysis code is publicly available at https://github.com/ojdanajakir848-a11y/thyroid-nodule-classification. Evaluation outputs — all reported metric JSON files, calibration and decision-curve data, and subgroup and threshold summaries — are stored alongside the code in the same repository under paper/output/repro/.
 - Ethics approval and consent: This study used only fully de-identified
   images from publicly available datasets, each released with its own
   research-use permission; no new patient data were collected and no
@@ -808,7 +823,7 @@ probabilities and ground-truth labels are shown for each case.
 
 18. Yu R, Wei Z, Zhu J, Li X, Fu X, Zhang Z, et al. DRSGen: diagnostic-region-guided single-domain generalization for thyroid nodule segmentation. *Pattern Recognition Letters*. 2026;206:120–127. doi:10.1016/j.patrec.2026.05.010.
 
-19. Yu M, Yan Y, Yan T, Xi Z, Zeng J, Huang T, et al. A two-stage multimodal learning framework based on text-driven vision pretraining and cross-modal feature fusion for thyroid ultrasound diagnosis (TTM-Net). *Expert Systems with Applications*. 2026;312:131440. doi:10.1016/j.eswa.2026.131440.
+19. Yu M, Yan Y, Yan T, Xi Z, Zeng J, Huang T, et al. A two-stage multimodal learning framework based on text-driven vision pretraining and cross-modal feature fusion for thyroid ultrasound diagnosis. *Expert Systems with Applications*. 2026;312:131440. doi:10.1016/j.eswa.2026.131440.
 
 20. Xiang T, Hu Z. ThyroFusion: a multi-modal deep learning framework integrating vision and language for thyroid nodule malignancy risk assessment. *Journal of Imaging Informatics in Medicine*. 2026. doi:10.1007/s10278-026-01964-6.
 

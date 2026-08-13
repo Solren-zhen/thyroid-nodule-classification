@@ -47,6 +47,8 @@ ThyroidXL 数据集（Duong 等，MICCAI 2025）[13] 包含在越南国家内分
 
 训练与测试划分在患者级无图像共享。成对逐字节（MD5）比较确认跨数据集图像零重复：全部 5,000 张 TN5000 图像与全部 3,493 张 TN3K 图像均具有唯一 MD5 哈希，TN5000–TN3K 无重叠；Thy-Wise 图像也未与任何 TN5000 或 TN3K 图像重复（独立发布的 ThyroidXL 队列未纳入此项比较）。由于每张 TN5000 图像对应一个独立结节样本，我们将图像文件名作为患者标识符用于分组划分。
 
+报告说明。原始公开发布未记录精确采集日期，因此我们报告发布团队记载的机构、设备与出版年份，而非确切采集时间。四个队列均为存档式公开集合，而非连续入组的临床序列，入组由发布机构决定，而非依据预先制定的方案。良/恶性标签来自采集同期进行的活检、细胞学或病理学检查，因此索引测试与参考标准同期进行，不存在随访间隔。
+
 <!-- FIGURE:1 -->
 
 ### 2.2 结构化患者与结节特征
@@ -233,6 +235,7 @@ ThyroidXL 数据集（Duong 等，MICCAI 2025）[13] 包含在越南国家内分
 亚组分析（见 3.6 节）为上述发现增添了两点临床相关的细节。其一，融合增益集中在图像判别最不确定的亚组：低中危 TI-RADS 组（TR2-3，Δ AUC +0.046）与小（≤20 mm）结节，在高度恶性的 TR5 组中较小（+0.013）、在 >20 mm 结节中为负（−0.017）。这一模式与"结构化风险信息在图像特征模糊处可能更有用"的假设一致，提示临床分支在不确定结节的分诊中最具价值。其二，未观察到融合获益存在有意义的性别或年龄相关差异。TR2-3 亚组仅含四个恶性结节，置信区间宽，不应过度解读其最大点估计；亚组结果有待在更大、多设备的队列中确认。
 
 **实际应用中的一个注意事项。** 表现最佳的配置仍依赖专家 TI-RADS 评分，因此并非完全自动化。但这并不意味着不再需要 AI：纯图像分析本身已与 TI-RADS 总分相当（AUC 0.939 对 0.929），两者结合又优于任一单独使用。最合理的临床定位是作为第二意见，在融合增益最大的低中危结节中减少低年资判读的主观性，而非取代报告医生。常规部署需要在读片流程中系统纳入专家评分，或实现 TI-RADS 描述符的自动提取，后者是当前活跃的研究方向 [4]。
+就预期用途而言，本模型面向超声经验有限的超声医师与临床医生，在低中危结节分诊时作为二次确认辅助；不用于自主决策，亦不取代资深放射科医生的审阅。
 
 **与近期 ThyroidXL 研究比较。** 自 ThyroidXL 发布以来，已有框架在纯图像输入下报告了很高的患者级性能：一种带注意力多实例学习的区域与上下文感知融合方法，在 ThyroidXL 上报告的患者级测试 AUC 达 0.993 [22]。该方法与本研究在三个与临床转化相关的方面存在差异。其一，它推理时需要结节分割掩膜（病灶聚焦分支与掩膜相乘），而我们的框架仅使用 B 型图像，在缺乏自动或手动掩膜时同样适用。其二，它在患者内用学习到的注意力聚合帧，而我们使用固定的平均聚合，更简单且不引入额外学习参数。其三，它不使用结构化患者与结节特征。由于这些方法学差异，我们的结果在绝对数值上不能直接与之比较；特别是，纯图像模型在 ThyroidXL 上较低 AUC 恰恰反映了缺乏掩膜引导。平均池化对两个模型均优于最大池化与注意力加权池化（补充表 S2），说明该掩膜方法报告的高患者级 AUC 并非源于其注意力池化。本研究反而聚焦掩膜方法未处理的问题，即跨数据集域漂移量化与结构化患者与结节特征的增量价值。
 
@@ -253,7 +256,7 @@ ThyroidXL 数据集（Duong 等，MICCAI 2025）[13] 包含在越南国家内分
 ## 声明
 
 - 数据可用性：TN5000（公开可用，[12]）、TN3K（Hugging Face，haifan-gong/TN3K，[10,11]）、Thy-Wise（figshare，DOI 10.6084/m9.figshare.20417895，CC BY 4.0，[14]）。ThyroidXL [13] 可在 https://huggingface.co/datasets/hunglc007/ThyroidXL 以受限访问获取；本研究已获授权并使用全部 11,635 张图像。
-- 代码可用性：分析代码公开于 https://github.com/ojdanajakir848-a11y/thyroid-nodule-classification。
+- 代码可用性：分析代码公开于 https://github.com/ojdanajakir848-a11y/thyroid-nodule-classification。评估输出（全部报告的指标 JSON、校准与决策曲线数据、亚组与阈值分析汇总）已随代码存入同一仓库的 paper/output/repro/ 目录。
 - 伦理批准与知情同意：本研究仅使用各公共数据集已去标识化的图像，且各数据集自带研究使用许可；未收集任何新的患者数据，无需机构审查委员会批准。
 - 经费：本工作未获任何资助机构的专项拨款。
 - 利益冲突：作者声明无利益冲突。
@@ -329,7 +332,7 @@ ACR：美国放射学会；AUC：受试者工作特征曲线下面积；AUPRC：
 
 18. Yu R, Wei Z, Zhu J, Li X, Fu X, Zhang Z, et al. DRSGen: diagnostic-region-guided single-domain generalization for thyroid nodule segmentation. *Pattern Recognition Letters*. 2026;206:120–127. doi:10.1016/j.patrec.2026.05.010.
 
-19. Yu M, Yan Y, Yan T, Xi Z, Zeng J, Huang T, et al. A two-stage multimodal learning framework based on text-driven vision pretraining and cross-modal feature fusion for thyroid ultrasound diagnosis (TTM-Net). *Expert Systems with Applications*. 2026;312:131440. doi:10.1016/j.eswa.2026.131440.
+19. Yu M, Yan Y, Yan T, Xi Z, Zeng J, Huang T, et al. A two-stage multimodal learning framework based on text-driven vision pretraining and cross-modal feature fusion for thyroid ultrasound diagnosis. *Expert Systems with Applications*. 2026;312:131440. doi:10.1016/j.eswa.2026.131440.
 
 20. Xiang T, Hu Z. ThyroFusion: a multi-modal deep learning framework integrating vision and language for thyroid nodule malignancy risk assessment. *Journal of Imaging Informatics in Medicine*. 2026. doi:10.1007/s10278-026-01964-6.
 
