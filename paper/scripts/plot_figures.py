@@ -98,35 +98,49 @@ def dca_refs(pt, pos_rate):
 
 def main():
     device = get_device()
-    # Joint 模型（TN5000+TN3K，H1 修复后重跑 2026-08-10）
-    # 注：image/best.pt 是 ThyroidXL image-only（fig5-7/Table 3 用），joint 模型在备份目录
-    weights = PROJ / "checkpoints" / "thyroid" / "image_backup" / "best_joint_20260810_fixed.pt"
-    model = load_model(weights).to(device)
-    print("model loaded")
+    # Single-dataset (TN5000-only) and joint (TN5000 + TN3K train) models, seed 42
+    single_weights = PROJ / "checkpoints" / "thyroid" / "single_tn3k_eval" / "best.pt"
+    joint_weights = PROJ / "checkpoints" / "thyroid" / "_pre_seedretrain_backup" / "best_joint_seed42_fixed.pt"
+    single = load_model(single_weights).to(device)
+    joint = load_model(joint_weights).to(device)
+    print("models loaded")
 
     ds_in = ThyroidDataset(str(PROJ / "data" / "thyroid_tn5000test"), split="test",
                            image_size=224, mock=False, split_by_group=True, seed=42)
-    ds_ext = ThyroidDataset(str(PROJ / "data" / "thyroid_tn3ktest"), split="test",
-                            image_size=224, mock=False, split_by_group=True, seed=42)
-    p_in, y_in = predict(model, ds_in, device)
-    p_ext, y_ext = predict(model, ds_ext, device)
-    print(f"internal n={len(y_in)} (pos {y_in.mean():.3f}), external n={len(y_ext)} (pos {y_ext.mean():.3f})")
+    ds_t3k_test = ThyroidDataset(str(PROJ / "data" / "thyroid_tn3ktest"), split="test",
+                                 image_size=224, mock=False, split_by_group=True, seed=42)
+    ds_t3k_full = ThyroidDataset(str(PROJ / "data" / "thyroid" / "tn3k"), split="all",
+                                 image_size=224, mock=False, split_by_group=True, seed=42)
+    p_s_in, y_s_in = predict(single, ds_in, device)
+    p_s_ext, y_s_ext = predict(single, ds_t3k_test, device)
+    p_s_full, y_s_full = predict(single, ds_t3k_full, device)
+    p_j_in, y_j_in = predict(joint, ds_in, device)
+    p_j_ext, y_j_ext = predict(joint, ds_t3k_test, device)
+    print(f"single: internal n={len(y_s_in)} (pos {y_s_in.mean():.3f}), "
+          f"TN3K official n={len(y_s_ext)} (pos {y_s_ext.mean():.3f}), "
+          f"TN3K full n={len(y_s_full)} (pos {y_s_full.mean():.3f})")
+    print(f"joint:  internal n={len(y_j_in)} (pos {y_j_in.mean():.3f}), "
+          f"TN3K official n={len(y_j_ext)} (pos {y_j_ext.mean():.3f})")
 
-    # ---- Fig 2: ROC overlay ----
-    fpr1, tpr1, _ = roc_curve(y_in, p_in)
-    auc1 = sk_auc(fpr1, tpr1)
-    fpr2, tpr2, _ = roc_curve(y_ext, p_ext)
-    auc2 = sk_auc(fpr2, tpr2)
-    fig, ax = plt.subplots(figsize=(6.2, 6))
-    ax.plot(fpr1, tpr1, lw=2, color="#1f77b4",
-            label=f"Internal test (AUC = {auc1:.3f}, 95% CI 0.910-0.951)")
-    ax.plot(fpr2, tpr2, lw=2, color="#d62728",
-            label=f"External TN3K (AUC = {auc2:.3f}, 95% CI 0.779-0.846)")
+    # ---- Fig 2: ROC overlay (domain-shift drop + joint recovery) ----
+    fpr_si, tpr_si, _ = roc_curve(y_s_in, p_s_in)
+    fpr_sf, tpr_sf, _ = roc_curve(y_s_full, p_s_full)
+    fpr_ji, tpr_ji, _ = roc_curve(y_j_in, p_j_in)
+    fpr_je, tpr_je, _ = roc_curve(y_j_ext, p_j_ext)
+    fig, ax = plt.subplots(figsize=(6.8, 6))
+    ax.plot(fpr_si, tpr_si, lw=2, color="#1f77b4",
+            label="Single-dataset: internal test (AUC = 0.915)")
+    ax.plot(fpr_sf, tpr_sf, lw=2, ls="--", color="#1f77b4",
+            label="Single-dataset: external TN3K full cohort (AUC = 0.712)")
+    ax.plot(fpr_ji, tpr_ji, lw=2, color="#2ca02c",
+            label="Joint: internal test (AUC = 0.931)")
+    ax.plot(fpr_je, tpr_je, lw=2, ls="--", color="#2ca02c",
+            label="Joint: external TN3K official test (AUC = 0.813)")
     ax.plot([0, 1], [0, 1], "k--", lw=1, alpha=0.6)
     ax.set_xlabel("False positive rate", fontsize=12)
     ax.set_ylabel("True positive rate", fontsize=12)
     ax.set_title("Receiver operating characteristic curves", fontsize=13)
-    ax.legend(loc="lower right", fontsize=10)
+    ax.legend(loc="lower right", fontsize=8)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     fig.tight_layout()
@@ -134,9 +148,9 @@ def main():
     plt.close(fig)
     print("fig2 saved")
 
-    # ---- Fig 3: calibration (a) + DCA (b) 合成图 ----
-    mp1, my1, ece1 = reliability_curve(y_in, p_in)
-    mp2, my2, ece2 = reliability_curve(y_ext, p_ext)
+    # ---- Fig 3: calibration (a) + DCA (b) ----
+    mp1, my1, ece1 = reliability_curve(y_j_in, p_j_in)
+    mp2, my2, ece2 = reliability_curve(y_j_ext, p_j_ext)
 
     def dca(y, p):
         pts = np.arange(0.05, 0.96, 0.05)
@@ -147,23 +161,25 @@ def main():
             nbs.append(tp / len(y) - fp / len(y) * (t / (1 - t)))
         return pts, np.array(nbs)
 
-    pt1, nb1 = dca(y_in, p_in)
-    pt2, nb2 = dca(y_ext, p_ext)
+    pt_ji, nb_ji = dca(y_j_in, p_j_in)
+    pt_je, nb_je = dca(y_j_ext, p_j_ext)
+    pt_se, nb_se = dca(y_s_ext, p_s_ext)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.2))
-    # (a) calibration
     ax1.plot([0, 1], [0, 1], "k--", lw=1.2, label="Perfect calibration")
     ax1.plot(mp1, my1, "o-", color="#1f77b4", lw=2, ms=6,
-             label=f"Internal (ECE = {ece1:.3f})")
+             label=f"Joint internal (ECE = {ece1:.3f})")
     ax1.plot(mp2, my2, "s-", color="#d62728", lw=2, ms=6,
-             label=f"External (ECE = {ece2:.3f})")
+             label=f"Joint external TN3K (ECE = {ece2:.3f})")
     ax1.set_xlabel("Predicted probability", fontsize=12)
     ax1.set_ylabel("Observed frequency", fontsize=12)
     ax1.set_title("(a) Calibration", fontsize=13)
     ax1.legend(loc="upper left", fontsize=9)
-    # (b) DCA
-    ax2.plot(pt1, nb1, lw=2, color="#1f77b4", label="Internal test")
-    ax2.plot(pt2, nb2, lw=2, color="#d62728", label="External TN3K")
+    ax2.plot(pt_ji, nb_ji, lw=2, color="#1f77b4", label="Joint: internal test")
+    ax2.plot(pt_je, nb_je, lw=2, color="#d62728",
+             label="Joint: external TN3K official test")
+    ax2.plot(pt_se, nb_se, lw=2, ls="--", color="#ff7f0e",
+             label="Single-dataset: external TN3K official test")
     ax2.plot([0, 1], [0, 0], "k:", lw=1, label="Treat none")
     ax2.set_xlabel("Threshold probability", fontsize=12)
     ax2.set_ylabel("Net benefit", fontsize=12)
@@ -175,11 +191,11 @@ def main():
     plt.close(fig)
     print("fig3 (calibration + DCA) saved")
 
-    # ---- Fig 4: confusion matrices ----
+    # ---- Fig 4: confusion matrices (joint model) ----
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.2))
     for ax, (y, p, title) in zip(
         axes,
-        [(y_in, p_in, "Internal test"), (y_ext, p_ext, "External TN3K")],
+        [(y_j_in, p_j_in, "Internal test"), (y_j_ext, p_j_ext, "External TN3K")],
     ):
         yp = (p >= 0.5).astype(int)
         cm = confusion_matrix(y, yp)

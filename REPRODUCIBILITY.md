@@ -124,7 +124,9 @@ python eval_thywise.py --weights <weights> --data_root data/thyroid/thywise   # 
 | Joint: Thy-Wise | same | `eval_thywise.py` | `paper/output/repro/trackA_joint_thywise.json` |
 
 Δ rows in Table 2 are computed from the unrounded values in the JSON files
-(e.g., TN3K ΔAUC = 0.8135 − 0.7285 = +0.085).
+(e.g., TN3K ΔAUC = 0.8135 − 0.7285 = +0.085). Net benefit at the fixed 0.5
+threshold (from the decision_curve arrays): TN3K official test 0.062 (single) →
+0.129 (joint); internal test 0.583 (single) → 0.615 (joint).
 
 ## 6. Table 3 (ThyroidXL ablation) + ensemble + paired test
 
@@ -201,7 +203,7 @@ python paper/scripts/eval_seed_retrain.py --only all
 ## 9. Figures
 
 ```bash
-python paper/scripts/plot_figures.py                # Figs 2–4 (track A ROC/calibration/DCA/confusion)
+python paper/scripts/plot_figures.py                # Figs 2–4 (track A ROC/calibration/DCA/confusion; Fig 2 adds the single-dataset full-TN3K curve; Fig 3b adds single-vs-joint external DCA)
 python paper/scripts/plot_flow_diagram.py           # Fig 1
 python paper/scripts/plot_thyroidxl_fusion.py       # Figs 5–8 (ablation)
 python paper/scripts/subgroup_analysis.py           # Fig 9

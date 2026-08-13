@@ -326,7 +326,7 @@ Figures 2–4). Joint training therefore recovered approximately half of the
 observed AUC loss on the external TN3K cohort. Note that the official TN3K
 test set is a target-domain held-out evaluation, because TN3K training images
 contributed to the joint model; Thy-Wise, by contrast, never contributed
-training data and is the completely unseen cohort.
+training data and is the completely unseen cohort. At the fixed 0.5 decision threshold, net benefit on the TN3K official test increased from 0.062 (single-dataset) to 0.129 (joint), compared with 0.000 for treating none (Figure 3b), indicating that the AUC improvement translated into a clinically meaningful gain at the default operating point.
 
 The gain transferred to a second, fully independent cohort. Applied to
 Thy-Wise (3,954 pathology-confirmed nodules from a third institution), the
@@ -763,13 +763,18 @@ Thyroid Imaging Reporting and Data System.
 **Figure 1.** Study flow diagram. Data acquisition, patient-level split,
 model training and evaluation pipeline for the four public datasets.
 
-**Figure 2.** Receiver operating characteristic (ROC) curves of the joint
-multi-dataset model (TN5000 + TN3K training) on the internal TN5000 test set
-and the external TN3K official test set, showing cross-dataset domain shift.
+**Figure 2.** Receiver operating characteristic (ROC) curves of the
+single-dataset (TN5000-only) and joint multi-dataset (TN5000 + TN3K training)
+models. Internal TN5000 test set (single 0.915, joint 0.931) and external TN3K
+cohort (single, full cohort 0.712; joint, official test 0.813) illustrate both
+the cross-dataset drop and its partial recovery from multi-dataset training.
 
-**Figure 3.** Calibration reliability plots (a) and decision curves (b) of the
-joint model on the internal and external test sets. ECE = expected calibration
-error.
+**Figure 3.** (a) Calibration reliability plots of the joint model on the
+internal TN5000 test set and the external TN3K official test set. (b) Decision
+curves of the joint model on the internal TN5000 test set and the external TN3K
+official test set, and of the single-dataset model on the external TN3K
+official test set, compared with the treat-none strategy. ECE = expected
+calibration error.
 
 **Figure 4.** Confusion matrices of the joint model on the internal TN5000
 test set (left) and external TN3K test set (right) at the fixed 0.5 decision
