@@ -5,7 +5,7 @@
 对 ThyroidXL 三臂模型（fusion/image/clinical）的 test 结节级 mean 预测，
 计算不同阈值下的 Sens/Spec/PPV/NPV，输出：
   - 控制台表（Youden 阈值处 PPV/NPV）
-  - paper/figures/thyroidxl_threshold_sensitivity.png（阈值曲线）
+  - paper/figures/fig8.png（阈值曲线，Figure 8）
   - paper/notes/threshold_analysis.md（汇总）
 """
 import json
@@ -136,9 +136,9 @@ def main():
     axes[1].set_xlim(0, 1); axes[1].set_ylim(0, 1)
     axes[1].legend(fontsize=8, loc="center left")
     fig.tight_layout()
-    fig.savefig(FIG_DIR / "thyroidxl_threshold_sensitivity.png", dpi=300)
+    fig.savefig(FIG_DIR / "fig8.png", dpi=300)
     plt.close(fig)
-    print("saved thyroidxl_threshold_sensitivity.png")
+    print("saved fig8.png")
 
     # markdown
     md = ["# Threshold Analysis (ThyroidXL test, nodule-level, n=739)",

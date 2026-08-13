@@ -74,7 +74,7 @@ def main():
     # 对比 AI 三臂（从 eval_test.json）
     print("\n=== 对比：AI 模型（结节级 mean，n=739）===")
     for ab in ["fusion", "image", "clinical"]:
-        p = PROJ / "checkpoints" / "thyroid" / "repro_eval" / f"{ab}_b32" / "eval_test.json"
+        p = PROJ / "paper" / "output" / "repro" / f"ablation_{ab}_nodule.json"
         if p.exists():
             d = json.loads(p.read_text(encoding="utf-8"))
             mm = d["metrics"]
