@@ -45,7 +45,7 @@ MODELS = [
     {"key": "image",    "ckpt": "checkpoints/thyroid/image/best.pt",                "cols": CLIN5, "label": "Image-only",      "color": "#1f77b4", "ls": "-",  "lw": 2},
     {"key": "clinical", "ckpt": "checkpoints/thyroid/clinical/best.pt",             "cols": CLIN5, "label": "Clinical-only",  "color": "#2ca02c", "ls": "-",  "lw": 2},
     {"key": "tirads",   "ckpt": "checkpoints/thyroid/ablation_img_tirads/best.pt",  "cols": ["tirads"], "label": "Image + TI-RADS", "color": "#000000", "ls": "-",  "lw": 3},
-    {"key": "fusion",   "ckpt": "checkpoints/thyroid/fusion/best.pt",               "cols": CLIN5, "label": "Full fusion",    "color": "#d62728", "ls": "--", "lw": 2},
+    {"key": "fusion",   "ckpt": "checkpoints/thyroid/fusion/best.pt",               "cols": CLIN5, "label": "Full five-feature fusion",    "color": "#d62728", "ls": "--", "lw": 2},
 ]
 
 

@@ -6,7 +6,7 @@ All metrics in this supplement use the same protocols as the main manuscript:
 AUC with bootstrap 95% confidence intervals (n = 2,000 samples); sensitivity
 and specificity at a fixed 0.5 decision threshold; ECE = expected calibration
 error (10 equal-width bins over [0,1]); the Brier score for the nodule-level
-ablation is reported in Table 3 of the main manuscript (image-only 0.110,
+ablation is reported in Table 4 of the main manuscript (image-only 0.110,
 clinical-only 0.293, fusion 0.113).
 
 ---
@@ -27,7 +27,7 @@ more heavily and is provided here for completeness.
 | Fusion | 0.917 (0.904–0.928) |
 
 Corresponding nodule-level (mean aggregation, n = 739) values are reported in
-Table 3 of the main manuscript (0.939 / 0.814 / 0.947). Fusion improves over
+Table 4 of the main manuscript (0.939 / 0.814 / 0.947). Fusion improves over
 image-only at both the per-image (+0.008) and nodule-level (+0.007) level.
 
 ### S1b. Thy-Wise external cohort (per-image, n = 29,070 images; 28.9% malignant)

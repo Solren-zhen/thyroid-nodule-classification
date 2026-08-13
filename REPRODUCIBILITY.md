@@ -128,7 +128,7 @@ python eval_thywise.py --weights <weights> --data_root data/thyroid/thywise   # 
 threshold (from the decision_curve arrays): TN3K official test 0.062 (single) →
 0.129 (joint); internal test 0.583 (single) → 0.615 (joint).
 
-## 6. Table 3 (ThyroidXL ablation) + ensemble + paired test
+## 6. Table 4 (ThyroidXL model comparison) + ensemble + paired test
 
 ```bash
 CLIN=tirads,width_mm,height_mm,age,gender
@@ -137,13 +137,13 @@ python eval_thyroid.py --weights checkpoints/thyroid/image/best.pt   --data_root
 python eval_thyroid.py --weights checkpoints/thyroid/clinical/best.pt --data_root data/thyroid/thyroidxl --split test --batch_size 32 --aggregate mean --clinical_columns $CLIN
 ```
 
-| Table 3 row | Result file (metrics include Brier) |
+| Table 4 row | Result file (metrics include Brier) |
 |---|---|
 | Fusion (0.947, 0.939 AUPRC, ECE 0.118) | `paper/output/repro/ablation_fusion_nodule.json` |
 | Image-only (0.939, 0.930 AUPRC, ECE 0.087) | `paper/output/repro/ablation_image_nodule.json` |
 | Clinical-only (0.814, 0.735 AUPRC, ECE 0.248) | `paper/output/repro/ablation_clinical_nodule.json` |
 
-Additional analyses reported in Sec. 3.5 / Table 3 note:
+Additional analyses reported in Sec. 3.5 / Table 4 note:
 
 ```bash
 # 3-seed ensemble (42/123/2024, pos_weight = 1.0): AUC 0.951 (0.937–0.964), AUPRC 0.944
@@ -159,11 +159,11 @@ python paper/scripts/tirads_baseline.py            # -> paper/output/repro/tirad
 python paper/scripts/analyze_threshold.py          # -> paper/output/repro/threshold_analysis_youden.md
 ```
 
-## 7. Table 4 (subgroups)
+## 7. Table 6 (subgroups)
 
 ```bash
 python paper/scripts/subgroup_analysis.py
-# -> paper/notes/subgroup_analysis.md  (source of Table 4)
+# -> paper/notes/subgroup_analysis.md  (source of Table 6)
 # -> paper/figures/fig9_subgroup_forest.png
 ```
 Committed copy: `paper/output/repro/subgroup_analysis_table4.md`.
@@ -231,7 +231,7 @@ python paper/scripts/error_cases.py                 # Fig 10
 
 ## 12. Reviewer-requested experiments
 
-### 12.1 Equal-sample-size control (Table 5)
+### 12.1 Equal-sample-size control (Table 3)
 
 ```bash
 # Build the equal-size manifest: 3,500 train images from the joint pool
@@ -274,7 +274,7 @@ result files `paper/output/repro/jes_s{123,2024}_{tn5000_internal_test,tn3k_offi
 TN3K official-test AUC across seeds 42/123/2024: 0.795 ± 0.003 (range
 0.792–0.798); Thy-Wise nodule-level AUC: 0.627 ± 0.028 (range 0.597–0.651).
 
-### 12.2 Feature-level ablation (Table 6)
+### 12.2 Feature-level ablation (Table 5)
 
 ```bash
 CLIN="tirads,width_mm,height_mm,age,gender"

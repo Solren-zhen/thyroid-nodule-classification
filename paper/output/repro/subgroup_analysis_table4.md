@@ -1,9 +1,9 @@
-**Table 4.** Subgroup analysis on the ThyroidXL test cohort (nodule-level, n=739).
+**Table 6.** Subgroup analysis on the ThyroidXL test cohort (nodule-level, n=739).
 
 AUC (95% CI) by model and subgroup. TR = TI-RADS total score;
-diameter = maximum nodule diameter (width or height). Δ = Fusion − Image-only AUC.
+diameter = maximum nodule diameter (width or height). Δ = Full five-feature fusion − Image-only AUC.
 
-| Subgroup | n | Malignant (%) | Image-only | Clinical-only | Fusion | Δ AUC |
+| Subgroup | n | Malignant (%) | Image-only | Clinical-only | Full five-feature fusion | Δ AUC |
 |---|---|---|---|---|---|---|
 | TI-RADS: TR2-3 | 227 | 1.8% | 0.883 (0.743-1.000) | 0.740 (0.544-0.872) | 0.929 (0.863-1.000) | +0.046 |
 | TI-RADS: TR4 | 215 | 32.1% | 0.823 (0.763-0.875) | 0.607 (0.530-0.686) | 0.838 (0.781-0.887) | +0.015 |

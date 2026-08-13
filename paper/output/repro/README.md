@@ -16,18 +16,22 @@ with the final-protocol checkpoints and the exact commands listed in
 | `trackA_joint_internal_test.json` | Table 2 — joint TN5000 internal test |
 | `trackA_joint_tn3k_official_test.json` | Table 2 — joint TN3K official test |
 | `trackA_joint_thywise.json` | Table 2 + S1b — joint Thy-Wise (per-image & nodule) |
-| `ablation_fusion_nodule.json` | Table 3 — fusion, nodule-level (mean) |
-| `ablation_image_nodule.json` | Table 3 — image-only, nodule-level |
-| `ablation_clinical_nodule.json` | Table 3 — clinical-only, nodule-level |
+| `ablation_fusion_nodule.json` | Table 4 — fusion, nodule-level (mean) |
+| `ablation_image_nodule.json` | Table 4 — image-only, nodule-level |
+| `ablation_clinical_nodule.json` | Table 4 — clinical-only, nodule-level |
+| `ablation_img_tirads_nodule.json` | Table 5 — image + TI-RADS, nodule-level |
+| `ablation_img_size_nodule.json` | Table 5 — image + size, nodule-level |
+| `ablation_img_agesex_nodule.json` | Table 5 — image + demographics, nodule-level |
+| `paired_img_tirads_vs_image.json` | Paired bootstrap ΔAUC test (p = 0.003) |
 | `ablation_fusion_perimage.json` | S1a — fusion, per-image |
 | `ablation_image_perimage.json` | S1a — image-only, per-image |
 | `ablation_clinical_perimage.json` | S1a — clinical-only, per-image |
 | `s1a_per_image_stats.json` | S1a — per-image AUC/CI summary |
 | `s2_mil_sensitivity.json` | S2 — mean/max/attention aggregation |
 | `s3_seed_retrain_summary.json` | S3 — 3-seed mean/range (seeds 42/123/2024) |
-| `ensemble_fusion_pw1.json` | Table 3 note — 3-seed ensemble AUC/CI/AUPRC |
+| `ensemble_fusion_pw1.json` | Table 4 note — 3-seed ensemble AUC/CI/AUPRC |
 | `paired_fusion_vs_image.json` | Paired bootstrap ΔAUC test (p = 0.012) |
-| `subgroup_analysis_table4.md` | Table 4 — subgroup AUCs |
+| `subgroup_analysis_table4.md` | Table 6 — subgroup AUCs |
 | `threshold_analysis_youden.md` | Sec. 3.5 — Youden-optimal operating points |
 | `tirads_baseline.md` | Sec. 3.5 — expert TI-RADS score baseline |
 
