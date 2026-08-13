@@ -323,7 +323,7 @@ with sensitivity 94.8% and specificity 75.7% (expected calibration error
 0.729 to 0.813 (95% CI 0.779–0.846; matched Δ = +0.085), with sensitivity
 67.4%, specificity 78.8% and expected calibration error 0.050 (Table 2;
 Figures 2–4). Joint training therefore recovered approximately half of the
-domain-shift gap on the external TN3K cohort. Note that the official TN3K
+observed AUC loss on the external TN3K cohort. Note that the official TN3K
 test set is a target-domain held-out evaluation, because TN3K training images
 contributed to the joint model; Thy-Wise, by contrast, never contributed
 training data and is the completely unseen cohort.
@@ -408,7 +408,7 @@ As a clinical reference point, the expert ACR TI-RADS total score alone (a
 widely used risk-stratification tool) achieved a nodule-level AUC of 0.929
 (AUPRC 0.887) on the same test cohort, with 79.3% sensitivity and 95.6%
 specificity at a TI-RADS-4.5 threshold. The image-only model (0.939) and the
-fused model (0.947) both exceeded this expert-scored baseline, indicating that
+fused model (0.947) both exceeded this expert-scored baseline in terms of discrimination, indicating that
 the deep models extract discriminative information beyond the TI-RADS total
 score, although the incremental gain over the clinical reference is modest
 (Δ AUC +0.018 for the fused model). The clinical-only MLP model (0.814) fell
@@ -518,7 +518,7 @@ on a single dataset achieved high internal discrimination (test AUC 0.915)
 but lost substantial performance externally (AUC 0.712 on TN3K; 0.608
 nodule-level on Thy-Wise), a cross-dataset gap that is invisible to
 single-cohort evaluation. Second, joint training on two datasets recovered
-approximately half of that gap on the cohort added to training (TN3K official
+approximately half of the observed AUC loss on the cohort added to training (TN3K official
 test AUC 0.813 vs. 0.729) and provided a comparable gain on a completely
 unseen cohort (Thy-Wise, 0.608 → 0.710). Third, structured patient and nodule
 features added only a small overall improvement over image-only
@@ -537,15 +537,15 @@ institutions, and their label prevalence differs substantially (71.5% vs
 a fixed operating threshold. A second external cohort (Thy-Wise) confirmed
 that the magnitude of this shift is cohort-specific. Comparable degradation
 across devices has been reported in the domain-adaptation literature [17,18].
-Our results support the emerging consensus that single-dataset AUCs
-substantially overestimate real-world performance, and reinforce the TRIPOD+AI
-recommendation that external validation is a prerequisite for deployment
+Our results align with the emerging consensus that single-dataset AUCs
+substantially overestimate real-world performance, and support the importance
+of external validation before clinical deployment
 [16].
 
 **Joint multi-dataset training helps the cohort added to training, and the
 gain transfers to unseen cohorts.** Adding TN3K training images to the TN5000
 pool improved external AUC on the official TN3K test set by +0.085 and
-restored approximately half of the domain-shift deficit; this is a pragmatic
+restored approximately half of the observed AUC loss; this is a pragmatic
 robustness strategy when target-domain images can be included in training.
 The key transfer result is the comparable gain on the completely independent
 Thy-Wise cohort (+0.102), which never contributed training data. The residual
@@ -691,7 +691,7 @@ strengthen the clinical utility of the framework.
 Using four public datasets, we showed that a thyroid nodule
 classification model trained on a single dataset achieves high internal AUC
 but loses substantial performance externally (0.91 to 0.71 on TN3K); that joint
-multi-dataset training recovers approximately half of that gap on the cohort
+multi-dataset training recovers approximately half of the observed AUC loss on the cohort
 added to training (external AUC 0.813 vs. 0.729 on the matched official test,
 Δ = +0.085); and that on a second, completely unseen external
 cohort (Thy-Wise), the same joint training provides a comparable gain
