@@ -21,6 +21,8 @@ code/data package.
     `checkpoints/thyroid/image/best.pt` transiently held joint / TN5000
     models; superseded by the canonical evals under `paper/output/repro/`
   - `thyroid_dataset.py.bak` — source backup superseded by `data/thyroid_dataset.py`
+- `legacy_docs/` — superseded session documents (`STATUS.md`, `RESUME.md`) that
+  contain pre-final numbers or hand-off notes; kept for provenance only
 
 The manuscript and `REPRODUCIBILITY.md` refer only to the final-protocol
 artifacts. Do not use the files in `legacy_protocols/` for new analyses.

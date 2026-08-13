@@ -66,7 +66,10 @@ are read from these manifests by the eval scripts and reproduced by
 ## 4. Checkpoints (final protocol, pw1.0)
 
 `checkpoints/` is git-ignored (model weights are not distributed through the
-repo). The canonical final checkpoints are:
+repo). A ready-to-upload release manifest with SHA-256 checksums is committed at
+`paper/output/repro/checkpoint_release_manifest.md` (and generated alongside the
+weights at `checkpoints/thyroid/RELEASE_README.md`). The canonical final
+checkpoints are:
 
 | Model | Path |
 |---|---|
