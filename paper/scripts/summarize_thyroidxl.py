@@ -28,7 +28,7 @@ def main():
     for ab in ABLATIONS:
         d = load_eval(ab)
         if d is None:
-            print(f"⚠ {ab}: eval_test.json 不存在")
+            print(f"警告：{ab}: eval_test.json 不存在")
             continue
         m = d["metrics"]
         rows.append({

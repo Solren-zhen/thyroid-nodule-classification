@@ -55,7 +55,7 @@ NOTES_DIR.mkdir(parents=True, exist_ok=True)
 
 CLIN = ["tirads", "width_mm", "height_mm", "age", "gender"]
 ABLATIONS = ["image", "clinical", "fusion"]
-COLORS = {"image": "#1f77b4", "clinical": "#2ca02c", "fusion": "#d62728"}
+COLORS = {"image": "#0072B2", "clinical": "#E69F00", "fusion": "#D55E00"}
 LABELS = {"image": "Image-only", "clinical": "Clinical-only", "fusion": "Full five-feature fusion"}
 MANIFEST = PROJ / "data" / "thyroid" / "thyroidxl" / "manifest.csv"
 

@@ -273,7 +273,7 @@ def main():
                 else PROJECT_ROOT / "checkpoints" / "thyroid" / args.ablation)
     save_dir.mkdir(parents=True, exist_ok=True)
     if (save_dir / "best.pt").exists():
-        print(f"⚠ 警告：{save_dir / 'best.pt'} 已存在，训练将覆盖它")
+        print(f"警告：{save_dir / 'best.pt'} 已存在，训练将覆盖它")
     log_csv = save_dir / "metrics.csv"
     with open(log_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerow(["epoch", "loss", "val_auc", "auc_lo", "auc_hi",

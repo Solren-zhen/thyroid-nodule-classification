@@ -42,7 +42,7 @@ def load_annotations(ann_path):
         pid = str(img["patient_id"]).zfill(8)     # e.g. '126' -> '00000126'
         m = meta.get(pid)
         if m is None:
-            print(f"  ⚠ 患者 {pid} 无 meta，跳过 {img['file_name']}")
+            print(f"  警告：患者 {pid} 无 meta，跳过 {img['file_name']}")
             continue
         nod = m.get("nodule_1") or {}
         out[img["file_name"]] = {
@@ -109,7 +109,7 @@ def main():
             if not (img_dir / fn).exists():
                 missing += 1
                 if missing <= 5:
-                    print(f"  ⚠ 缺图: {split}/images/{fn}")
+                    print(f"  警告：缺图: {split}/images/{fn}")
     if missing:
         print(f"缺图 {missing} 张，先完成下载再构建 manifest")
         sys.exit(1)

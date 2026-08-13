@@ -28,10 +28,10 @@ from thyroid.models.thyroid import ThyroidClassifier
 
 CLIN5 = ["tirads", "width_mm", "height_mm", "age", "gender"]
 MODELS = [
-    {"key": "image",    "ckpt": "checkpoints/thyroid/image/best.pt",                "cols": CLIN5, "label": "Image-only",      "color": "#1f77b4"},
-    {"key": "clinical", "ckpt": "checkpoints/thyroid/clinical/best.pt",             "cols": CLIN5, "label": "Clinical-only",  "color": "#2ca02c"},
+    {"key": "image",    "ckpt": "checkpoints/thyroid/image/best.pt",                "cols": CLIN5, "label": "Image-only",      "color": "#0072B2"},
+    {"key": "clinical", "ckpt": "checkpoints/thyroid/clinical/best.pt",             "cols": CLIN5, "label": "Clinical-only",  "color": "#E69F00"},
     {"key": "tirads",   "ckpt": "checkpoints/thyroid/ablation_img_tirads/best.pt",  "cols": ["tirads"], "label": "Image + TI-RADS", "color": "#000000"},
-    {"key": "fusion",   "ckpt": "checkpoints/thyroid/fusion/best.pt",               "cols": CLIN5, "label": "Full five-feature fusion",    "color": "#d62728"},
+    {"key": "fusion",   "ckpt": "checkpoints/thyroid/fusion/best.pt",               "cols": CLIN5, "label": "Full five-feature fusion",    "color": "#D55E00"},
 ]
 FIG_DIR = PROJ / "paper" / "figures"
 

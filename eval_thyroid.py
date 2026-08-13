@@ -87,7 +87,7 @@ def main():
                 if num_clin == len(_tcol) and all(c in _header for c in _tcol):
                     clinical_cols = list(_tcol)
         if clinical_cols is None and mc.get("use_clinical", False):
-            print("  ⚠ 未指定 --clinical_columns 且 checkpoint 未记录列名；将使用默认 ACR 列（缺失值补 0）")
+            print("  警告：未指定 --clinical_columns 且 checkpoint 未记录列名；将使用默认 ACR 列（缺失值补 0）")
     if clinical_cols:
         print(f"  [clinical] 使用列: {clinical_cols}")
     ds = ThyroidDataset(data_root, split=args.split, image_size=224,
