@@ -18,9 +18,7 @@ Reporting and Data System (TI-RADS) descriptors.
 **Methods.** In track A, an image-only EfficientNetV2-S model trained on
 TN5000 was evaluated on two external cohorts (TN3K and Thy-Wise), and a joint
 model additionally trained on TN3K images was compared with the
-single-dataset model to quantify cross-dataset domain shift. In track B, a
-multimodal model fusing the image encoder with five structured patient and
-nodule features (ACR TI-RADS total score, nodule width and height, age, sex)
+single-dataset model to quantify cross-dataset domain shift. In track B, a full five-feature fusion model combining the image encoder with five structured patient and nodule features (ACR TI-RADS total score, nodule width and height, age, sex)
 was compared with image-only and clinical-only models on ThyroidXL.
 Performance was assessed using the area under the receiver operating
 characteristic curve (AUC) with bootstrap confidence intervals (CI),
@@ -100,11 +98,7 @@ assessment and therefore share some dependence on image acquisition. Whether
 fusing such structured patient and nodule features with image-derived deep
 features improves classification, and whether any gain is robust across
 datasets, has not, to our knowledge, been systematically tested on public
-multi-cohort data. We therefore evaluated a multimodal framework that
-fuses image features with structured patient and nodule features (ACR TI-RADS score,
-nodule width and height, age, sex), and quantified both the internal gain and
-the behaviour of the fused model relative to image-only and clinical-only
-configurations.
+multi-cohort data. We therefore evaluated a full five-feature fusion model that combines image features with structured patient and nodule features (ACR TI-RADS score, nodule width and height, age, sex), and quantified both the internal gain and the behaviour of this model relative to image-only and clinical-only configurations.
 
 In this study, we systematically evaluate an image-only EfficientNetV2
 classifier across four public datasets to quantify cross-dataset domain
@@ -114,9 +108,7 @@ dimensions, age and sex) can mitigate the resulting performance gap. Our
 contributions are threefold: (1) we quantify the external-generalization gap
 of a single-dataset model on two independent cohorts and show that
 multi-dataset training recovers part of the gap, including on a cohort that
-never contributed training data; (2) we conduct a head-to-head ablation of
-image-only, clinical-only and fused models to isolate the incremental value of
-structured features; and (3) we report calibration (expected calibration
+never contributed training data; (2) we conduct a head-to-head comparison of image-only, clinical-only, full five-feature fusion, and feature-specific fusion models to isolate the incremental value of structured features; and (3) we report calibration (expected calibration
 error and Brier score) and decision curve analysis to assess clinical
 utility, following the STARD 2015 and TRIPOD+AI reporting guidelines.
 
@@ -187,8 +179,7 @@ grouped splitting.
 
 ### 2.2 Structured patient and nodule features
 
-Five structured patient and nodule features were used as the structured
-input to the fusion model. The ThyroidXL dataset provides, for each nodule, an expert ACR
+Five structured patient and nodule features were used as the structured input to the full five-feature fusion model. The ThyroidXL dataset provides, for each nodule, an expert ACR
 TI-RADS total score (1–5), the nodule width and height in millimetres
 (recorded at acquisition), the patient age (years), and sex
 (1 = male, 2 = female), which were concatenated into a
@@ -252,8 +243,7 @@ aggregated to the nodule level by averaging image-level probabilities before
 computing metrics (per-image statistics are reported separately and are
 provided in Supplementary Table S1).
 
-Discrimination was quantified by the AUC with 95% CIs obtained by seeded
-bootstrap resampling (n = 2,000 samples). Sensitivity, specificity and accuracy were
+Discrimination was quantified by the AUC with 95% CIs obtained by seeded bootstrap resampling (n = 2,000 samples); for nodule-level analyses, resampling was performed at the nodule level rather than at the image level. Sensitivity, specificity and accuracy were
 reported at a fixed decision threshold of 0.5 applied uniformly to internal
 and external test sets. Calibration was quantified by the expected
 calibration error (ECE) computed with 10 equal-width bins over [0, 1] (bins
@@ -422,11 +412,7 @@ image + TI-RADS (ΔAUC +0.021). The five-feature fusion also showed higher
 AUPRC (0.939 vs. 0.930) and specificity (0.940 vs. 0.909) than image-only, at
 a modest cost in sensitivity (0.725 vs. 0.779). In an exploratory
 threshold analysis, predictive values were examined at the Youden-optimal
-operating point determined on the test cohort: the fused model achieved balanced positive
-and negative predictive values (PPV 0.856, NPV 0.898), comparable to the
-image-only model (PPV 0.815, NPV 0.920) and above the clinical-only model (PPV
-0.688, NPV 0.835), suggesting that the fusion gain in discrimination does not
-come at the cost of poorer predictive values (Figure 8). Because this operating point was derived from the test cohort, these predictive values illustrate achievable performance at a Youden-optimal threshold rather than an unbiased prospective estimate. The ThyroidXL test cohort was 47.8% malignant, compared with 26.1% in the development set; this difference in prevalence is relevant to interpreting the fixed-threshold and Youden-threshold operating points reported here. The clinical-only
+operating point determined on the test cohort: the image + TI-RADS model achieved balanced positive and negative predictive values (PPV 0.860, NPV 0.943), above the full five-feature fusion (PPV 0.856, NPV 0.898), image-only (PPV 0.815, NPV 0.920) and clinical-only (PPV 0.688, NPV 0.835) models, suggesting that the gain in discrimination of the best-performing configuration does not come at the cost of poorer predictive values (Figure 8). Because this operating point was derived from the test cohort, these predictive values illustrate achievable performance at a Youden-optimal threshold rather than an unbiased prospective estimate. The ThyroidXL test cohort was 47.8% malignant, compared with 26.1% in the development set; this difference in prevalence is relevant to interpreting the fixed-threshold and Youden-threshold operating points reported here. The clinical-only
 model, using only the five structured features, was markedly inferior
 (AUPRC 0.735), and at the fixed 0.5 threshold it degenerated to predicting all
 nodules as benign (sensitivity 0.00, specificity 1.00), reflecting both the
@@ -436,7 +422,7 @@ predicted probabilities below the fixed 0.5 threshold; the clinical-only
 model's value therefore lies in its ranking ability (nodule-level AUC 0.814)
 rather than in absolute probabilities at a fixed operating point. The image-only model was best calibrated
 (ECE 0.087), while the clinical-only model was substantially miscalibrated
-(ECE 0.248) and the fused model intermediate (ECE 0.118); the fusion gain in
+(ECE 0.248) and the full-fusion model intermediate (ECE 0.118); the fusion gain in
 discrimination therefore came with a small cost in calibration relative to
 image-only classification. Brier scores followed the same ordering
 (image-only 0.110, fusion 0.113, clinical-only 0.293).
@@ -444,11 +430,9 @@ image-only classification. Brier scores followed the same ordering
 As a clinical reference point, the expert ACR TI-RADS total score alone (a
 widely used risk-stratification tool) achieved a nodule-level AUC of 0.929
 (AUPRC 0.887) on the same test cohort, with 79.3% sensitivity and 95.6%
-specificity at a TI-RADS-4.5 threshold. The image-only model (0.939) and the
-fused model (0.947) both exceeded this expert-scored baseline in terms of discrimination, indicating that
+specificity at a TI-RADS-4.5 threshold. The image-only model (0.939) and the full five-feature fusion model (0.947) both exceeded this expert-scored baseline in terms of discrimination, indicating that
 the deep models extract discriminative information beyond the TI-RADS total
-score, although the incremental gain over the clinical reference is modest
-(Δ AUC +0.018 for the fused model). The clinical-only MLP model (0.814) fell
+score, although the incremental gain over the clinical reference is modest (Δ AUC +0.018 for the full five-feature fusion model). The clinical-only MLP model (0.814) fell
 below the direct TI-RADS score (0.929), reflecting information loss in
 regressing the raw five features to a single risk estimate.
 
@@ -461,7 +445,21 @@ structured information was mainly attributable to the expert TI-RADS score
 the hypothesis that structured patient and nodule priors complement image features, but
 the magnitude is modest in this single-device cohort (Figure 5).
 
-**Table 3.** Core model comparison on the ThyroidXL held-out test cohort (nodule-level, n = 739). Rows are ordered to reflect the feature-level finding that the expert TI-RADS score was the main contributor to the structured-feature gain (full ablation in Table 6).
+**Table 3.** Core model comparison on the ThyroidXL held-out test cohort (nodule-level, n = 739). Rows are ordered to reflect the feature-level finding that the expert TI-RADS score was the main contributor to the structured-feature gain (full ablation in Table 6). ΔAUC is computed from unrounded values relative to image-only.
+
+| Model | AUC (95% CI) | ΔAUC vs image-only | AUPRC | Sensitivity | Specificity | ACC | ECE | Brier |
+|---|---|---|---|---|---|---|---|---|
+| Expert TI-RADS only | 0.929 | — | 0.887 | 0.793^e^ | 0.956^e^ | — | — | — |
+| Image-only | 0.939 (0.924–0.954) | — | 0.930 | 0.779 | 0.909 | 0.847 | 0.087 | 0.110 |
+| Image + TI-RADS | 0.960 (0.948–0.973) | +0.021 | 0.954 | 0.813 | 0.953 | 0.886 | 0.064 | 0.084 |
+| Fusion (all five features) | 0.947 (0.932–0.960) | +0.007 | 0.939 | 0.725 | 0.940 | 0.838 | 0.118 | 0.113 |
+| Clinical-only | 0.814 (0.782–0.847) | −0.125 | 0.735 | 0.00 | 1.00 | 0.522 | 0.248 | 0.293 |
+
+Sensitivity and specificity at a fixed 0.5 decision threshold; for the expert
+TI-RADS row, ^e^ sensitivity and specificity are reported at a TI-RADS-4.5
+threshold, and ACC, ECE and Brier are not defined because the expert score is
+an ordinal 1–5 scale rather than a continuous probability. AUPRC = area
+under the precision-recall curve. Table 3 reports seed-42 single-run estimates.
 
 | Model | AUC (95% CI) | AUPRC | Sensitivity | Specificity | ACC | ECE | Brier |
 |---|---|---|---|---|---|---|---|
@@ -544,10 +542,7 @@ nodule size, fusion improved over image-only for nodules ≤10 mm (0.882 vs.
 >20 mm (0.949 vs. 0.966, Δ −0.017), a subgroup with low malignancy prevalence
 (16.8%). Fusion gains were small across age strata
 (<45: +0.004; 45–60: +0.011; ≥60: +0.001) and in the male subgroup (n = 86,
-Δ +0.006), whereas female patients (n = 653) showed a gain of +0.008. Overall, the subgroup analysis indicates that the clinical
-signal contributes most where image-derived discrimination is least certain
-(low-to-intermediate TI-RADS risk, small nodules), and that the modest average
-fusion gain in Table 3 is not driven by any single subgroup. Because the TR2-3
+Δ +0.006), whereas female patients (n = 653) showed a gain of +0.008. Overall, the observed pattern is consistent with the hypothesis that structured risk information may be more useful when image-based discrimination is less certain (low-to-intermediate TI-RADS risk, small nodules), and the modest average gain of the prespecified full-fusion model in Table 3 is not driven by any single subgroup. Because the TR2-3
 subgroup contained only four malignant nodules, its confidence intervals are
 very wide, and the largest point estimate (Δ AUC +0.046) should be regarded as
 hypothesis-generating rather than as a definitive effect. Subgroup analyses were
@@ -631,8 +626,7 @@ TI-RADS score, nodule width and height, age and sex) could stabilise
 predictions under domain shift was tested directly in the ThyroidXL ablation:
 age and sex are independent of image acquisition, whereas the TI-RADS score
 and nodule dimensions are structured measurements derived from ultrasound
-assessment that may remain informative when pixel statistics degrade. The incremental value of structured information was mainly attributable to the expert TI-RADS score rather than demographic or size features: image + TI-RADS achieved a nodule-level AUC of 0.960, compared with 0.939 for image-only, whereas the full five-feature fusion achieved 0.947. The clinical-only model was markedly inferior (AUC 0.814) and poorly calibrated (ECE 0.248). The fused model was
-slightly less well calibrated than the image-only model (ECE 0.118 vs. 0.087),
+assessment that may remain informative when pixel statistics degrade. The incremental value of structured information was mainly attributable to the expert TI-RADS score rather than demographic or size features (Section 3.5). Notably, adding all five structured features did not improve upon TI-RADS-only augmentation: the full five-feature fusion (AUC 0.947) did not exceed image + TI-RADS (AUC 0.960). This may reflect redundancy among structured variables, limited incremental information from age, sex and nodule dimensions, or optimization effects in the multimodal head; importantly, the feature-level ablation indicates that the gain was not achieved by indiscriminate feature accumulation. The clinical-only model was markedly inferior (AUC 0.814) and poorly calibrated (ECE 0.248). The full-fusion model was slightly less well calibrated than the image-only model (ECE 0.118 vs. 0.087),
 indicating that the added structured features improved ranking without
 proportionally improving the reliability of the predicted probabilities at the
 fixed decision threshold. Two implications follow. First, image features remained the primary discriminative signal, yet the expert TI-RADS score added a substantial incremental gain (nodule-level AUC 0.939 → 0.960), whereas demographic and size features contributed little (Section 3.5). Second, structured features alone (clinical-only model, AUC 0.814) were insufficient for reliable discrimination. The large gain of image + TI-RADS over image-only is consistent with TI-RADS encoding structured expert assessment that is related to, but not identical with, the information extractable from raw ultrasound pixels. This tempers the
@@ -645,9 +639,7 @@ The subgroup analysis (Section 3.6) adds two clinically relevant nuances to
 this finding. First, the fusion gain was concentrated in the subgroups where
 image-derived discrimination is least certain: the low-to-intermediate
 TI-RADS group (TR2-3, Δ AUC +0.046) and small nodules (≤20 mm). It was
-smaller in the highly malignant TR5 group (+0.013) and negative for nodules >20 mm (−0.017). This pattern
-is consistent with the clinical intuition that a structured-risk prior adds
-most where image features are ambiguous, and suggests that the clinical branch
+smaller in the highly malignant TR5 group (+0.013) and negative for nodules >20 mm (−0.017). This pattern is consistent with the hypothesis that structured risk information may be more useful where image features are ambiguous, and suggests that the clinical branch
 may be most valuable in the triage of indeterminate nodules. Second, no
 meaningful sex- or age-dependent asymmetry in the fusion benefit was observed.
 The wide confidence intervals in the TR2-3 subgroup (which contained only four
@@ -689,9 +681,7 @@ over-referral is preferable to a missed malignancy; the operating point should
 be selected to match the clinical setting, and the decision curves provide the
 information to do so explicitly.
 
-**Error patterns.** At a fixed 0.5 threshold, the fused model on the ThyroidXL
-test cohort produced more false negatives than false positives (97 vs. 23 of
-739 nodules), i.e. a tendency to under-call malignancy (Figure 10). This
+**Error patterns.** At a fixed 0.5 threshold, the image + TI-RADS model on the ThyroidXL test cohort produced more false negatives than false positives (66 vs. 18 of 739 nodules), i.e. a tendency to under-call malignancy (Figure 10). This
 asymmetry is consistent with the low prevalence of malignancy in the ThyroidXL
 development set (26.1%) and the high specificity attained by the model; in
 clinical triage, where missing a malignancy is the more serious error, a lower
@@ -715,10 +705,7 @@ of clinical features under genuine cross-device domain shift could not be
 quantified; the fusion gain observed here (Δ AUC +0.007) may not generalise to
 multi-device settings where image statistics degrade more substantially.
 Fourth, we evaluated a single architecture (EfficientNetV2-S), and other
-backbones may behave differently. Fifth, subgroup analyses were conducted
-using the prespecified full fusion model and were not repeated for the
-feature-selected image + TI-RADS model. Finally, external validation, while
-performed on multiple public datasets, remains retrospective; prospective,
+backbones may behave differently. Fifth, subgroup analyses were conducted using the prespecified full fusion model and were not repeated for the feature-selected image + TI-RADS model. Sixth, the best-performing image + TI-RADS configuration still depends on an expert-provided TI-RADS score and is therefore not fully automated; practical deployment would require either routine expert scoring or reliable automated extraction of TI-RADS descriptors. Finally, external validation, while performed on multiple public datasets, remains retrospective; prospective,
 institution-specific evaluation would be required before clinical deployment.
 
 **Future work.** The fusion gain observed on the single-device ThyroidXL cohort
@@ -767,15 +754,7 @@ highlighting the need for external validation before clinical deployment. On a f
 - Sample size: All available images from the four public datasets were used;
   no a priori sample size calculation was performed because the study
   analysed complete public cohorts.
-- Use of artificial intelligence: During the preparation of this work, the
-  authors used Claude (Anthropic) as a writing and code-assistance tool to help
-  draft and revise the manuscript text, to assist with data-processing and
-  experiment scripts, and to help format the reference list. The authors
-  reviewed and verified all AI-assisted outputs, take full responsibility for
-  the content of the manuscript, and confirm that no AI tool was used to
-  generate scientific conclusions, interpret data, or make decisions about the
-  study design or analysis. All methods and results were independently
-  produced, checked and are reproducible from the public datasets described.
+- Use of artificial intelligence: During the preparation of this work, the authors used AI-assisted tools (including Claude and Codex) for drafting and revising manuscript text, writing and debugging analysis code, and supporting experimental design and statistical analyses. The authors reviewed and verified all AI-assisted outputs, take full responsibility for the content of the manuscript, and confirm that all reported results were produced and independently checked using the described public datasets and code.
 - Consent for publication: Not applicable (no individual person's data are
   presented; all images are de-identified and from public repositories).
 - Acknowledgements: The authors thank the developers of the TN5000, TN3K,
@@ -829,8 +808,7 @@ n = 739): nodule-level AUC (95% CI) of the image-only, clinical-only and prespec
 diameter (≤10, 10–20, >20 mm), age (<45, 45–60, ≥60 years) and sex. The
 dashed vertical line marks an AUC of 0.5.
 
-**Figure 10.** Representative misclassifications of the fused model on the
-ThyroidXL test cohort. Top row: false positives (benign predicted malignant);
+**Figure 10.** Representative misclassifications of the image + TI-RADS model on the ThyroidXL test cohort. Top row: false positives (benign predicted malignant);
 bottom row: false negatives (malignant predicted benign). Predicted
 probabilities and ground-truth labels are shown for each case.
 

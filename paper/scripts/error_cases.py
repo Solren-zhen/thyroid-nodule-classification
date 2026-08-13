@@ -1,28 +1,32 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""错误案例可视化：fusion 模型在 ThyroidXL test 的假阳/假阴病例。
+"""Error-case visualization: image + TI-RADS model on ThyroidXL test.
 
-生成 2x2 网格图：2 个假阳 + 2 个假阴，标注预测概率 / 真实标签 / TI-RADS。
-输出 paper/figures/fig10_error_cases.png（增大行间距避免标题重叠）
+Generates a 2x2 grid (2 false positives + 2 false negatives) with predicted
+probability / true label annotations.
+Output: paper/figures/fig10_error_cases.png
 """
 import sys
+from collections import defaultdict
 from pathlib import Path
 
 import cv2
-import numpy as np
-import torch
-from torch.utils.data import DataLoader
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
+import torch
+from torch.utils.data import DataLoader
 
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
+sys.path.insert(0, str(PROJ))
 from thyroid.data.thyroid_dataset import ThyroidDataset
 from thyroid.models.thyroid import ThyroidClassifier
 
-CLIN = ["tirads", "width_mm", "height_mm", "age", "gender"]
+COLS = ["tirads"]
 FIG_DIR = PROJ / "paper" / "figures"
+CKPT = PROJ / "checkpoints" / "thyroid" / "ablation_img_tirads" / "best.pt"
 
 
 def get_device():
@@ -48,12 +52,12 @@ def load_model(weights_path, device):
 def main():
     device = get_device()
     ds = ThyroidDataset(str(PROJ / "data" / "thyroid" / "thyroidxl"), split="test",
-                        image_size=224, num_clinical_features=5, clinical_columns=CLIN,
-                        mock=False, split_by_group=True, seed=42)
-    model = load_model(PROJ / "checkpoints" / "thyroid" / "fusion" / "best.pt", device)
+                        image_size=224, num_clinical_features=len(COLS),
+                        clinical_columns=COLS, mock=False,
+                        split_by_group=True, seed=42)
+    model = load_model(CKPT, device)
 
     loader = DataLoader(ds, batch_size=32, shuffle=False, num_workers=0)
-    # 收集 frame 级预测 + 样本信息
     recs = []
     global_idx = 0
     with torch.no_grad():
@@ -71,24 +75,19 @@ def main():
                 })
                 global_idx += 1
 
-    # 结节级 mean 聚合
-    from collections import defaultdict
     groups = defaultdict(list)
     for r in recs:
         groups[r["pid"]].append(r)
     nod = {}
     for pid, rs in groups.items():
-        p = np.mean([r["prob"] for r in rs])
-        l = rs[0]["label"]
-        nod[pid] = {"prob": p, "label": l, "image_path": rs[0]["image_path"],
-                    "tirads": ds.samples[0]["clinical"][0]}  # placeholder
+        nod[pid] = {"prob": float(np.mean([r["prob"] for r in rs])),
+                    "label": rs[0]["label"], "image_path": rs[0]["image_path"]}
 
-    # 找假阳（label 0, prob>=0.5）和假阴（label 1, prob<0.5）
     fp = sorted([v for v in nod.values() if v["label"] == 0 and v["prob"] >= 0.5],
                 key=lambda v: -v["prob"])
     fn = sorted([v for v in nod.values() if v["label"] == 1 and v["prob"] < 0.5],
                 key=lambda v: v["prob"])
-    print(f"假阳 {len(fp)} 个, 假阴 {len(fn)} 个")
+    print(f"false positives {len(fp)}, false negatives {len(fn)}")
 
     fig, axes = plt.subplots(2, 2, figsize=(10, 9.5))
     cases = [(fp[0], "False positive (benign\npredicted malignant)"),
@@ -105,7 +104,7 @@ def main():
         ax.set_title(f"{title}\nP={case['prob']:.2f} | Truth: {lab}",
                      fontsize=10, pad=12)
         ax.axis("off")
-    fig.suptitle("Representative misclassifications of the fused model (ThyroidXL test)",
+    fig.suptitle("Representative misclassifications of the image + TI-RADS model (ThyroidXL test)",
                  fontsize=12)
     fig.tight_layout(h_pad=3.2, w_pad=1.2, rect=[0, 0, 1, 0.955])
     out = FIG_DIR / "fig10_error_cases.png"
