@@ -586,10 +586,11 @@ nodule-level on Thy-Wise), a cross-dataset gap that is invisible to
 single-cohort evaluation. Second, joint training on two datasets recovered
 approximately half of the observed AUC loss on the cohort added to training (TN3K official
 test AUC 0.813 vs. 0.729) and provided a comparable gain on a completely
-unseen cohort (Thy-Wise, 0.608 → 0.710). Third, structured patient and nodule
-features added only a small overall improvement over image-only
-classification on ThyroidXL (ΔAUC +0.007), concentrated in diagnostically
-ambiguous subgroups. Across these analyses we report calibration (ECE and
+unseen cohort (Thy-Wise, 0.608 → 0.710). Third, the incremental value of structured information was mainly
+attributable to the expert ACR TI-RADS score: adding TI-RADS to the image
+model improved the nodule-level AUC from 0.939 to 0.960 (ΔAUC +0.021),
+whereas nodule size and demographic features contributed little additional
+discrimination. Across these analyses we report calibration (ECE and
 Brier score) and decision-curve metrics alongside discrimination, and on the
 ThyroidXL cohort we report a three-arm ablation of image-only, clinical-only
 and fused models (Section 3.5), addressing reporting gaps that remain common
