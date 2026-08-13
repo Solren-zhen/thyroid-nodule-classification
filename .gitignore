@@ -5,6 +5,8 @@ checkpoints/
 data/thyroid/
 data/thyroid_multi/
 data/thyroid_jes/
+data/thyroid_jes_s123/
+data/thyroid_jes_s2024/
 data/thyroid_tn3ktest/
 data/thyroid_tn5000test/
 logs/
