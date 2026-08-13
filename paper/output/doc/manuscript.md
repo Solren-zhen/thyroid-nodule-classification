@@ -1,5 +1,11 @@
 # Multimodal fusion of ultrasound imaging and ACR TI-RADS features for thyroid nodule malignancy classification: an external multi-dataset validation study
 
+**Chaohui Zhen**¹
+
+¹ Wenzhou Medical University, Wenzhou, China
+
+Correspondence: Chaohui Zhen (chaohui0408.medical@outlook.com)
+
 ## Abstract
 
 **Background.** Thyroid nodules are highly prevalent, yet ultrasound-based
@@ -710,7 +716,7 @@ remained the dominant signal.
   presented; all images are de-identified and from public repositories).
 - Acknowledgements: The authors thank the developers of the TN5000, TN3K,
   Thy-Wise and ThyroidXL datasets for making their data publicly available.
-- Authors' contributions: [Author 1] designed the study, developed the methodology, implemented the models and analysis scripts, conducted all experiments and statistical analyses, prepared the figures and tables, and drafted the manuscript. [Author 2 — include only if applicable] contributed to [describe specific role]. All authors read and approved the final manuscript.
+- Authors' contributions: Chaohui Zhen designed the study, developed the methodology, implemented the models and analysis scripts, conducted all experiments and statistical analyses, prepared the figures and tables, and drafted the manuscript. The author read and approved the final manuscript.
 
 ## Abbreviations
 

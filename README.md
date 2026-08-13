@@ -145,7 +145,7 @@ once published):
   title  = {Multimodal fusion of ultrasound imaging and ACR TI-RADS features
             for thyroid nodule malignancy classification: an external multi-dataset
             validation study},
-  author = {Zhen, Chaohui and others},
+  author = {Zhen, Chaohui},
   journal = {TBD},
   year   = {2026}
 }

@@ -1,8 +1,8 @@
 # Cover Letter — BMC Medical Imaging
 
-> **待填写项**（`[...]`）：作者名单、通讯作者信息、GitHub URL、日期。其余文字为定稿草稿。
+> 作者、通讯作者与 GitHub URL 已填写；日期在投稿当日更新。
 
-[Date]
+13 August 2026
 
 Dear Editors,
 
@@ -18,5 +18,5 @@ We confirm that this manuscript is original, has not been published previously, 
 
 Yours sincerely,
 
-[Author names]
-[Corresponding author: Name, Affiliation, Email]
+Chaohui Zhen (甄朝晖)
+Corresponding author: Chaohui Zhen, Wenzhou Medical University, chaohui0408.medical@outlook.com
