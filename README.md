@@ -167,9 +167,6 @@ once published):
 }
 ```
 
-> ⚠️ The author name above is a placeholder — update `author` to the actual
-> author list before release.
-
 ## Data provenance and licences
 
 - **TN5000** — Zhang et al., Scientific Data 2025; open access.
