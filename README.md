@@ -4,7 +4,7 @@
 
 Code accompanying the manuscript:
 
-> **Multimodal fusion of ultrasound imaging and ACR TI-RADS features for thyroid nodule malignancy classification: a multi-dataset validation study**
+> **Multimodal fusion of ultrasound imaging and ACR TI-RADS features for thyroid nodule malignancy classification: an external multi-dataset validation study**
 
 This repository reproduces the experiments of the manuscript: an image-only
 EfficientNetV2-S classifier trained on TN5000, external validation on TN3K and
@@ -143,7 +143,7 @@ once published):
 ```bibtex
 @article{thyroid_fusion,
   title  = {Multimodal fusion of ultrasound imaging and ACR TI-RADS features
-            for thyroid nodule malignancy classification: a multi-dataset
+            for thyroid nodule malignancy classification: an external multi-dataset
             validation study},
   author = {Zhen, Chaohui and others},
   journal = {TBD},
