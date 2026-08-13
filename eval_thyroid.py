@@ -179,6 +179,7 @@ def main():
     print(f"  Sensitivity: {m['sensitivity']:.4f}  Specificity: {m['specificity']:.4f}")
     print(f"  Precision  : {m['precision']:.4f}  Recall: {m['recall']:.4f}  F1: {m['f1']:.4f}")
     print(f"  ECE        : {m['ece']:.4f}")
+    print(f"  Brier      : {m['brier']:.4f}")
     print(f"  Confusion  : TP={m['tp']} FP={m['fp']} TN={m['tn']} FN={m['fn']}")
     print(f"{'='*56}\n")
 

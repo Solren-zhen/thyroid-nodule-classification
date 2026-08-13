@@ -2,7 +2,7 @@
 
 **Standards for Reporting of Diagnostic Accuracy Studies — Artificial Intelligence**
 
-Manuscript title: Multimodal fusion of ultrasound imaging and ACR TI-RADS features for thyroid nodule malignancy classification: a multi-dataset validation study
+Manuscript title: External generalization and domain shift in thyroid ultrasound AI: quantifying cross-dataset performance, multi-dataset training, and the incremental value of structured features
 Date: 2026-08-12
 Status: Author self-assessment (fill page numbers after final formatting)
 

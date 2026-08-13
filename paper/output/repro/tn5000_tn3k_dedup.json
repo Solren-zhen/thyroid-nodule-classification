@@ -1,0 +1,8 @@
+{
+  "tn5000_files": 5000,
+  "tn5000_unique_md5": 5000,
+  "tn3k_files": 3493,
+  "tn3k_unique_md5": 3493,
+  "cross_dataset_duplicate_md5": 0,
+  "duplicate_samples": []
+}

@@ -99,6 +99,7 @@ def compute_metrics(labels: np.ndarray, probs: np.ndarray, threshold: float = 0.
     auc = float(roc_auc_score(labels, probs)) if len(np.unique(labels)) > 1 else 0.0
     auprc = float(average_precision_score(labels, probs)) if len(np.unique(labels)) > 1 else 0.0
     auc_mean, auc_lo, auc_hi = bootstrap_auc(labels, probs)
+    brier = float(np.mean((probs - labels) ** 2))
     tp = int(((preds == 1) & (labels == 1)).sum())
     fp = int(((preds == 1) & (labels == 0)).sum())
     tn = int(((preds == 0) & (labels == 0)).sum())
@@ -108,7 +109,7 @@ def compute_metrics(labels: np.ndarray, probs: np.ndarray, threshold: float = 0.
     return {
         "acc": acc, "precision": float(p), "recall": float(r), "f1": float(f1),
         "auc": auc, "auc_ci": (auc_lo, auc_hi), "auprc": auprc,
-        "ece": ece_score(labels, probs),
+        "ece": ece_score(labels, probs), "brier": brier,
         "tp": tp, "fp": fp, "tn": tn, "fn": fn,
         "sensitivity": sen, "specificity": spe,
     }

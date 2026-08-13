@@ -1,12 +1,13 @@
 # Supplementary Material
 
-**Supplementary Tables for:** Multimodal fusion of ultrasound imaging and ACR TI-RADS
-features for thyroid nodule malignancy classification: an external multi-dataset validation study.
+**Supplementary Tables for:** External generalization and domain shift in thyroid ultrasound AI: quantifying cross-dataset performance, multi-dataset training, and the incremental value of structured features.
 
 All metrics in this supplement use the same protocols as the main manuscript:
 AUC with bootstrap 95% confidence intervals (n = 2,000 samples); sensitivity
 and specificity at a fixed 0.5 decision threshold; ECE = expected calibration
-error (10 bins).
+error (10 equal-width bins over [0,1]); the Brier score for the nodule-level
+ablation is reported in Table 3 of the main manuscript (image-only 0.110,
+clinical-only 0.293, fusion 0.113).
 
 ---
 

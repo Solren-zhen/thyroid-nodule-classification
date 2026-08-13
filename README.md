@@ -1,10 +1,10 @@
-# Thyroid nodule malignancy classification: multimodal fusion of ultrasound imaging and ACR TI-RADS features with multi-dataset external validation
+# External generalization and domain shift in thyroid ultrasound AI
 
 [Paper]() · [Datasets]() · License: [MIT](LICENSE) · [Reproducibility](REPRODUCIBILITY.md)
 
 Code accompanying the manuscript:
 
-> **Multimodal fusion of ultrasound imaging and ACR TI-RADS features for thyroid nodule malignancy classification: an external multi-dataset validation study**
+> **External generalization and domain shift in thyroid ultrasound AI: quantifying cross-dataset performance, multi-dataset training, and the incremental value of structured features**
 
 This repository reproduces the experiments of the manuscript: an image-only
 EfficientNetV2-S classifier trained on TN5000, external validation on TN3K and
@@ -81,6 +81,11 @@ python prepare_thyroidxl.py --root data/thyroid/thyroidxl
 python prepare_multi.py
 ```
 
+Cross-dataset byte-level (MD5) duplicate checks (TN5000?TN3K and
+Thy-Wise?(TN5000+TN3K), zero duplicates) are provided by
+tools/tn5000_tn3k_dedup_check.py and tools/thywise_dedup_check.py, with
+reports committed under paper/output/repro/.
+
 > Data files are excluded from this repository (see `.gitignore`). To reproduce,
 > download the data and re-run the prepare steps; each manifest stores absolute
 > image paths resolved relative to the repository root at prepare time.
@@ -127,8 +132,9 @@ python paper/scripts/ensemble_fusion_pw1.py   # canonical 3-seed ensemble (AUC/C
 ```
 
 Metrics reported: AUC with bootstrap 95% CI (n = 2000), sensitivity/specificity/
-accuracy at a fixed 0.5 threshold, expected calibration error (ECE, 10 bins),
-decision curve analysis, confusion matrix, and F1.
+accuracy at a fixed 0.5 threshold, expected calibration error (ECE, 10
+equal-width bins) and Brier score, decision curve analysis, confusion matrix,
+and F1.
 
 ## Reporting
 
@@ -142,9 +148,9 @@ once published):
 
 ```bibtex
 @article{thyroid_fusion,
-  title  = {Multimodal fusion of ultrasound imaging and ACR TI-RADS features
-            for thyroid nodule malignancy classification: an external multi-dataset
-            validation study},
+  title  = {External generalization and domain shift in thyroid ultrasound AI:
+            quantifying cross-dataset performance, multi-dataset training, and the
+            incremental value of structured features},
   author = {Zhen, Chaohui},
   journal = {TBD},
   year   = {2026}

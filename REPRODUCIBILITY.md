@@ -27,7 +27,8 @@ regenerated from the **final protocol** (patient-grouped 70/15/15 split,
   are the exact values behind the paper.
 - AUC 95% CIs: bootstrap, n = 2,000, seed = 0 (`train_thyroid.bootstrap_auc`).
 - Sensitivity/specificity/accuracy at a fixed 0.5 decision threshold.
-- ECE: 10 bins. DCA: net benefit over thresholds 0.05–0.95.
+- ECE: 10 equal-width bins over [0,1] (bins with no observations are excluded). Brier score.
+- DCA: net benefit over thresholds 0.05–0.95 (step 0.05), compared with treat-none and treat-all references.
 - Thy-Wise and ThyroidXL nodule-level results: per-image probabilities averaged
   within each nodule (`--aggregate mean`); per-image statistics are also
   reported (S1a/S1b).
@@ -57,6 +58,10 @@ python prepare_thyroidxl.py --root data/thyroid/thyroidxl
 # Joint training manifest: TN5000 train/val + TN3K trainval (7,129 images),
 # internal test held out (data/thyroid_tn5000test, data/thyroid_tn3ktest)
 python prepare_multi.py
+
+# Cross-dataset byte-level (MD5) duplicate checks (zero duplicates found)
+python tools/tn5000_tn3k_dedup_check.py   # -> paper/output/repro/tn5000_tn3k_dedup.json
+python tools/thywise_dedup_check.py       # -> paper/output/repro/thywise_dedup.json
 ```
 
 Table 1 counts (5,000 / 3,493 / 29,070 / 11,635 images, splits, class counts)
@@ -130,7 +135,7 @@ python eval_thyroid.py --weights checkpoints/thyroid/image/best.pt   --data_root
 python eval_thyroid.py --weights checkpoints/thyroid/clinical/best.pt --data_root data/thyroid/thyroidxl --split test --batch_size 32 --aggregate mean --clinical_columns $CLIN
 ```
 
-| Table 3 row | Result file |
+| Table 3 row | Result file (metrics include Brier) |
 |---|---|
 | Fusion (0.947, 0.939 AUPRC, ECE 0.118) | `paper/output/repro/ablation_fusion_nodule.json` |
 | Image-only (0.939, 0.930 AUPRC, ECE 0.087) | `paper/output/repro/ablation_image_nodule.json` |

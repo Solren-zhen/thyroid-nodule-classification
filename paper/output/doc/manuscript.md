@@ -1,4 +1,4 @@
-# Multimodal fusion of ultrasound imaging and ACR TI-RADS features for thyroid nodule malignancy classification: an external multi-dataset validation study
+# External generalization and domain shift in thyroid ultrasound AI: quantifying cross-dataset performance, multi-dataset training, and the incremental value of structured features
 
 **Chaohui Zhen**¹
 
@@ -10,39 +10,51 @@ Correspondence: Chaohui Zhen (chaohui0408.medical@outlook.com)
 
 **Background.** Thyroid nodules are highly prevalent, yet ultrasound-based
 risk stratification remains subjective and operator-dependent. Deep learning
-models trained on thyroid ultrasound images show promise, but most studies lack external validation and few integrate structured clinical features such as the American College of
-Radiology (ACR) Thyroid Imaging Reporting and Data System (TI-RADS) descriptors.
+models trained on thyroid ultrasound images show promise, but most studies
+lack external validation, and few integrate structured patient and nodule
+features such as the American College of Radiology (ACR) Thyroid Imaging
+Reporting and Data System (TI-RADS) descriptors.
 
 **Methods.** In track A, an image-only EfficientNetV2-S model trained on
-TN5000 was evaluated on two external cohorts (TN3K and Thy-Wise), and a
-joint model also trained on TN3K images was compared with the
+TN5000 was evaluated on two external cohorts (TN3K and Thy-Wise), and a joint
+model additionally trained on TN3K images was compared with the
 single-dataset model to quantify cross-dataset domain shift. In track B, a
-multimodal model fusing the image encoder with five clinical features (ACR
-TI-RADS total score, nodule width and height, age, sex) was compared with
-image-only and clinical-only models on ThyroidXL. Performance was assessed
-using the area under the receiver operating characteristic curve (AUC) with
-bootstrap confidence intervals (CI), sensitivity, specificity, expected calibration error (ECE), and decision curves.
+multimodal model fusing the image encoder with five structured patient and
+nodule features (ACR TI-RADS total score, nodule width and height, age, sex)
+was compared with image-only and clinical-only models on ThyroidXL.
+Performance was assessed using the area under the receiver operating
+characteristic curve (AUC) with bootstrap confidence intervals (CI),
+sensitivity, specificity, expected calibration error (ECE), Brier score and
+decision curves.
 
-**Results.** In track A, the single-dataset model achieved an internal test
-AUC of 0.915 but dropped to 0.712 on the full external TN3K cohort (0.729 on the official test split) and 0.608 (nodule-level)
-on Thy-Wise. Joint training raised the TN3K test AUC from 0.729 to 0.813
-(matched Δ = +0.085) and the Thy-Wise nodule-level AUC to 0.710 (Δ = +0.102).
-In track B, fusion achieved a nodule-level AUC of 0.947, above the image-only
-(0.939) and clinical-only (0.814) models; image features dominated, and
-clinical features added a small but statistically significant gain
-(ΔAUC +0.007; p = 0.012).
+**Results.** The single-dataset model achieved an internal test AUC of 0.915
+but dropped to 0.712 on the full TN3K cohort (0.729 on the official test
+split) and to 0.608 (nodule-level) on the completely unseen Thy-Wise cohort,
+quantifying a large cross-dataset domain-shift gap. Joint training raised the
+TN3K official-test AUC from 0.729 to 0.813 (matched Δ = +0.085) and the
+Thy-Wise nodule-level AUC to 0.710 (Δ = +0.102), showing that the benefit of
+multi-dataset training transfers beyond the cohort added to training. In
+track B, fusion achieved a nodule-level AUC of 0.947, above the image-only
+(0.939) and clinical-only (0.814) models; the incremental gain was small but
+statistically significant (ΔAUC +0.007; 95% CI 0.002–0.013; p = 0.012) and
+was concentrated in low-to-intermediate TI-RADS scores and small nodules.
 
 **Conclusions.** Across four public datasets, image-only classifiers achieved
 high internal AUC but lost substantial performance externally, quantifying
-cross-dataset domain shift; joint multi-dataset training recovered part of
-the gap on both an added and an unseen cohort. Adding structured clinical
-features yielded a small overall improvement on ThyroidXL, concentrated in
-low-to-intermediate TI-RADS scores and small nodules, supporting structured
-priors as a complementary signal while image features remained dominant. All datasets are publicly accessible (ThyroidXL under gated access), and analysis code is available at https://github.com/ojdanajakir848-a11y/thyroid.
+cross-dataset domain shift in thyroid ultrasound AI; joint multi-dataset
+training recovered part of the gap on both a target-domain held-out cohort and
+a completely unseen cohort. Adding structured patient and nodule features
+yielded a small overall improvement on ThyroidXL, concentrated in
+diagnostically ambiguous subgroups, while image features remained dominant.
+These findings support the importance of external validation before clinical
+deployment. All datasets are publicly accessible (ThyroidXL under gated
+access), and analysis code is available at
+https://github.com/ojdanajakir848-a11y/thyroid.
+
 
 ## Keywords
 
-Thyroid nodule; Ultrasound imaging; Deep learning; Domain shift; External validation; Multimodal fusion; TI-RADS; Calibration
+Thyroid nodule; Ultrasound imaging; Deep learning; Domain shift; External validation; Generalization; Multimodal fusion; TI-RADS; Calibration
 
 ## 1. Introduction
 
@@ -70,37 +82,41 @@ persist in the literature. First, most studies evaluate on a single dataset,
 where models trained and tested on images from the same institution can
 overestimate real-world performance because of domain shift across hospitals,
 ultrasound devices and patient populations. Second, the vast majority of
-models are image-only and discard structured clinical information that
+models are image-only and discard structured patient and nodule information that
 radiologists routinely use, such as the American College of Radiology (ACR)
 Thyroid Imaging Reporting and Data System (TI-RADS) descriptors. Third,
 reported models rarely include calibration metrics or decision curve
 analysis, which are essential for clinical utility assessment.
 
-The ACR TI-RADS lexicon provides a standardised, device-independent
+The ACR TI-RADS lexicon provides a standardised, semantically defined
 description of nodule composition, echogenicity, shape, margin and echogenic
 foci, and its total score is a validated predictor of malignancy risk [3].
-Because these features are defined semantically
-rather than by image statistics, they are in principle less affected by
-acquisition variability than raw pixels. Whether fusing such structured
-clinical features with image-derived deep features improves classification, and
-whether any gain is robust across datasets, has not, to our knowledge, been systematically tested
-on public multi-cohort data. We therefore evaluated a multimodal framework that
-fuses image features with structured clinical features (ACR TI-RADS score,
+Because the descriptors are defined semantically rather than by pixel
+statistics, they are in principle less affected by acquisition variability
+than raw pixels, although in practice they are derived from ultrasound
+assessment and therefore share some dependence on image acquisition. Whether
+fusing such structured patient and nodule features with image-derived deep
+features improves classification, and whether any gain is robust across
+datasets, has not, to our knowledge, been systematically tested on public
+multi-cohort data. We therefore evaluated a multimodal framework that
+fuses image features with structured patient and nodule features (ACR TI-RADS score,
 nodule width and height, age, sex), and quantified both the internal gain and
 the behaviour of the fused model relative to image-only and clinical-only
 configurations.
 
-In this study, we systematically evaluate a multimodal framework
-that combines an EfficientNetV2 image encoder with a clinical encoder for five
-structured clinical features (expert TI-RADS total score and nodule
-demographics). Our contributions are threefold: (1) we
-conduct a head-to-head ablation of image-only, clinical-only and fused
-models; (2) we quantify cross-dataset domain shift by externally validating on
-an independent multi-device dataset and evaluate whether joint multi-dataset
-training mitigates the observed performance gap; and (3) we report
-calibration (expected calibration error) and decision curve analysis to
-assess clinical utility, following the STARD 2015 and TRIPOD reporting
-guidelines.
+In this study, we systematically evaluate an image-only EfficientNetV2
+classifier across four public datasets to quantify cross-dataset domain
+shift, and test whether joint multi-dataset training and the addition of
+structured patient and nodule features (expert TI-RADS total score, nodule
+dimensions, age and sex) can mitigate the resulting performance gap. Our
+contributions are threefold: (1) we quantify the external-generalization gap
+of a single-dataset model on two independent cohorts and show that
+multi-dataset training recovers part of the gap, including on a cohort that
+never contributed training data; (2) we conduct a head-to-head ablation of
+image-only, clinical-only and fused models to isolate the incremental value of
+structured features; and (3) we report calibration (expected calibration
+error and Brier score) and decision curve analysis to assess clinical
+utility, following the STARD 2015 and TRIPOD+AI reporting guidelines.
 
 ## 2. Methods
 
@@ -157,29 +173,34 @@ represented by multiple images, ThyroidXL evaluations were aggregated to the
 nodule level by averaging image-level probabilities (Section 2.5).
 
 No images were shared between training and test splits at the patient level.
-A byte-level comparison (MD5) confirmed that no Thy-Wise image is duplicated
-in the TN5000 or TN3K datasets used for training (the ThyroidXL cohort,
-released independently, was not included in this comparison).
-Because each TN5000 image corresponds to an independent nodule sample, image
-filenames were treated as patient identifiers for grouped splitting.
+Pairwise byte-level (MD5) comparisons confirmed zero cross-dataset image
+duplication: all 5,000 TN5000 images and all 3,493 TN3K images had unique MD5
+hashes, with no TN5000–TN3K overlap, and no Thy-Wise image matched any TN5000
+or TN3K image (the ThyroidXL cohort, released independently, was not included
+in this comparison). Because each TN5000 image corresponds to an independent
+nodule sample, image filenames were treated as patient identifiers for
+grouped splitting.
 
 <!-- FIGURE:1 -->
 
-### 2.2 Clinical features
+### 2.2 Structured patient and nodule features
 
-Five structured clinical features were used as the clinical input to the
-fusion model. The ThyroidXL dataset provides, for each nodule, an expert ACR
+Five structured patient and nodule features were used as the structured
+input to the fusion model. The ThyroidXL dataset provides, for each nodule, an expert ACR
 TI-RADS total score (1–5), the nodule width and height in millimetres
 (recorded at acquisition), the patient age (years), and sex
 (1 = male, 2 = female), which were concatenated into a
-five-dimensional clinical vector. The ACR TI-RADS total score is a
-device-independent, semantically defined risk-stratification summary derived
-from composition,
-echogenicity, shape, margin and echogenic-foci descriptors [3], and was
-therefore expected to be less affected by acquisition variability than raw
-pixel statistics. Unlike the image modality, these features do not require
-nodule segmentation or manual lesion cropping at inference time. No nodule in
-ThyroidXL lacked any of the five features.
+five-dimensional structured feature vector. The ACR TI-RADS total score is a
+semantically defined risk-stratification summary derived from composition,
+echogenicity, shape, margin and echogenic-foci descriptors [3]. Age and sex
+are demographic variables that are independent of image acquisition, whereas
+the TI-RADS score and nodule dimensions are structured measurements derived
+from ultrasound assessment; together they therefore provide structured
+patient and nodule information that is less directly tied to raw pixel
+statistics than the image modality, without being fully device-independent.
+Unlike the image modality, these features do not require nodule segmentation
+or manual lesion cropping at inference time. No nodule in ThyroidXL lacked any
+of the five features.
 
 ### 2.3 Model architecture
 
@@ -191,9 +212,9 @@ compound-scaling design offers a favourable accuracy/efficiency trade-off, is
 well-suited to the available 6 GB GPU memory, and has been
 widely used for medical-image classification including thyroid ultrasound [8];
 we did not perform an architecture search, and other backbones may behave
-differently (Section 4, Limitations). The clinical encoder was a multi-layer
-perceptron mapping the five-dimensional clinical vector (Section 2.2) to a
-64-dimensional embedding. The two
+differently (Section 4, Limitations). The structured-feature encoder was a multi-layer
+perceptron mapping the five-dimensional structured feature vector
+(Section 2.2) to a 64-dimensional embedding. The two
 embeddings were concatenated and passed to a prediction head with hidden
 dimensions 256 and 128 and a dropout of 0.3, producing a malignancy probability.
 Three ablation configurations were compared: image-only (clinical branch
@@ -235,13 +256,16 @@ Discrimination was quantified by the AUC with 95% CIs obtained by seeded
 bootstrap resampling (n = 2,000 samples). Sensitivity, specificity and accuracy were
 reported at a fixed decision threshold of 0.5 applied uniformly to internal
 and external test sets. Calibration was quantified by the expected
-calibration error (ECE, 10 bins). Clinical utility was assessed by decision curve
-analysis (DCA), reporting net benefit across threshold probabilities. Reporting
+calibration error (ECE) computed with 10 equal-width bins over [0, 1] (bins
+with no observations were excluded) and by the Brier score. Clinical utility
+was assessed by decision curve analysis (DCA), reporting net benefit over
+threshold probabilities from 0.05 to 0.95 in steps of 0.05 and comparing each
+model with the treat-none and treat-all reference strategies. Reporting
 follows the STARD 2015 [15] and TRIPOD+AI [16] checklists.
 
 ## 3. Results
 
-Two evaluation tracks structure the results: track A (Sections 3.2–3.4) evaluates image-only single- and multi-dataset models across the four cohorts, and track B (Section 3.5) evaluates the multimodal fusion ablation on ThyroidXL.
+Two evaluation tracks structure the results: track A (Sections 3.2–3.4) evaluates image-only single- and multi-dataset models across the four cohorts, and track B (Section 3.5) evaluates the structured-feature fusion ablation on ThyroidXL.
 
 ### 3.1 Dataset characteristics
 
@@ -251,8 +275,9 @@ Two evaluation tracks structure the results: track A (Sections 3.2–3.4) evalua
 |---|---|---|---|---|
 | Total images | 5,000 | 3,493 | 29,070 | 11,635 |
 | Patients / nodules | 5,000^a^ | 2,421 | 3,954 | 4,093 |
-| Benign | 1,426 (28.5%) | 2,283 (65.4%) | 20,680 images / 2,876 nodules (72.7%) | 7,052 images (73.9% of dev.) |
-| Malignant | 3,574 (71.5%) | 1,210 (34.6%) | 8,390 images / 1,078 nodules (27.3%) | 2,489 images (26.1% of dev.) |
+| Benign images | 1,426 (28.5%) | 2,283 (65.4%) | 20,680 (71.1%) | 7,052 (73.9% of dev.) |
+| Malignant images | 3,574 (71.5%) | 1,210 (34.6%) | 8,390 (28.9%) | 2,489 (26.1% of dev.) |
+| Malignancy prevalence (test cohort) | 72.0%^b^ | 38.4%^c^ | 27.3%^e^ | 47.8%^d^ |
 | Train / Val / Test | 3,500 / 750 / 750^b^ | — / — / 614^c^ | — / — / 3,954 | 8,615 / 926 / 2,094^d^ |
 | Ground truth | Biopsy-confirmed | Published labels [11] | Pathological diagnosis [14] | Cytological/pathological [13] |
 | Acquisition | Single institution, GE Logiq E9/S7 | Multi-device, multi-institution | Single institution, Jinan University Hospital | Single institution, Hitachi Aloka Arietta V70 |
@@ -260,9 +285,10 @@ Two evaluation tracks structure the results: track A (Sections 3.2–3.4) evalua
 | Role in this study | Primary training + internal test | External validation #1 | External validation #2 | Fusion training/test (Section 3.5) |
 
 ^a^ Each TN5000 image corresponds to an independent nodule; filenames serve as patient identifiers for grouped splitting.
-^b^ Patient-level grouped random split (70/15/15, seed = 42).
-^c^ Official test split of the TN3K dataset. Joint training used TN3K train (n = 2,879) for training and the official test set for evaluation.
-^d^ ThyroidXL official development cohort split at patient level into train/val (90/10, seed = 42); official test cohort (739 nodules) held out.
+^b^ Patient-level grouped random split (70/15/15, seed = 42); the held-out internal TN5000 test cohort (n = 750) was 72.0% malignant.
+^c^ Official test split of the TN3K dataset (n = 614; 38.4% malignant); joint training used TN3K train (n = 2,879) for training and the official test set for evaluation.
+^d^ Official ThyroidXL test cohort (739 nodules; 47.8% malignant); the development cohort was split at the patient level into train/val (90/10, seed = 42).
+^e^ Nodule-level malignancy prevalence of Thy-Wise; all 3,954 nodules were used for external evaluation.
 
 ### 3.2 Internal test performance (image-only, single-dataset model)
 
@@ -276,7 +302,7 @@ seed-to-seed variation in the held-out test AUC was 0.915–0.954
 
 ### 3.3 External validation reveals substantial domain shift
 
-Applying the single-dataset model to the full TN3K cohort (3,493 images from
+Applying the single-dataset model to the full TN3K cohort for descriptive external evaluation (3,493 images from
 a different institution and device setting) yielded an AUC of 0.712 (95% CI
 0.695–0.729) with sensitivity 51.4% and specificity 76.5% (expected
 calibration error 0.120). On the official TN3K test split (n = 614), the same
@@ -297,7 +323,10 @@ with sensitivity 94.8% and specificity 75.7% (expected calibration error
 0.729 to 0.813 (95% CI 0.779–0.846; matched Δ = +0.085), with sensitivity
 67.4%, specificity 78.8% and expected calibration error 0.050 (Table 2;
 Figures 2–4). Joint training therefore recovered approximately half of the
-domain-shift gap on the external TN3K cohort.
+domain-shift gap on the external TN3K cohort. Note that the official TN3K
+test set is a target-domain held-out evaluation, because TN3K training images
+contributed to the joint model; Thy-Wise, by contrast, never contributed
+training data and is the completely unseen cohort.
 
 The gain transferred to a second, fully independent cohort. Applied to
 Thy-Wise (3,954 pathology-confirmed nodules from a third institution), the
@@ -340,9 +369,9 @@ All metrics computed at a fixed 0.5 decision threshold. Sensitivity and specific
 
 <!-- FIGURE:4 -->
 
-### 3.5 Multimodal fusion
+### 3.5 Fusion ablation (ThyroidXL)
 
-To test whether structured clinical features improve over image-only
+To test whether structured patient and nodule features improve over image-only
 classification, we trained three ablation configurations on the ThyroidXL
 training cohort (Section 2.2) and evaluated them on the held-out ThyroidXL test
 cohort (2,094 images, 739 nodules), aggregating image-level probabilities to the
@@ -354,9 +383,9 @@ the clinical-only model (0.814, 95% CI 0.782–0.847) (Table 3). The fusion gain
 over image-only was statistically significant (ΔAUC +0.007; paired bootstrap
 95% CI 0.002–0.013, two-sided p = 0.012). The fused model also showed
 the highest AUPRC (0.939 vs. 0.930 for image-only) and specificity (0.940 vs.
-0.909), at a modest cost in sensitivity (0.725 vs. 0.779). As an exploratory
-complement, predictive values were examined at the Youden-optimal operating
-point determined on the test cohort: the fused model achieved balanced positive
+0.909), at a modest cost in sensitivity (0.725 vs. 0.779). In an exploratory
+threshold analysis, predictive values were examined at the Youden-optimal
+operating point determined on the test cohort: the fused model achieved balanced positive
 and negative predictive values (PPV 0.856, NPV 0.898), comparable to the
 image-only model (PPV 0.815, NPV 0.920) and above the clinical-only model (PPV
 0.688, NPV 0.835), suggesting that the fusion gain in discrimination does not
@@ -372,7 +401,8 @@ rather than in absolute probabilities at a fixed operating point. The image-only
 (ECE 0.087), while the clinical-only model was substantially miscalibrated
 (ECE 0.248) and the fused model intermediate (ECE 0.118); the fusion gain in
 discrimination therefore came with a small cost in calibration relative to
-image-only classification.
+image-only classification. Brier scores followed the same ordering
+(image-only 0.110, fusion 0.113, clinical-only 0.293).
 
 As a clinical reference point, the expert ACR TI-RADS total score alone (a
 widely used risk-stratification tool) achieved a nodule-level AUC of 0.929
@@ -389,18 +419,22 @@ These results indicate that image features dominate the classification task,
 and that adding expert TI-RADS and demographic features yields a small
 overall improvement in discrimination (Δ AUC +0.007), AUPRC (+0.009) and
 specificity (+0.031) over image-only. The gain is directionally consistent with
-the hypothesis that structured clinical priors complement image features, but
+the hypothesis that structured patient and nodule priors complement image features, but
 the magnitude is modest in this single-device cohort (Figure 5).
 
-**Table 3.** Three-arm ablation on the ThyroidXL held-out test cohort (nodule-level, n = 739).
+**Table 3.** Model ablation and clinical reference on the ThyroidXL held-out test cohort (nodule-level, n = 739).
 
-| Model | AUC (95% CI) | AUPRC | Sensitivity | Specificity | ACC | ECE |
-|---|---|---|---|---|---|---|
-| Image-only | 0.939 (0.924–0.954) | 0.930 | 0.779 | 0.909 | 0.847 | 0.087 |
-| Clinical-only | 0.814 (0.782–0.847) | 0.735 | 0.00 | 1.00 | 0.522 | 0.248 |
-| Fusion | 0.947 (0.932–0.960) | 0.939 | 0.725 | 0.940 | 0.838 | 0.118 |
+| Model | AUC (95% CI) | AUPRC | Sensitivity | Specificity | ACC | ECE | Brier |
+|---|---|---|---|---|---|---|---|
+| Image-only | 0.939 (0.924–0.954) | 0.930 | 0.779 | 0.909 | 0.847 | 0.087 | 0.110 |
+| Clinical-only | 0.814 (0.782–0.847) | 0.735 | 0.00 | 1.00 | 0.522 | 0.248 | 0.293 |
+| Fusion | 0.947 (0.932–0.960) | 0.939 | 0.725 | 0.940 | 0.838 | 0.118 | 0.113 |
+| Expert TI-RADS only | 0.929 | 0.887 | 0.793^e^ | 0.956^e^ | — | — | — |
 
-Sensitivity and specificity at a fixed 0.5 decision threshold. AUPRC = area
+Sensitivity and specificity at a fixed 0.5 decision threshold; for the expert
+TI-RADS row, ^e^ sensitivity and specificity are reported at a TI-RADS-4.5
+threshold, and ACC, ECE and Brier are not defined because the expert score is
+an ordinal 1–5 scale rather than a continuous probability. AUPRC = area
 under the precision-recall curve. Table 3 reports the fusion model from a
 single training run (seed 42). As a robustness check, two additional fusion
 models were trained with the same protocol (pos_weight = 1.0) and different
@@ -432,7 +466,8 @@ scores 2–3 were combined into a single low-to-intermediate risk group
 The fusion gain over image-only was largest in the low-to-intermediate risk
 group (TR2-3: Δ AUC +0.046; fusion 0.929 vs. image-only 0.883) and smaller in
 TR4 (Δ +0.015; 0.838 vs. 0.823) and TR5 (Δ +0.013; 0.773 vs. 0.760), where
-the high malignancy prevalence (94.3%) limits discriminative headroom. By
+the high malignancy prevalence (94.3%) may reduce the available
+discrimination range. By
 nodule size, fusion improved over image-only for nodules ≤10 mm (0.882 vs.
 0.868, Δ +0.014) and 10–20 mm (0.976 vs. 0.970, Δ +0.006), but not for nodules
 >20 mm (0.949 vs. 0.966, Δ −0.017), a subgroup with low malignancy prevalence
@@ -443,17 +478,17 @@ signal contributes most where image-derived discrimination is least certain
 (low-to-intermediate TI-RADS risk, small nodules), and that the modest average
 fusion gain in Table 3 is not driven by any single subgroup. Because the TR2-3
 subgroup contained only four malignant nodules, its confidence intervals are
-wide and should be interpreted with caution. Subgroup analyses were
+very wide, and the largest point estimate (Δ AUC +0.046) should be regarded as
+hypothesis-generating rather than as a definitive effect. Subgroup analyses were
 exploratory; the reported 95% confidence intervals are not adjusted for
-multiple comparisons. These analyses constitute an exploratory fairness
-assessment of the model across patient sex, age, nodule size and TI-RADS risk
-strata; sex-stratified estimates should be interpreted cautiously given the
+multiple comparisons. These analyses were exploratory subgroup performance
+analyses across patient sex, age, nodule size and TI-RADS risk strata; sex-stratified estimates should be interpreted cautiously given the
 small male subgroup (n = 86).
 
 **Table 4.** Subgroup analysis on the ThyroidXL test cohort (nodule-level, n = 739).
 
 AUC (95% CI) by model and subgroup. TR = TI-RADS total score;
-diameter = maximum nodule diameter (width or height). Δ = Fusion 0 Image-only AUC.
+diameter = maximum nodule diameter (width or height). Δ = Fusion − Image-only AUC.
 
 | Subgroup | n | Malignant (%) | Image-only | Clinical-only | Fusion | Δ AUC |
 |---|---|---|---|---|---|---|
@@ -469,85 +504,84 @@ diameter = maximum nodule diameter (width or height). Δ = Fusion 0 Image-only A
 | Sex: male | 86 | 61.6% | 0.957 (0.909–0.991) | 0.816 (0.707–0.918) | 0.963 (0.914–0.994) | +0.006 |
 | Sex: female | 653 | 45.9% | 0.938 (0.922–0.954) | 0.813 (0.782–0.847) | 0.946 (0.931–0.961) | +0.008 |
 
-^a^ Δ = Fusion 0 Image-only AUC, computed from unrounded values; displayed Δ may differ by ±0.001 from the difference of the rounded AUCs shown in the table.
+^a^ Δ = Fusion − Image-only AUC, computed from unrounded values; displayed Δ may differ by ±0.001 from the difference of the rounded AUCs shown in the table.
 
 <!-- FIGURE:9 -->
 
 ## 4. Discussion
 
-We systematically evaluated a multimodal framework for thyroid nodule
-malignancy classification that combines ultrasound image features with
-structured clinical features, and quantified its generalisation across
-four public datasets. Three principal findings emerged. First, an
-image-only model trained on a single large dataset achieved high internal
-discrimination (test AUC 0.915) but lost substantial performance on an
-independent external dataset (AUC 0.712), quantifying a 0.20 cross-dataset
-domain-shift gap that is invisible to single-cohort evaluation. Second, joint
-training on the combined training images of two datasets (7,129 images: 6,379
-training plus 750 validation) recovered approximately half of this gap on
-TN3K (external AUC 0.813 vs. 0.729 on the matched official test, Δ = +0.085)
-with only a modest internal change (AUC 0.931, +0.01). Third,
-on a second, fully independent pathology-confirmed cohort (Thy-Wise; 3,954
-nodules), joint training provided a comparable gain (nodule-level AUC
-0.608 → 0.710, Δ = +0.102), demonstrating that external performance
-is strongly cohort-dependent and that the benefit of joint training
-transfers to unseen distributions beyond the cohort added during training.
-Across these analyses we report calibration
-and decision-curve metrics alongside discrimination, and on the ThyroidXL
-cohort we report a three-arm ablation of image-only, clinical-only and fused
-models (Section 3.5), addressing reporting gaps that remain common in the
-field.
+We systematically evaluated the external generalization of a thyroid nodule
+malignancy classifier across four public datasets and tested two potential
+mitigations: multi-dataset training and structured patient and nodule
+features. Three principal findings emerged. First, an image-only model trained
+on a single dataset achieved high internal discrimination (test AUC 0.915)
+but lost substantial performance externally (AUC 0.712 on TN3K; 0.608
+nodule-level on Thy-Wise), a cross-dataset gap that is invisible to
+single-cohort evaluation. Second, joint training on two datasets recovered
+approximately half of that gap on the cohort added to training (TN3K official
+test AUC 0.813 vs. 0.729) and provided a comparable gain on a completely
+unseen cohort (Thy-Wise, 0.608 → 0.710). Third, structured patient and nodule
+features added only a small overall improvement over image-only
+classification on ThyroidXL (ΔAUC +0.007), concentrated in diagnostically
+ambiguous subgroups. Across these analyses we report calibration (ECE and
+Brier score) and decision-curve metrics alongside discrimination, and on the
+ThyroidXL cohort we report a three-arm ablation of image-only, clinical-only
+and fused models (Section 3.5), addressing reporting gaps that remain common
+in the field.
 
-**Domain shift is the central barrier to translation.** The external drop from
-0.915 to 0.712 deserves emphasis. TN5000 and TN3K were acquired with
-different devices at different institutions, and their label prevalence also
-differs substantially (71.5% vs 34.6% malignant), which partly explains the
-concurrent fall in sensitivity (90.6% internally to 51.3% on the official
-TN3K test) at a fixed operating threshold. A second external cohort confirmed that the magnitude of this shift
-is cohort-specific: applied to Thy-Wise, the single-dataset model's
-nodule-level AUC fell further to 0.608 (Section 3.4). Comparable degradation
-when ultrasound models are transferred across devices has been reported in the
-domain-adaptation literature [17,18]. Our result supports the emerging consensus that single-dataset AUCs
-substantially overestimate real-world performance, and reinforces the TRIPOD+AI
-recommendation that external validation is a prerequisite for deployment [16].
+**Domain shift is the central barrier to translation.** The external drop
+deserves emphasis because it reflects factors that internal testing cannot
+expose: TN5000 and TN3K were acquired with different devices at different
+institutions, and their label prevalence differs substantially (71.5% vs
+34.6% malignant), which partly explains the concurrent fall in sensitivity at
+a fixed operating threshold. A second external cohort (Thy-Wise) confirmed
+that the magnitude of this shift is cohort-specific. Comparable degradation
+across devices has been reported in the domain-adaptation literature [17,18].
+Our results support the emerging consensus that single-dataset AUCs
+substantially overestimate real-world performance, and reinforce the TRIPOD+AI
+recommendation that external validation is a prerequisite for deployment
+[16].
 
 **Joint multi-dataset training helps the cohort added to training, and the
-gain transfers to unseen cohorts.** Adding TN3K training images to the TN5000 pool
-improved external AUC on the official TN3K test set from 0.729 to 0.813
-(+0.085, matched), restored approximately half of the domain-shift deficit,
-and improved external specificity from 78.0% to 78.8%. Multi-dataset pooling is therefore a
-pragmatic robustness strategy when data from the target cohort can be included
-in training. On the fully independent Thy-Wise cohort, joint training also
-improved nodule-level AUC, from 0.608 to 0.710 (+0.102), a gain comparable to
-that on TN3K. The gain therefore transfers beyond the added distribution.
-The residual gaps seen on both TN3K and Thy-Wise (absolute AUCs of 0.813 and
-0.710, well below the internal 0.931) indicate that device-agnostic priors,
-such as structured clinical features, may be required in addition.
+gain transfers to unseen cohorts.** Adding TN3K training images to the TN5000
+pool improved external AUC on the official TN3K test set by +0.085 and
+restored approximately half of the domain-shift deficit; this is a pragmatic
+robustness strategy when target-domain images can be included in training.
+The key transfer result is the comparable gain on the completely independent
+Thy-Wise cohort (+0.102), which never contributed training data. The residual
+gaps on both cohorts (absolute AUCs of 0.813 and 0.710, well below the
+internal 0.931) indicate that multi-dataset pooling alone does not eliminate
+domain shift, and that additional robustness strategies, including structured
+patient and nodule features, merit evaluation.
 
-**Structured clinical features complement, but do not dominate, image
-features.** The hypothesis that structured clinical priors (an expert ACR
-TI-RADS score, nodule width and height, age and sex) are largely independent
-of acquisition hardware and could stabilise predictions was tested directly in
-the ThyroidXL ablation. The fused model achieved a modest overall
+**Structured patient and nodule features complement, but do not dominate, image
+features.** The hypothesis that structured patient and nodule priors (an expert ACR
+TI-RADS score, nodule width and height, age and sex) could stabilise
+predictions under domain shift was tested directly in the ThyroidXL ablation:
+age and sex are independent of image acquisition, whereas the TI-RADS score
+and nodule dimensions are structured measurements derived from ultrasound
+assessment that may remain informative when pixel statistics degrade. The fused model achieved a modest overall
 improvement over image-only (nodule-level AUC 0.947 vs. 0.939; AUPRC 0.939 vs.
 0.930; specificity 0.940 vs. 0.909), while the clinical-only model was markedly
 inferior (AUC 0.814) and poorly calibrated (ECE 0.248). The fused model was
 slightly less well calibrated than the image-only model (ECE 0.118 vs. 0.087),
-indicating that the added clinical features improved ranking without
+indicating that the added structured features improved ranking without
 proportionally improving the reliability of the predicted probabilities at the
 fixed decision threshold. Two implications follow. First, image features dominated the classification task in this
 single-device cohort, and the incremental value of the five structured
-features, while directionally positive, was small. Second, clinical features
+features, while directionally positive, was small. Second, structured features
 alone were insufficient for reliable discrimination. This tempers the
-"device-independent prior" framing: structured features appear to be a useful
-complementary signal rather than a substitute for image analysis. Whether the
+"device-independent prior" framing: only a subset of the features (age and
+sex) is truly independent of image acquisition, and structured features
+appear to be a useful complementary signal rather than a substitute for image
+analysis. Whether the
 fusion gain would be larger under genuine cross-device domain shift (where
 image statistics degrade but semantic features should not) remains an open
 question that the present single-device ThyroidXL cohort cannot answer, and is
 a direction for future work with multi-device TI-RADS-annotated data. Our
 framework also differs from multimodal methods that depend on free-text
 radiology reports [19,20] or on contrast-enhanced sequences [21]: it uses only
-routine B-mode ultrasound together with structured clinical values, requiring
+routine B-mode ultrasound together with structured patient and nodule values, requiring
 no additional acquisitions or report transcription, which is an advantage for
 widespread clinical deployment.
 
@@ -576,7 +610,7 @@ by the mask), whereas our framework uses only the B-mode image and is
 therefore applicable where automated or manual masks are unavailable. Second,
 it aggregates frames with learned attention within each patient, whereas we
 use fixed mean aggregation, which is simpler and avoids additional learned
-parameters. Third, it does not use structured clinical features. Our results
+parameters. Third, it does not use structured patient and nodule features. Our results
 are not directly comparable in absolute terms because of these methodological
 differences, and in particular the lower AUC of our image-only model on
 ThyroidXL reflects the absence of mask guidance. To isolate the contribution of
@@ -592,7 +626,7 @@ attention pooling, and is consistent with the presence of mask guidance
 itself, which our framework deliberately avoids for clinical applicability. The present study instead
 focuses on the questions that the mask-based approach does not address,
 namely cross-dataset domain-shift quantification and the incremental value of
-structured clinical features.
+structured patient and nodule features.
 
 **Calibration and decision-curve reporting.** Discrimination alone is
 insufficient for clinical use. The single-dataset model was reasonably well
@@ -644,7 +678,7 @@ institution-specific evaluation would be required before clinical deployment.
 
 **Future work.** The fusion gain observed on the single-device ThyroidXL cohort
 should be re-tested on multi-device, TI-RADS-annotated data to determine whether
-structured clinical priors confer larger robustness under genuine cross-device
+structured patient and nodule priors confer larger robustness under genuine cross-device
 domain shift. Extending deep learning to the automated extraction of
 TI-RADS descriptors from ultrasound images [4] could reduce the reliance on
 expert scoring while preserving the structured-feature prior, and would
@@ -659,22 +693,22 @@ classification model trained on a single dataset achieves high internal AUC
 but loses substantial performance externally (0.91 to 0.71 on TN3K); that joint
 multi-dataset training recovers approximately half of that gap on the cohort
 added to training (external AUC 0.813 vs. 0.729 on the matched official test,
-Δ = +0.085); and that on a second, unseen external
+Δ = +0.085); and that on a second, completely unseen external
 cohort (Thy-Wise), the same joint training provides a comparable gain
 (nodule-level AUC 0.608 → 0.710, +0.102). External
 performance is therefore strongly cohort-dependent, yet the benefit of
-multi-dataset pooling transfers to unseen distributions, and
-image-only models alone appear insufficient for reliable cross-site deployment. On a fourth
-cohort (ThyroidXL), fusing image features with structured clinical features
-(ACR TI-RADS score, nodule width and height, age, sex) yielded a small overall
-improvement over image-only classification (nodule-level AUC 0.947
-vs. 0.939;
-AUPRC 0.939 vs. 0.930; ΔAUC +0.007, p = 0.012), concentrated in
-low-to-intermediate TI-RADS scores and small nodules, while the clinical-only
-model was markedly inferior
-(AUC 0.814) and poorly calibrated. Together, these findings establish
-external validation as a prerequisite for reliable, deployable
-ultrasound-based thyroid nodule classification, and identify clinical-feature
+multi-dataset pooling transfers to unseen distributions; image-only models
+showed limited robustness across the evaluated cross-dataset settings,
+highlighting the need for external validation before clinical deployment. On a
+fourth cohort (ThyroidXL), fusing image features with structured patient and
+nodule features (ACR TI-RADS score, nodule width and height, age, sex) yielded
+a small overall improvement over image-only classification (nodule-level AUC
+0.947 vs. 0.939; AUPRC 0.939 vs. 0.930; ΔAUC +0.007, 95% CI 0.002–0.013,
+p = 0.012), concentrated in low-to-intermediate TI-RADS scores and small
+nodules, while the clinical-only model was markedly inferior
+(AUC 0.814) and poorly calibrated. Together, these findings support the
+importance of external validation before clinical deployment of
+ultrasound-based thyroid nodule classifiers, and identify structured-feature
 fusion as a directionally positive complement whose incremental value should
 be re-evaluated under genuine multi-device domain shift; image features
 remained the dominant signal.
