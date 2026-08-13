@@ -408,18 +408,22 @@ All metrics computed at a fixed 0.5 decision threshold. Sensitivity and specific
 ### 3.5 Fusion ablation (ThyroidXL)
 
 To test whether structured patient and nodule features improve over image-only
-classification, we trained three ablation configurations on the ThyroidXL
-training cohort (Section 2.2) and evaluated them on the held-out ThyroidXL test
-cohort (2,094 images, 739 nodules), aggregating image-level probabilities to the
-nodule level by averaging. Results are summarised in Table 3 and Figures 5–8.
+classification, we evaluated image-only, clinical-only, full five-feature
+fusion, and feature-specific fusion configurations on the ThyroidXL training
+cohort (Section 2.2), and evaluated them on the held-out ThyroidXL test cohort
+(2,094 images, 739 nodules), aggregating image-level probabilities to the
+nodule level by averaging. Results are summarised in Tables 3 and 6 and Figures
+5–8.
 
-The fusion model achieved the highest nodule-level AUC (0.947, 95% CI
-0.932–0.960), followed by the image-only model (0.939, 95% CI 0.924–0.954) and
-the clinical-only model (0.814, 95% CI 0.782–0.847) (Table 3). The fusion gain
-over image-only was statistically significant (ΔAUC +0.007; paired bootstrap
-95% CI 0.002–0.013, two-sided p = 0.012). The fused model also showed
-the highest AUPRC (0.939 vs. 0.930 for image-only) and specificity (0.940 vs.
-0.909), at a modest cost in sensitivity (0.725 vs. 0.779). In an exploratory
+The image + TI-RADS model achieved the highest nodule-level AUC (0.960, 95% CI
+0.948–0.973), followed by the five-feature fusion model (0.947, 95% CI
+0.932–0.960) and the image-only model (0.939, 95% CI 0.924–0.954) (Table 3).
+The prespecified five-feature fusion gain over image-only was statistically
+significant (ΔAUC +0.007; paired bootstrap 95% CI 0.002–0.013, two-sided
+p = 0.012), and the feature-level ablation (Table 6) showed a larger gain for
+image + TI-RADS (ΔAUC +0.021). The five-feature fusion also showed higher
+AUPRC (0.939 vs. 0.930) and specificity (0.940 vs. 0.909) than image-only, at
+a modest cost in sensitivity (0.725 vs. 0.779). In an exploratory
 threshold analysis, predictive values were examined at the Youden-optimal
 operating point determined on the test cohort: the fused model achieved balanced positive
 and negative predictive values (PPV 0.856, NPV 0.898), comparable to the
@@ -493,11 +497,15 @@ provided little or no gain over image-only, and the full fusion did not exceed
 image + TI-RADS alone. The incremental value of structured information
 therefore derives mainly from the expert TI-RADS score in this cohort. The difference between image + TI-RADS and image-only was statistically significant in a paired bootstrap analysis (ΔAUC +0.021, 95% CI 0.008–0.035, two-sided p = 0.003).
 
-**Temperature scaling.** The fused model improved discrimination at a small
-calibration cost relative to image-only (ECE 0.118 vs 0.087; Brier 0.113 vs
-0.110). Temperature scaling fitted on the validation cohort (T = 0.686)
-produced a modest improvement in calibration without affecting discrimination
-(ECE 0.118 → 0.109; Brier 0.113 → 0.112; AUC unchanged at 0.947).
+**Temperature scaling.** As a calibration robustness analysis, temperature
+scaling was fitted on the validation cohort and applied to the prespecified
+full-fusion model and to the best-performing image + TI-RADS model. For the
+full-fusion model (T = 0.686), it produced a modest improvement in calibration
+without affecting discrimination (ECE 0.118 → 0.109; Brier 0.113 → 0.112; AUC
+unchanged at 0.947). The image + TI-RADS model was already well calibrated
+(ECE 0.064; Brier 0.084) and temperature scaling did not improve it further
+(ECE 0.079; Brier 0.085; AUC unchanged at 0.960), indicating that the
+best-performing configuration does not require post-hoc recalibration.
 
 **Table 6.** Feature-level ablation on the ThyroidXL held-out test cohort
 (nodule-level, n = 739).

@@ -1,4 +1,12 @@
 {
+  "ckpt": "checkpoints\\thyroid\\fusion\\best.pt",
+  "cols": [
+    "tirads",
+    "width_mm",
+    "height_mm",
+    "age",
+    "gender"
+  ],
   "temperature": 0.6857044261402736,
   "n_val": 335,
   "n_test": 739,

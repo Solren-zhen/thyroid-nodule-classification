@@ -291,11 +291,23 @@ done
 
 Result files: `paper/output/repro/ablation_img_{tirads,agesex,size}_nodule.json`.
 
-### 12.3 Temperature scaling (fusion model)
+### 12.3 Temperature scaling
 
 ```bash
-python paper/scripts/temperature_scaling.py   # -> paper/output/repro/temperature_scaling.json
+# prespecified full-fusion model
+python paper/scripts/temperature_scaling_model.py \
+  --ckpt checkpoints/thyroid/fusion/best.pt \
+  --cols tirads,width_mm,height_mm,age,gender \
+  --out paper/output/repro/temperature_scaling.json
+# best-performing image + TI-RADS model
+python paper/scripts/temperature_scaling_model.py \
+  --ckpt checkpoints/thyroid/ablation_img_tirads/best.pt \
+  --cols tirads \
+  --out paper/output/repro/temperature_scaling_tirads.json
 ```
 
-T = 0.686 fitted on the validation cohort (n = 335 nodules); test ECE
-0.118 → 0.109, Brier 0.113 → 0.112, AUC unchanged (0.947).
+Full fusion: T = 0.686 (fitted on the validation cohort, n = 335 nodules);
+test ECE 0.118 → 0.109, Brier 0.113 → 0.112, AUC unchanged (0.947).
+Image + TI-RADS: T = 1.222; already well calibrated (ECE 0.064, Brier 0.084);
+temperature scaling did not improve (ECE 0.079, Brier 0.085); AUC unchanged
+(0.960).
