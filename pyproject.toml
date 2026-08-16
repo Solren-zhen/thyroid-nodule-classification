@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff.lint]
+# E501: research code keeps long lines; E402: imports after sys.path setup
+ignore = ["E501", "E402"]
