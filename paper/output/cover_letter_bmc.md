@@ -16,5 +16,5 @@ We confirm that this manuscript is original, has not been published previously, 
 
 Yours sincerely,
 
-Chaohui Zhen (甄朝晖)
+Chaohui Zhen
 Corresponding author: Chaohui Zhen, Wenzhou Medical University, chaohui0408.medical@outlook.com
