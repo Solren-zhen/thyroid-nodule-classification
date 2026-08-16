@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """终轮一致性核对：Table 4 / per-image / supplementary 数字 vs 脚本产出。"""
 import json
 import re

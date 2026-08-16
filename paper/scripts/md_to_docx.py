@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Manuscript markdown -> docx (BMC submission format).
 
 Fixed layout:
@@ -17,9 +16,9 @@ import sys
 from pathlib import Path
 
 from docx import Document
-from docx.shared import Inches, Pt, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt, RGBColor
 
 PROJ = Path(__file__).resolve().parents[2]
 MD = PROJ / "paper" / "output" / "doc" / "manuscript.md"
@@ -92,7 +91,6 @@ def add_rich_text(par, text, enable_links=False):
             continue
         cm = re.match(r"\[([0-9,\s]+)\]", tok)
         if cm and enable_links:
-            nums = [int(x) for x in cm.group(1).split(",") if x.strip().isdigit()]
             # render each number as its own hyperlink, keep brackets/commas plain
             inner = cm.group(1)
             # iterate inner numbers
@@ -117,10 +115,8 @@ def add_rich_text(par, text, enable_links=False):
 
 def parse_table_line(line):
     line = line.strip()
-    if line.startswith("|"):
-        line = line[1:]
-    if line.endswith("|"):
-        line = line[:-1]
+    line = line.removeprefix("|")
+    line = line.removesuffix("|")
     return [c.strip() for c in line.split("|")]
 
 
@@ -271,7 +267,7 @@ def main():
                     run = p.add_run()
                     try:
                         run.add_picture(str(fpath), width=Inches(5.0))
-                    except Exception as e:
+                    except Exception as e:  # noqa: BLE001 - 单图失败仅警告
                         print(f"  [warn] fig{fig_no}: {e}")
                     # caption under image: pull from the figure legend text
                 else:

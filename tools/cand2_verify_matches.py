@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """找出 24 张疑似重复 cand2 图片的参考集匹配文件，并输出对照拼图。
 
 用法：python tools/cand2_verify_matches.py
@@ -7,9 +6,8 @@
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw
-
 from cand2_content_check import dhash, discover  # 复用
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1] / "data" / "thyroid"
 REF_PATTERNS = {

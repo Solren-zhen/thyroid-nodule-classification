@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Download TN5000 thyroid ultrasound dataset from HF mirror.
 
@@ -13,7 +12,6 @@ Usage:
 
 import argparse
 import concurrent.futures
-import os
 from pathlib import Path
 
 import requests
@@ -43,7 +41,7 @@ def download_one(item):
             with open(dest, "wb") as f:
                 f.write(r.content)
             return ("ok", rel)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - 下载重试兜底
             last_err = e
     return ("fail", f"{rel}: {last_err}")
 

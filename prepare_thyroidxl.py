@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 ThyroidXL → manifest.csv 构建脚本
 ==================================
@@ -22,8 +21,6 @@ import pathlib
 import random
 import sys
 from collections import defaultdict
-
-import numpy as np
 
 CLINICAL_COLS = ["tirads", "width_mm", "height_mm", "age", "gender"]
 SEED = 42

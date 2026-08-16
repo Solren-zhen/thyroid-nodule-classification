@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Generic gated/normal HuggingFace dataset downloader via hf-mirror.
 
@@ -52,7 +51,7 @@ def download_one(item, base, dest_root, headers, retries):
             with open(dest, "wb") as f:
                 f.write(r.content)
             return ("ok", rel)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - 下载重试兜底
             last_err = e
     return ("fail", f"{rel}: {last_err}")
 
@@ -93,10 +92,8 @@ def main():
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as ex:
         futs = {ex.submit(download_one, *t, base, dest_root, headers, args.retries): t[0]
                 for t in tasks}
-        done = 0
-        for fut in concurrent.futures.as_completed(futs):
+        for done, fut in enumerate(concurrent.futures.as_completed(futs), start=1):
             status, rel = fut.result()
-            done += 1
             if status == "ok":
                 ok += 1
             elif status == "skip":

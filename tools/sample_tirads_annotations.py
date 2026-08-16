@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """TI-RADS 人工标注取样（方案 B：ThyroidXL 审批不通过时的替代路线）。
 
 从 TN5000（主训练）取样标注子集用于三臂消融（image / clinical / fusion）；

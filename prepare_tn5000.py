@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Build manifest.csv for the TN5000 dataset (HF mirror: Johnyquest7/...).
 
@@ -20,7 +19,6 @@ import argparse
 import csv
 import sys
 from pathlib import Path
-
 
 CLINICAL_COLS = ["composition", "echogenicity", "shape",
                  "margin", "echogenic_foci", "size_mm"]

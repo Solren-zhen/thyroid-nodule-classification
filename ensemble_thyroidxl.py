@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """multi-seed 集成评估：加载多个 seed 的 fusion 模型，各自推理 test 集
 （结节级 mean 聚合），3 个模型的结节概率平均 → 最终 AUC/AUPRC。
 
@@ -17,9 +16,9 @@ import torch
 from torch.utils.data import DataLoader
 
 PROJ = Path(__file__).resolve().parent
-sys.path.insert(0, str(PROJ.parent))
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+sys.path.insert(0, str(PROJ))
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 from train_thyroid import compute_metrics
 
 CLIN = ["tirads", "width_mm", "height_mm", "age", "gender"]
@@ -122,7 +121,7 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({
         "ensemble": {k: (list(v) if isinstance(v, tuple) else v) for k, v in m.items()},
-        "seeds": args.seeds, "tta": args.tta, "n": int(len(labels)),
+        "seeds": args.seeds, "tta": args.tta, "n": len(labels),
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"saved: {out}")
 

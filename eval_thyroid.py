@@ -18,11 +18,11 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from thyroid.models.thyroid import ThyroidClassifier
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from train_thyroid import compute_metrics, bootstrap_auc, ece_score, get_device
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
+from train_thyroid import compute_metrics, get_device
 
 
 def decision_curve(labels: np.ndarray, probs: np.ndarray,
@@ -151,7 +151,7 @@ def main():
         groups = {}
         for pid, p in zip(pids, probs):
             groups.setdefault(pid, []).append(p)
-        agg_probs, agg_labels = [], []
+        agg_probs = []
         for pid, ps in groups.items():
             if args.aggregate == "mean":
                 ap = float(np.mean(ps))
@@ -185,7 +185,7 @@ def main():
 
     dca = decision_curve(labels, probs)
     out = {"metrics": {k: (list(v) if isinstance(v, tuple) else v) for k, v in m.items()},
-           "decision_curve": dca, "n": int(len(labels)),
+           "decision_curve": dca, "n": len(labels),
            "pos_rate": float(labels.mean()), "tag": tag}
     out_path = weights.parent / f"eval_{args.split}.json"
     with open(out_path, "w", encoding="utf-8") as f:

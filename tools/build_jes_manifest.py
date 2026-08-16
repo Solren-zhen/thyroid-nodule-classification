@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Build an equal-sample-size control (JES) training manifest for a given seed.
 
 The joint pool (data/thyroid_multi) contains 6,379 train + 750 val images.
@@ -32,7 +31,8 @@ def main():
     ap.add_argument("--out", type=str, default="data/thyroid_jes")
     args = ap.parse_args()
 
-    rows = list(csv.DictReader(open(SRC, newline="", encoding="utf-8")))
+    with open(SRC, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
     train = [r for r in rows if r["split"] == "train"]
     val = [r for r in rows if r["split"] == "val"]
     print(f"joint pool: train={len(train)} val={len(val)}")

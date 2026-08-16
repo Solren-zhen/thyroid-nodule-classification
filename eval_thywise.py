@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Thy-Wise 外部验证评估（第三外部队列，按结节聚合）。
 
 Thy-Wise 一个结节多张图（均值 ~7 张，最多 49 张），按图像统计会过度加权
@@ -21,11 +20,11 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from thyroid.models.thyroid import ThyroidClassifier  # noqa: E402
-from thyroid.data.thyroid_dataset import ThyroidDataset  # noqa: E402
-from train_thyroid import compute_metrics, get_device  # noqa: E402
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
+from train_thyroid import compute_metrics, get_device
 
 
 def group_by_nodule(probs: np.ndarray, labels: np.ndarray, pids: list):
@@ -39,7 +38,7 @@ def group_by_nodule(probs: np.ndarray, labels: np.ndarray, pids: list):
 def aggregate(groups, method: str):
     """method: max / mean / majority"""
     ys, prs = [], []
-    for pid, items in groups.items():
+    for items in groups.values():
         labs = [it[0] for it in items]
         probs = [it[1] for it in items]
         # 结节级真值：该结节多数图片标签（同结节同标签，保守校验用）
@@ -135,7 +134,7 @@ def main():
         results[f"nodule_{method}"] = {
             "auc": m["auc"], "auc_ci": list(m["auc_ci"]), "auprc": m["auprc"],
             "sensitivity": m["sensitivity"], "specificity": m["specificity"],
-            "acc": m["acc"], "ece": m["ece"], "n": int(len(ys)),
+            "acc": m["acc"], "ece": m["ece"], "n": len(ys),
             "pos_rate": float(ys.mean()),
         }
     out = weights.parent / "eval_thywise.json"

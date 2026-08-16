@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Paired bootstrap ΔAUC test between two ThyroidXL ablation models.
 
 Default comparison: image + TI-RADS vs image-only (seed-42 anchors), the
@@ -22,8 +21,8 @@ PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))  # `import thyroid` (repo root is the package)
 sys.path.insert(0, str(PROJ))          # `from train_thyroid import ...`
 
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 from train_thyroid import get_device
 
 CLIN5 = ["tirads", "width_mm", "height_mm", "age", "gender"]

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """汇总 ThyroidXL 三臂消融 test 评估 → Table 3 数据 + markdown 表格。
 
 读取 checkpoints/thyroid/{fusion,image,clinical}/eval_test.json，
 输出三臂对比表（AUC/CI/AUPRC/Sens/Spec/ACC/ECE）到 stdout + paper/notes/thyroidxl_ablation_summary.md
 """
 import json
-import sys
 from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[2]

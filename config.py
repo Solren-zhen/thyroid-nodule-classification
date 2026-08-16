@@ -3,7 +3,6 @@
 """
 from dataclasses import dataclass, field
 
-
 # 默认 ACR TI-RADS 临床特征列（TN5000/TN3K/Thy-Wise manifest 使用）
 ACR_CLINICAL_COLUMNS = [
     "composition", "echogenicity", "shape", "margin",

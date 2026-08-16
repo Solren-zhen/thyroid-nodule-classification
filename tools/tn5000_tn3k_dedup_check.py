@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """TN5000 <-> TN3K 跨数据集逐字节(MD5)查重（审稿意见 D8 补充）。
 
 比对 TN5000 (5000 张 png) 与 TN3K 全部图像 (trainval-image + test-image,

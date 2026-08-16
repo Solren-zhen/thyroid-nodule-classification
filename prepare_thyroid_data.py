@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Prepare manifest.csv from the figshare thyroid ultrasound dataset (RAR archives).
 
@@ -49,7 +48,7 @@ def extract_rar(rar: Path, dest_root: Path) -> Path:
         sys.exit("tar.exe not found; Windows 10/11 ships it in System32.")
     print(f"  extracting {rar.name} ({rar.stat().st_size / 1e6:.1f} MB) ...")
     r = subprocess.run([tar, "-xf", str(rar), "-C", str(dest)],
-                       capture_output=True, text=True)
+                       capture_output=True, text=True, check=False)
     if r.returncode != 0:
         raise RuntimeError(f"tar failed for {rar.name}:\n{r.stderr}")
     marker.write_text(rar.name, encoding="utf-8")

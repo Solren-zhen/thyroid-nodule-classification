@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """ThyroidXL test 亚组分析：按 TI-RADS / 结节尺寸 / 年龄 / 性别分层。
 
 对三臂模型（fusion/image/clinical）在 ThyroidXL test 上重跑推理，
@@ -19,6 +18,7 @@ import sys
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -38,14 +38,14 @@ plt.rcParams.update({
 })
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
 from sklearn.metrics import roc_auc_score
+from torch.utils.data import DataLoader
 
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 from train_thyroid import bootstrap_auc
 
 FIG_DIR = PROJ / "paper" / "figures"
@@ -200,7 +200,7 @@ def main():
             continue
         p, y = per_image[ab]["probs"], per_image[ab]["labels"]
         res = subgroup_auc(y, p)
-        per_image_stats[ab] = {"n": int(len(p)), "pos_rate": float(y.mean())}
+        per_image_stats[ab] = {"n": len(p), "pos_rate": float(y.mean())}
         if res:
             per_image_stats[ab]["auc"], per_image_stats[ab]["ci_lo"], per_image_stats[ab]["ci_hi"] = res
     (PROJ / "checkpoints" / "thyroid" / "per_image_stats.json").write_text(

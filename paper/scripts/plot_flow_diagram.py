@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Figure 1: 研究流程图（数据→切分→模型→评估）"""
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 from pathlib import Path
+
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 
 FIG_DIR = Path(__file__).resolve().parents[2] / "paper" / "figures"
 
@@ -19,7 +20,7 @@ def box(ax, x, y, w, h, text, fc="#e8f0fe", ec="#1f77b4", fs=10):
 
 def arrow(ax, x1, y1, x2, y2):
     ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
-                arrowprops=dict(arrowstyle="-|>", lw=1.5, color="#333333"))
+                arrowprops={"arrowstyle": "-|>", "lw": 1.5, "color": "#333333"})
 
 
 def main():

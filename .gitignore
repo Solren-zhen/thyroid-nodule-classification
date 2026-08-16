@@ -25,3 +25,9 @@ paper/output/citation_verification_report.md
 paper/notes/
 paper/input/
 submission/
+
+# manuscript drafts (in revision; added to repo after journal submission)
+paper/output/doc/manuscript.md
+paper/output/doc/manuscript_zh.md
+paper/output/cover_letter_bmc.md
+paper/output/supplementary.md

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Thy-Wise <-> (TN5000 + TN3K) 跨数据集逐字节(MD5)查重。
 
 审稿意见 D8 补充：为手稿中 "no Thy-Wise image is duplicated in the TN5000 or

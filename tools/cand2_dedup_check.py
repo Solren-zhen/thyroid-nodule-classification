@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """cand2 MD5 去重验证（D8）。
 
 比对 cand2 (7058 图) 与 TN5000 (5000 图) + TN3K (3493 图) 的逐字节 MD5。
@@ -8,7 +7,6 @@
 import hashlib
 import json
 import sys
-from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
@@ -66,7 +64,6 @@ def main():
     print(f"[ref] unique md5: {len(ref_md5)}", flush=True)
 
     # 3) 逐张比对 cand2
-    dup_tn5000 = []
     dup_tn3k = []
     unique = []
     with ProcessPoolExecutor() as ex:

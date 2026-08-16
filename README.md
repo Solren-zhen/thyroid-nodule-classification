@@ -1,6 +1,6 @@
 # External generalization and domain shift in thyroid ultrasound AI
 
-[Paper]() · [Datasets]() · License: [MIT](LICENSE) · [Reproducibility](REPRODUCIBILITY.md)
+[📄 Paper](paper/output/doc/manuscript.md) · [🗂️ Datasets](#data-preparation) · License: [MIT](LICENSE) · [Reproducibility](REPRODUCIBILITY.md) · [![CI](https://github.com/Solren-zhen/thyroid-nodule-classification/actions/workflows/test.yml/badge.svg)](https://github.com/Solren-zhen/thyroid-nodule-classification/actions)
 
 Code accompanying the manuscript:
 
@@ -12,6 +12,13 @@ Thy-Wise, joint multi-dataset training to quantify cross-dataset domain shift,
 and a three-arm ablation (image-only / clinical-only / fusion) on ThyroidXL
 fusing an image encoder with five structured clinical features (ACR TI-RADS
 total score, nodule width, nodule height, age, sex).
+
+## Preprint status
+
+> 📚 An **arXiv preprint is planned** upon journal submission; this badge will be
+> updated with the arXiv ID. Until then the current manuscript draft is
+> maintained at [`paper/output/doc/manuscript.md`](paper/output/doc/manuscript.md)
+> (English) and [`manuscript_zh.md`](paper/output/doc/manuscript_zh.md) (中文).
 
 ## Key results (paper summary)
 
@@ -26,8 +33,6 @@ total score, nodule width, nodule height, age, sex).
 | ThyroidXL test — image-only | 0.939 |
 | ThyroidXL test — clinical-only | 0.814 |
 | ThyroidXL test — image + TI-RADS | 0.960 |
-| ThyroidXL test — fusion | 0.947 |
-| ThyroidXL test — image-only | 0.939 |
 
 Equal-sample-size control shows the joint-training gain is not a pure
 sample-size effect (TN3K official test AUC 0.729 → 0.792 at matched training

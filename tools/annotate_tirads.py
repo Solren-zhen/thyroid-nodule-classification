@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """TI-RADS 人工标注工具（方案 B）。
 
 读取 sample_tirads_annotations.py 生成的标注 CSV，逐张显示超声图，

@@ -19,10 +19,9 @@
 """
 import csv
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
-import numpy as np
 import cv2
+import numpy as np
 import torch
 from torch.utils.data import Dataset
 
@@ -52,7 +51,7 @@ class ThyroidDataset(Dataset):
         split: str = "train",
         image_size: int = 224,
         num_clinical_features: int = 6,
-        clinical_columns: Optional[List[str]] = None,
+        clinical_columns: list[str] | None = None,
         mock: bool = False,
         split_by_group: bool = True,
         seed: int = 42,
@@ -94,7 +93,7 @@ class ThyroidDataset(Dataset):
 
     # ── 加载 ─────────────────────────────────────────
 
-    def _load_manifest(self, manifest_path: Path) -> List[Dict]:
+    def _load_manifest(self, manifest_path: Path) -> list[dict]:
         samples = []
         with open(manifest_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
@@ -136,7 +135,7 @@ class ThyroidDataset(Dataset):
             raise ValueError(f"manifest.csv 为空: {manifest_path}")
         return samples
 
-    def _create_mock_samples(self) -> List[Dict]:
+    def _create_mock_samples(self) -> list[dict]:
         """模拟数据：60 例患者 × 10 张图 = 600 张（35% 阳性率）"""
         rng = np.random.RandomState(self.seed)
         samples = []
@@ -161,12 +160,8 @@ class ThyroidDataset(Dataset):
                 })
         return samples
 
-    def _apply_split(self) -> List[Dict]:
+    def _apply_split(self) -> list[dict]:
         """按 7:1.5:1.5 切分（默认按 patient_id 分组；split="all" 返回全部样本）"""
-        if self.split == "all":
-            return list(self.samples)
-        if self.split == "all":
-            return list(self.samples)
         if self.split == "all":
             return list(self.samples)
         if getattr(self, "_has_split_col", False):
@@ -178,7 +173,7 @@ class ThyroidDataset(Dataset):
         rng = np.random.RandomState(self.seed)
 
         if self.split_by_group:
-            group_map: Dict[str, List[int]] = {}
+            group_map: dict[str, list[int]] = {}
             for i, s in enumerate(self.samples):
                 group_map.setdefault(s["patient_id"], []).append(i)
             groups = list(group_map.values())
@@ -203,7 +198,7 @@ class ThyroidDataset(Dataset):
     def __len__(self) -> int:
         return len(self.samples)
 
-    def __getitem__(self, index: int) -> Dict[str, torch.Tensor]:
+    def __getitem__(self, index: int) -> dict[str, torch.Tensor]:
         sample = self.samples[index]
 
         if sample["image_path"]:
@@ -214,7 +209,7 @@ class ThyroidDataset(Dataset):
                 cv2.IMREAD_UNCHANGED,
             )
             if img is None:
-                raise IOError(f"无法读取图片: {sample['image_path']}")
+                raise OSError(f"无法读取图片: {sample['image_path']}")
             if img.ndim == 2:
                 img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
             elif img.ndim == 3 and img.shape[2] == 4:

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """ThyroidXL model-comparison figures: ROC / calibration / DCA.
 
 Models: image-only, clinical-only, image + TI-RADS (feature-selected best),
@@ -12,11 +11,13 @@ import sys
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from sklearn.metrics import roc_curve, auc as sk_auc
+from sklearn.metrics import auc as sk_auc
+from sklearn.metrics import roc_curve
 from torch.utils.data import DataLoader
 
 plt.rcParams.update({
@@ -36,8 +37,8 @@ plt.rcParams.update({
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 
 FIG_DIR = PROJ / "paper" / "figures"
 CLIN5 = ["tirads", "width_mm", "height_mm", "age", "gender"]
@@ -143,7 +144,7 @@ def main():
 
     # Fig 5: ROC
     fig, ax = plt.subplots(figsize=(6.6, 6))
-    for k, r in results.items():
+    for r in results.values():
         ax.plot(r["fpr"], r["tpr"], lw=r["lw"], ls=r["ls"], color=r["color"],
                 label=f"{r['label']} (AUC = {r['auc']:.3f})")
     ax.plot([0, 1], [0, 1], "k--", lw=1, alpha=0.6)
@@ -161,7 +162,7 @@ def main():
     # Fig 6: calibration
     fig, ax = plt.subplots(figsize=(6.4, 5.6))
     ax.plot([0, 1], [0, 1], "k--", lw=1.2, label="Perfect calibration")
-    for k, r in results.items():
+    for r in results.values():
         ax.plot(r["mp"], r["my"], "o-", color=r["color"], lw=2, ms=4,
                 label=f"{r['label']} (ECE = {r['ece']:.3f})")
     ax.set_xlabel("Predicted probability", fontsize=12)
@@ -175,7 +176,7 @@ def main():
 
     # Fig 7: DCA
     fig, ax = plt.subplots(figsize=(6.4, 5.6))
-    for k, r in results.items():
+    for r in results.values():
         ax.plot(r["pts"], r["nbs"], lw=r["lw"], ls=r["ls"], color=r["color"], label=r["label"])
     ax.plot([0, 1], [0, 0], "k:", lw=1, label="Treat none")
     ax.set_xlabel("Threshold probability", fontsize=12)

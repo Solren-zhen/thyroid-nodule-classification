@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Generate paper figures: ROC overlay, calibration reliability, DCA, confusion."""
 
-import json
 import sys
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -27,13 +26,13 @@ plt.rcParams.update({
 })
 import numpy as np
 import torch
-from sklearn.metrics import roc_curve, auc as sk_auc, confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_curve
 from torch.utils.data import DataLoader
 
 PROJ = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJ.parent))
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+sys.path.insert(0, str(PROJ))
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 
 FIG_DIR = PROJ / "paper" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -199,7 +198,7 @@ def main():
     ):
         yp = (p >= 0.5).astype(int)
         cm = confusion_matrix(y, yp)
-        im = ax.imshow(cm, cmap="Blues")
+        ax.imshow(cm, cmap="Blues")
         ax.set_xticks([0, 1])
         ax.set_yticks([0, 1])
         ax.set_xticklabels(["Benign", "Malignant"])

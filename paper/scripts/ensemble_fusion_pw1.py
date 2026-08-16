@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """融合三 seed（pos_weight=1.0 统一协议）集成 AUC 重算。
 
 读取 seed42（fusion_backup/best_posw1.0_seed42）、seed123/2024（fusion_seed{123,2024}_pw1.0）
@@ -9,14 +8,15 @@
 import json
 import sys
 from pathlib import Path
+
 import numpy as np
-import torch
 
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
 import importlib.util
-from thyroid.data.thyroid_dataset import ThyroidDataset
+
+from data.thyroid_dataset import ThyroidDataset
 from train_thyroid import get_device
 
 # paper 不是包，用文件路径加载 paired_auc_test 中的 load_model / predict_nodule_mean
@@ -40,7 +40,8 @@ def main():
     ds = ThyroidDataset(str(PROJ / "data" / "thyroid" / "thyroidxl"), split="test",
                         image_size=224, num_clinical_features=5, clinical_columns=CLIN,
                         mock=False, split_by_group=True, seed=42)
-    from sklearn.metrics import roc_auc_score, average_precision_score
+    from sklearn.metrics import average_precision_score, roc_auc_score
+
     from train_thyroid import bootstrap_auc
 
     ensemble_p = None
@@ -60,14 +61,14 @@ def main():
     m_auc = roc_auc_score(labels, ensemble_p)
     m_auprc = average_precision_score(labels, ensemble_p)
     _, lo, hi = bootstrap_auc(labels, ensemble_p, n_boot=2000, seed=0)
-    print(f"\n=== ENSEMBLE (3 seeds, pw1.0) ===")
+    print("\n=== ENSEMBLE (3 seeds, pw1.0) ===")
     print(f"  AUC      : {m_auc:.4f} (95% CI {lo:.4f}-{hi:.4f})")
     print(f"  AUPRC    : {m_auprc:.4f}")
 
     out = PROJ / "checkpoints" / "thyroid" / "seed_retrain_eval" / "ensemble_fusion_pw1.json"
     out.write_text(json.dumps({
         "ensemble_auc": m_auc, "auc_ci": [lo, hi], "ensemble_auprc": m_auprc,
-        "seeds": list(CKPTS.keys()), "n": int(len(labels)),
+        "seeds": list(CKPTS.keys()), "n": len(labels),
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"saved: {out}")
 

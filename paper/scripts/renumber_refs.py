@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """References Vancouver 重编号：按正文首引顺序重排 23 条。
 
 映射（当前编号 -> 新编号）由首引顺序决定：
@@ -38,14 +37,6 @@ body, refs = t.split("## References", 1)
 
 # 2-pass: 先把每个 [N] 单号替换为占位（保护组合里的），再组合引用整体处理
 def single_pass(text, mapper):
-    # 处理组合引用 [a,b,c] 整体（内部映射）
-    def comb(m):
-        inner = m.group(1)
-        nums = [int(x) for x in inner.split(",") if x.strip().isdigit()]
-        if not nums or max(nums) > 100:
-            return m.group(0)
-        newnums = [str(MAP[num]) for num in nums]
-        return "[" + ",".join(newnums) + "]"
     # 先占位化每个数字 token（防止 22->6 与 6->7 互相覆盖）
     placeholders = {}
     for num in mapper:

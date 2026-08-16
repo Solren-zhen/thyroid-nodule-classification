@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """figshare 文件下载（支持断点续传 + 进度日志）。
 
 用法：
@@ -6,11 +5,10 @@
       --dest data/thyroid/thywise/thywise_us_images.zip --log logs/thywise_dl.log
 """
 import argparse
-import os
 import sys
 import time
-from pathlib import Path
 import urllib.request
+from pathlib import Path
 
 CHUNK = 256 * 1024
 
@@ -68,7 +66,7 @@ def main():
                     log(f"{human(got)} / {human(total)}  {human(speed)}/s  ETA {eta:.0f}min")
                     last = now
         log(f"完成：{dest} ({human(got)})")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - 下载中断时保存进度并退出
         log(f"中断/出错：{type(e).__name__} {e}（已保存 {human(got)}，可重跑续传）")
         sys.exit(1)
 

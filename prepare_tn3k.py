@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Build manifest for TN3K (trainval labelled split=train; official test labelled split=test)."""
 
 import argparse
 import csv
 import sys
 from pathlib import Path
-
 
 CLINICAL_COLS = ["composition", "echogenicity", "shape",
                  "margin", "echogenic_foci", "size_mm"]

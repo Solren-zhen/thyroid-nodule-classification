@@ -23,21 +23,24 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader
+from sklearn.metrics import (
+    average_precision_score,
+    precision_recall_fscore_support,
+    roc_auc_score,
+)
+from torch import nn
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR, ReduceLROnPlateau
-from sklearn.metrics import roc_auc_score, average_precision_score, precision_recall_fscore_support
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
-from thyroid.config import get_thyroid_config
-from thyroid.models.thyroid import ThyroidClassifier
-from thyroid.data.thyroid_dataset import ThyroidDataset
-
+from config import get_thyroid_config
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 
 # ── 工具 ─────────────────────────────────────────
 
@@ -98,7 +101,7 @@ def compute_metrics(labels: np.ndarray, probs: np.ndarray, threshold: float = 0.
     )
     auc = float(roc_auc_score(labels, probs)) if len(np.unique(labels)) > 1 else 0.0
     auprc = float(average_precision_score(labels, probs)) if len(np.unique(labels)) > 1 else 0.0
-    auc_mean, auc_lo, auc_hi = bootstrap_auc(labels, probs)
+    _, auc_lo, auc_hi = bootstrap_auc(labels, probs)
     brier = float(np.mean((probs - labels) ** 2))
     tp = int(((preds == 1) & (labels == 1)).sum())
     fp = int(((preds == 1) & (labels == 0)).sum())
@@ -127,7 +130,7 @@ def train_one_epoch(model, loader, optimizer, scaler, device, use_amp,
         labels = batch["label"].to(device).unsqueeze(1)
         clinical = batch["clinical"].to(device)
 
-        def step(images=None):
+        def step(images=None, clinical=clinical, labels=labels):
             outputs = model(images=images, clinical=clinical)
             return criterion(outputs["logits"], labels)
 

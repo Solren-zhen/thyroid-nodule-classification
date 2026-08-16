@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Temperature scaling for an arbitrary ThyroidXL fusion model (nodule-level).
 
 Fits T on the held-out validation cohort (mean-aggregated nodule logits) and
@@ -25,8 +24,8 @@ PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
 
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 from train_thyroid import compute_metrics, get_device
 
 
@@ -106,8 +105,8 @@ def main():
         "ckpt": str(Path(args.ckpt).relative_to(PROJ)),
         "cols": cols,
         "temperature": T,
-        "n_val": int(len(y_val)),
-        "n_test": int(len(y_test)),
+        "n_val": len(y_val),
+        "n_test": len(y_test),
         "before": {
             "auc": m_raw["auc"], "auc_ci": list(m_raw["auc_ci"]),
             "brier": m_raw["brier"], "ece": m_raw["ece"],

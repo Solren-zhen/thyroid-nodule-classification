@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Patient-level aggregation sensitivity: mean vs max vs attention-weighted.
 
 对 ThyroidXL 每帧预测，比较三种结节级聚合策略的 AUC：
@@ -14,14 +13,14 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from sklearn.metrics import average_precision_score, roc_auc_score
 from torch.utils.data import DataLoader
-from sklearn.metrics import roc_auc_score, average_precision_score
 
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 from train_thyroid import bootstrap_auc
 
 CLIN = ["tirads", "width_mm", "height_mm", "age", "gender"]
@@ -70,7 +69,7 @@ def frame_predictions(model, ds, device, batch_size=32):
 def aggregate(groups, p_all, l_all, method, temp=5.0):
     """groups: {pid: [frame_idx,...]}"""
     agg_p, agg_l = [], []
-    for pid, idxs in groups.items():
+    for idxs in groups.values():
         ps = p_all[idxs]
         l = l_all[idxs[0]]  # 同结节标签一致
         if method == "mean":
@@ -111,7 +110,7 @@ def main():
             p, l = aggregate(groups, p_all, l_all, method)
             auc = roc_auc_score(l, p) if len(np.unique(l)) > 1 else 0
             auprc = average_precision_score(l, p) if len(np.unique(l)) > 1 else 0
-            m, lo, hi = bootstrap_auc(l, p)
+            _, lo, hi = bootstrap_auc(l, p)
             print(f"  {method:10s}: AUC {auc:.4f} (95% CI {lo:.4f}-{hi:.4f}) | AUPRC {auprc:.4f}")
             results[ab][method] = {"auc": float(auc), "auc_ci": [float(lo), float(hi)],
                                    "auprc": float(auprc)}

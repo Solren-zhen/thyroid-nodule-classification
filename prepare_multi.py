@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Build multi-dataset training manifest (TN5000 + TN3K trainval) and
 internal/external test manifests for joint-training evaluation.
 
@@ -16,14 +15,11 @@ Layout:
   data/thyroid_tn5000test/manifest.csv-> TN5000 held-out test 750 (absolute paths)
 """
 
-import argparse
 import csv
-import sys
 from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
-
 
 CLINICAL_COLS = ["composition", "echogenicity", "shape",
                  "margin", "echogenic_foci", "size_mm"]

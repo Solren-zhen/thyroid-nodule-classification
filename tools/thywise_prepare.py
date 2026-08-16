@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Thy-Wise 解压 + 建 manifest + MD5 去重（第三外部验证队列的前提）。
 
 1. 从外层 zip 解出 benign_after.zip / malignant_after.zip → 再解到
@@ -13,7 +12,6 @@ import hashlib
 import io
 import sys
 import zipfile
-from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
@@ -75,7 +73,7 @@ def build_manifest():
             try:
                 with Image.open(jpg) as im:
                     im.load()
-            except Exception:
+            except Exception:  # noqa: BLE001 - 单个坏文件跳过
                 skipped += 1
                 continue
             pid = jpg.parent.name  # 结节文件夹名（跨良恶性唯一）

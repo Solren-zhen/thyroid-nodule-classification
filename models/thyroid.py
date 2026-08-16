@@ -10,10 +10,9 @@
 
 复用 encoder.ModalityEncoder（EfficientNet）与 fusion.ClinicalMLP / MetastasisHead。
 """
-from typing import List, Optional
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 from .encoder import ModalityEncoder
 from .fusion import ClinicalMLP, MetastasisHead
@@ -43,7 +42,7 @@ class ThyroidClassifier(nn.Module):
         clinical_feature_dim: int = 6,
         clinical_hidden_dim: int = 64,
         clinical_output_dim: int = 64,
-        head_hidden: List[int] = [256, 128],
+        head_hidden: list[int] | None = None,
         head_dropout: float = 0.3,
         use_image: bool = True,
         use_clinical: bool = True,
@@ -77,6 +76,8 @@ class ThyroidClassifier(nn.Module):
         if head_in == 0:
             raise ValueError("use_image 与 use_clinical 至少一个必须为 True")
 
+        if head_hidden is None:
+            head_hidden = [256, 128]
         self.head = MetastasisHead(
             input_dim=head_in,
             hidden_dims=list(head_hidden),
@@ -85,8 +86,8 @@ class ThyroidClassifier(nn.Module):
 
     def forward(
         self,
-        images: Optional[torch.Tensor] = None,      # (B, 3, H, W)
-        clinical: Optional[torch.Tensor] = None,     # (B, clinical_feature_dim)
+        images: torch.Tensor | None = None,      # (B, 3, H, W)
+        clinical: torch.Tensor | None = None,     # (B, clinical_feature_dim)
     ) -> dict:
         feats = []
         if self.use_image:

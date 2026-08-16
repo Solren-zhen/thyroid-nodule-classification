@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Error-case visualization: image + TI-RADS model on ThyroidXL test.
 
 Generates a 2x2 grid (2 false positives + 2 false negatives) with predicted
@@ -12,6 +11,7 @@ from pathlib import Path
 
 import cv2
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,8 +21,8 @@ from torch.utils.data import DataLoader
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 
 COLS = ["tirads"]
 FIG_DIR = PROJ / "paper" / "figures"

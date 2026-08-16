@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """训练后评估编排：为 S3 生成 3-seed 均值/范围。
 
 track A（TN5000-only / joint）三 seed（42,123,2024）在
@@ -47,7 +46,7 @@ FUSION_CKPTS = {
 def run(cmd: list) -> dict:
     """跑子进程，解析输出的 JSON 文件（由 eval 脚本写到固定位置）。"""
     tag = cmd[cmd.index("--weights") + 1]
-    out_json = Path(tag).parent / f"eval_test.json"
+    out_json = Path(tag).parent / "eval_test.json"
     # eval_thyroid.py 把结果写到 --weights 同目录 eval_test.json
     subprocess.run(cmd, check=True, cwd=PROJ)
     if not out_json.exists():

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """cand2 内容级去重（dHash 感知哈希）。
 
 MD5 只能查逐字节重复；若 cand2 是 TN3K/TN5000 重编码（改尺寸/转 JPG），

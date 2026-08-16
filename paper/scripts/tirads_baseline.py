@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """TI-RADS 单独评分作为临床基线。
 
 用 ThyroidXL 的专家 TIRADS 总分（1-5）直接作为良恶性预测分数，
@@ -14,10 +13,10 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from sklearn.metrics import roc_auc_score, average_precision_score
+from sklearn.metrics import average_precision_score, roc_auc_score
 
 PROJ = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJ.parent))
+sys.path.insert(0, str(PROJ))
 
 
 def load_test_manifest():

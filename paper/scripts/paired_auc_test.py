@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """fusion vs image-only 的配对 ΔAUC 检验（ThyroidXL test，seed 42 锚点）。
 
 同一 739 个结节上，用 paired bootstrap（重抽样结节索引，两模型同索引）得到
@@ -10,6 +9,7 @@
 """
 import sys
 from pathlib import Path
+
 import numpy as np
 import torch
 from sklearn.metrics import roc_auc_score
@@ -18,8 +18,9 @@ PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))  # 使 `import thyroid`（项目根即包）可用
 sys.path.insert(0, str(PROJ))          # 使 `from train_thyroid import ...` 可用
 from torch.utils.data import DataLoader
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 from train_thyroid import get_device
 
 CLIN = ["tirads", "width_mm", "height_mm", "age", "gender"]

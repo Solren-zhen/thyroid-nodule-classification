@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software or its trained models in your work, please cite it as follows."
+title: "External generalization and domain shift in thyroid ultrasound AI: quantifying cross-dataset performance, multi-dataset training, and the incremental value of structured features"
+type: software
+abstract: >-
+  Open-source reproduction code for a thyroid nodule malignancy classifier
+  (EfficientNetV2-S) with multi-dataset external validation. Quantifies
+  cross-dataset domain shift on TN5000 / TN3K / Thy-Wise / ThyroidXL, tests
+  joint multi-dataset training and equal-sample-size controls, and ablates the
+  incremental value of structured clinical features (ACR TI-RADS). Includes
+  patient-level splitting, bootstrap confidence intervals, calibration (ECE /
+  Brier), decision curves, and full reproducibility artifacts.
+authors:
+  - family-names: Zhen
+    given-names: Chaohui
+    name: "Chaohui Zhen"
+    affiliation: "Wenzhou Medical University, Wenzhou, China"
+    email: "chaohui0408.medical@outlook.com"
+date-released: "2026-08-14"
+keywords:
+  - thyroid nodule
+  - ultrasound imaging
+  - deep learning
+  - domain shift
+  - external validation
+  - generalization
+  - multimodal fusion
+  - TI-RADS
+  - calibration
+license: MIT
+repository-code: "https://github.com/Solren-zhen/thyroid-nodule-classification"

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """PPV/NPV + threshold sensitivity analysis (ThyroidXL test, nodule-level).
 
 Models: image-only, clinical-only, image + TI-RADS (feature-selected best),
@@ -14,6 +13,7 @@ import sys
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,8 +23,8 @@ from torch.utils.data import DataLoader
 PROJ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJ.parent))
 sys.path.insert(0, str(PROJ))
-from thyroid.data.thyroid_dataset import ThyroidDataset
-from thyroid.models.thyroid import ThyroidClassifier
+from data.thyroid_dataset import ThyroidDataset
+from models.thyroid import ThyroidClassifier
 
 CLIN5 = ["tirads", "width_mm", "height_mm", "age", "gender"]
 MODELS = [
@@ -115,7 +115,7 @@ def main():
         tgrid = np.arange(0.01, 0.99, 0.01)
         youden = tgrid[np.argmax([metrics_at(y, p, t)["sen"] + metrics_at(y, p, t)["spe"] - 1 for t in tgrid])]
         mt = metrics_at(y, p, youden)
-        rows[key] = {**mt, "n": int(len(y))}
+        rows[key] = {**mt, "n": len(y)}
         print(f"{m['label']:16s} Youden t={youden:.2f} | Sens {mt['sen']:.3f} Spec {mt['spe']:.3f} "
               f"PPV {mt['ppv']:.3f} NPV {mt['npv']:.3f}")
         sens = [metrics_at(y, p, t)["sen"] for t in thresholds]
